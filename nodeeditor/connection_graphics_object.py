@@ -1,0 +1,241 @@
+from qtpy.QtCore import QRectF
+from qtpy.QtGui import QPainter, QPainterPath
+from qtpy.QtWidgets import (
+    QGraphicsBlurEffect,
+    QGraphicsItem,
+    QGraphicsObject,
+    QGraphicsSceneHoverEvent,
+    QGraphicsSceneMouseEvent,
+    QStyleOptionGraphicsItem,
+    QWidget,
+)
+
+
+from .base import ConnectionBase
+from .connection_painter import ConnectionPainter
+from .node_connection_interaction import NodeConnectionInteraction
+from .port import PortType, opposite_port
+
+
+debug_drawing = False
+
+
+class ConnectionGraphicsObject(QGraphicsObject):
+    def __init__(self, scene, connection):
+        '''
+        connection_graphics_object
+
+        Parameters
+        ----------
+        scene : FlowScene
+        connection : Connection
+        '''
+        super().__init__()
+        self._scene = scene
+        self._connection = connection
+
+        self._scene.addItem(self)
+        self.setFlag(QGraphicsItem.ItemIsMovable, True)
+        self.setFlag(QGraphicsItem.ItemIsFocusable, True)
+        self.setFlag(QGraphicsItem.ItemIsSelectable, True)
+        self.setAcceptHoverEvents(True)
+
+        # self.add_graphics_effect()
+        self.setZValue(-1.0)
+
+    def __del__(self):
+        try:
+            self._scene.removeItem(self)
+        except:
+            ...
+
+    def connection(self) -> ConnectionBase:
+        """
+        connection
+
+        Returns
+        -------
+        value : Connection
+        """
+        return self._connection
+
+    def boundingRect(self) -> QRectF:
+        """
+        boundingRect
+
+        Returns
+        -------
+        value : QRectF
+        """
+        return self._connection.connection_geometry().bounding_rect()
+
+    def shape(self) -> QPainterPath:
+        """
+        shape
+
+        Returns
+        -------
+        value : QPainterPath
+        """
+        # TODO DEBUG_DRAWING
+        if debug_drawing:
+            path = QPainterPath()
+            path.addRect(self.boundingRect())
+            return path
+
+        geom = self._connection.connection_geometry()
+        return ConnectionPainter.get_painter_stroke(geom)
+
+    def set_geometry_changed(self):
+        self.prepareGeometryChange()
+
+    def move(self):
+        """
+        Updates the position of both ends
+        """
+        for port_type in (PortType.In, PortType.Out):
+            node = self._connection.get_node(port_type)
+            if node is None:
+                continue
+
+            node_graphics = node.node_graphics_object()
+            node_geom = node.node_geometry()
+            scene_pos = node_geom.port_scene_position(
+                self._connection.get_port_index(port_type), port_type, node_graphics.sceneTransform()
+            )
+
+            inverted, invertible = self.sceneTransform().inverted()
+            if invertible:
+                connection_pos = inverted.map(scene_pos)
+                conn = self._connection
+                conn.connection_geometry().set_end_point(port_type, connection_pos)
+
+            cgo = conn.get_connection_graphics_object()
+            cgo.set_geometry_changed()
+            cgo.update()
+
+    def lock(self, locked: bool):
+        """
+        lock
+
+        Parameters
+        ----------
+        locked : bool
+        """
+        self.setFlag(QGraphicsItem.ItemIsMovable, not locked)
+        self.setFlag(QGraphicsItem.ItemIsFocusable, not locked)
+        self.setFlag(QGraphicsItem.ItemIsSelectable, not locked)
+
+    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
+        """
+        paint
+
+        Parameters
+        ----------
+        painter : QPainter
+        option : QStyleOptionGraphicsItem
+        widget : QWidget
+        """
+        painter.setClipRect(option.exposedRect)
+        ConnectionPainter.paint(painter, self._connection)
+
+    def mousePressEvent(self, event: QGraphicsSceneMouseEvent):
+        """
+        mousePressEvent
+
+        Parameters
+        ----------
+        event : QGraphicsSceneMouseEvent
+        """
+        super().mousePressEvent(event)
+        # event.ignore()
+
+    def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent):
+        """
+        mouseMoveEvent
+
+        Parameters
+        ----------
+        event : QGraphicsSceneMouseEvent
+        """
+        self.prepareGeometryChange()
+        # view = event.widget()
+        # TODO/BUG: widget is returning QWidget(), not QGraphicsView...
+        view = self._scene.views()[0]
+
+        node = self._scene.locate_node_at(event.scenePos(), view.transform())
+        state = self._connection.connection_state()
+        state.interact_with_node(node)
+        state_required = state.required_port()
+        if node:
+            node.react_to_possible_connection(
+                state_required,
+                self._connection.data_type(opposite_port(state_required)),
+                event.scenePos()
+            )
+
+        # -------------------
+        offset = event.pos() - event.lastPos()
+        required_port = self._connection.required_port()
+        if required_port != PortType.none:
+            self._connection.connection_geometry().move_end_point(required_port, offset)
+
+        # -------------------
+        self.update()
+        event.accept()
+
+    def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent):
+        """
+        mouseReleaseEvent
+
+        Parameters
+        ----------
+        event : QGraphicsSceneMouseEvent
+        """
+        self.ungrabMouse()
+        event.accept()
+        node = self._scene.locate_node_at(event.scenePos(), self._scene.views()[0].transform())
+
+        interaction = NodeConnectionInteraction(node, self._connection, self._scene)
+        if node and interaction.try_connect():
+            node.reset_reaction_to_connection()
+
+        if self._connection.connection_state().requires_port():
+            self._scene.delete_connection(self._connection)
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent):
+        """
+        hoverEnterEvent
+
+        Parameters
+        ----------
+        event : QGraphicsSceneHoverEvent
+        """
+        self._connection.connection_geometry().set_hovered(True)
+        self.update()
+        self._scene.connection_hovered.emit(self.connection(),
+                                            event.screenPos())
+        event.accept()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent):
+        """
+        hoverLeaveEvent
+
+        Parameters
+        ----------
+        event : QGraphicsSceneHoverEvent
+        """
+        self._connection.connection_geometry().set_hovered(False)
+        self.update()
+        self._scene.connection_hover_left.emit(self.connection())
+        event.accept()
+
+    def add_graphics_effect(self):
+        effect = QGraphicsBlurEffect()
+        effect.setBlurRadius(5)
+        self.setGraphicsEffect(effect)
+
+        # effect = QGraphicsDropShadowEffect()
+        # effect = ConnectionBlurEffect(self)
+        # effect.setOffset(4, 4)
+        # effect.setColor(QColor(Qt.gray).darker(800))
