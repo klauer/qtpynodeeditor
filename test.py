@@ -103,7 +103,7 @@ model = MyDataModel()
 registry = nodeeditor.DataModelRegistry()
 registry.register_model(model, category='My Category')
 
-set_style()
+# set_style()
 
 scene = nodeeditor.FlowScene(registry=registry)
 

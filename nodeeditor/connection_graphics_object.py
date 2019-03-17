@@ -33,6 +33,8 @@ class ConnectionGraphicsObject(QGraphicsObject):
         super().__init__()
         self._scene = scene
         self._connection = connection
+        self._state = connection.connection_state()
+        self._geometry = connection.connection_geometry()
 
         self._scene.addItem(self)
         self.setFlag(QGraphicsItem.ItemIsMovable, True)
@@ -72,7 +74,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         -------
         value : QRectF
         """
-        return self._connection.connection_geometry().bounding_rect()
+        return self._geometry.bounding_rect()
 
     def shape(self) -> QPainterPath:
         """
@@ -88,8 +90,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
             path.addRect(self.boundingRect())
             return path
 
-        geom = self._connection.connection_geometry()
-        return ConnectionPainter.get_painter_stroke(geom)
+        return ConnectionPainter.get_painter_stroke(self._geometry)
 
     def set_geometry_changed(self):
         self.prepareGeometryChange()
@@ -98,8 +99,12 @@ class ConnectionGraphicsObject(QGraphicsObject):
         """
         Updates the position of both ends
         """
+        conn = self._connection
+        cgo = conn.get_connection_graphics_object()
+
         for port_type in (PortType.In, PortType.Out):
             node = self._connection.get_node(port_type)
+            print('move', node)
             if node is None:
                 continue
 
@@ -112,10 +117,8 @@ class ConnectionGraphicsObject(QGraphicsObject):
             inverted, invertible = self.sceneTransform().inverted()
             if invertible:
                 connection_pos = inverted.map(scene_pos)
-                conn = self._connection
-                conn.connection_geometry().set_end_point(port_type, connection_pos)
+                self._geometry.set_end_point(port_type, connection_pos)
 
-            cgo = conn.get_connection_graphics_object()
             cgo.set_geometry_changed()
             cgo.update()
 
@@ -169,9 +172,8 @@ class ConnectionGraphicsObject(QGraphicsObject):
         view = self._scene.views()[0]
 
         node = self._scene.locate_node_at(event.scenePos(), view.transform())
-        state = self._connection.connection_state()
-        state.interact_with_node(node)
-        state_required = state.required_port()
+        self._state.interact_with_node(node)
+        state_required = self._state.required_port()
         if node:
             node.react_to_possible_connection(
                 state_required,
@@ -183,7 +185,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         offset = event.pos() - event.lastPos()
         required_port = self._connection.required_port()
         if required_port != PortType.none:
-            self._connection.connection_geometry().move_end_point(required_port, offset)
+            self._geometry.move_end_point(required_port, offset)
 
         # -------------------
         self.update()
@@ -205,7 +207,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         if node and interaction.try_connect():
             node.reset_reaction_to_connection()
 
-        if self._connection.connection_state().requires_port():
+        if self._state.requires_port():
             self._scene.delete_connection(self._connection)
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent):
@@ -216,7 +218,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneHoverEvent
         """
-        self._connection.connection_geometry().set_hovered(True)
+        self._geometry.set_hovered(True)
         self.update()
         self._scene.connection_hovered.emit(self.connection(),
                                             event.screenPos())
@@ -230,7 +232,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneHoverEvent
         """
-        self._connection.connection_geometry().set_hovered(False)
+        self._geometry.set_hovered(False)
         self.update()
         self._scene.connection_hover_left.emit(self.connection())
         event.accept()

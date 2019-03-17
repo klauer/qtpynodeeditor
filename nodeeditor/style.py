@@ -275,8 +275,8 @@ class NodeStyle(Style):
         self.error_color = QColor()
 
         self.pen_width = 1.0
-        self.hovered_pen_width = 1.0
-        self.connection_point_diameter = 1.0
+        self.hovered_pen_width = 2.0
+        self.connection_point_diameter = 5.0
         self.opacity = 1.0
 
         super().__init__(json_text=json_text)
@@ -304,24 +304,24 @@ class NodeStyle(Style):
         doc = json.loads(byte_array)
         style = doc["NodeStyle"]
 
-        self._normal_boundary_color = _get_qcolor(style, 'NormalBoundaryColor')
-        self._selected_boundary_color = _get_qcolor(style, 'SelectedBoundaryColor')
-        self._gradient_color0 = _get_qcolor(style, 'GradientColor0')
-        self._gradient_color1 = _get_qcolor(style, 'GradientColor1')
-        self._gradient_color2 = _get_qcolor(style, 'GradientColor2')
-        self._gradient_color3 = _get_qcolor(style, 'GradientColor3')
-        self._shadow_color = _get_qcolor(style, 'ShadowColor')
-        self._font_color = _get_qcolor(style, 'FontColor')
-        self._font_color_faded = _get_qcolor(style, 'FontColorFaded')
-        self._connection_point_color = _get_qcolor(style, 'ConnectionPointColor')
-        self._filled_connection_point_color = _get_qcolor(style, 'FilledConnectionPointColor')
-        self._warning_color = _get_qcolor(style, 'WarningColor')
-        self._error_color = _get_qcolor(style, 'ErrorColor')
+        self.normal_boundary_color = _get_qcolor(style, 'NormalBoundaryColor')
+        self.selected_boundary_color = _get_qcolor(style, 'SelectedBoundaryColor')
+        self.gradient_color0 = _get_qcolor(style, 'GradientColor0')
+        self.gradient_color1 = _get_qcolor(style, 'GradientColor1')
+        self.gradient_color2 = _get_qcolor(style, 'GradientColor2')
+        self.gradient_color3 = _get_qcolor(style, 'GradientColor3')
+        self.shadow_color = _get_qcolor(style, 'ShadowColor')
+        self.font_color = _get_qcolor(style, 'FontColor')
+        self.font_color_faded = _get_qcolor(style, 'FontColorFaded')
+        self.connection_point_color = _get_qcolor(style, 'ConnectionPointColor')
+        self.filled_connection_point_color = _get_qcolor(style, 'FilledConnectionPointColor')
+        self.warning_color = _get_qcolor(style, 'WarningColor')
+        self.error_color = _get_qcolor(style, 'ErrorColor')
 
-        self._pen_width = float(style['PenWidth'])
-        self._hovered_pen_width = float(style['HoveredPenWidth'])
-        self._connection_point_diameter = float(style['ConnectionPointDiameter'])
-        self._opacity = float(style['Opacity'])
+        self.pen_width = float(style['PenWidth'])
+        self.hovered_pen_width = float(style['HoveredPenWidth'])
+        self.connection_point_diameter = float(style['ConnectionPointDiameter'])
+        self.opacity = float(style['Opacity'])
 
 
 class StyleCollection:
