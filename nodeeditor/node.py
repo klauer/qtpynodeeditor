@@ -31,6 +31,18 @@ class Node(QObject, Serializable, NodeBase):
         self._node_data_model.data_updated.connect(self.on_data_updated)
         self._node_data_model.embedded_widget_size_updated.connect(self.on_node_size_updated)
 
+    def _cleanup(self):
+        if self._node_graphics_object is not None:
+            self._node_graphics_object._cleanup()
+            self._node_graphics_object = None
+            self._node_geometry = None
+
+    def __del__(self):
+        try:
+            self._cleanup()
+        except Exception:
+            ...
+
     def save(self) -> dict:
         """
         save

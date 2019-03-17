@@ -1,3 +1,4 @@
+import os
 import json
 from qtpy.QtCore import (QByteArray, QDir, QFile, QFileInfo, QIODevice,
                          QJsonDocument, QPoint, QPointF, QSizeF, QUuid, Qt)
@@ -57,10 +58,13 @@ class FlowScene(QGraphicsScene):
         self.connection_created.connect(self.send_connection_created_to_nodes)
         self.connection_deleted.connect(self.send_connection_deleted_to_nodes)
 
+    def _cleanup(self):
+        self.clear_scene()
+
     def __del__(self):
         try:
-            self.clear_scene()
-        except:
+            self._cleanup()
+        except Exception:
             ...
 
     def locate_node_at(self, point, transform):
@@ -92,14 +96,10 @@ class FlowScene(QGraphicsScene):
         connection.connection_completed.connect(self.connection_created.emit)
         return connection
 
-    def create_connection(
-        self,
-        node_in: Node,
-        port_index_in: PortIndex,
-        node_out: Node,
-        port_index_out: PortIndex,
-        converter: TypeConverter,
-    ) -> Connection:
+    def create_connection(self,
+                          node_in: Node, port_index_in: PortIndex,
+                          node_out: Node, port_index_out: PortIndex,
+                          converter: TypeConverter) -> Connection:
         """
         create_connection
 
@@ -115,8 +115,9 @@ class FlowScene(QGraphicsScene):
         -------
         value : Connection
         """
-        connection = Connection.from_nodes(node_in, port_index_in, node_out,
-                                           port_index_out, converter)
+        connection = Connection.from_nodes(node_in, port_index_in,
+                                           node_out, port_index_out,
+                                           converter=converter)
         cgo = ConnectionGraphicsObject(self, connection)
         node_in.node_state().set_connection(PortType.In, port_index_in, connection)
         node_out.node_state().set_connection(PortType.Out, port_index_out, connection)
@@ -151,28 +152,26 @@ class FlowScene(QGraphicsScene):
         node_out = self._nodes[node_out_id]
 
         def get_converter():
-            converter_val = connection_json["converter"]
-            if not converter_val.isUndefined():
-                converter_json = converter_val
-                in_type = NodeDataType(
-                    id=converter_json["in"]["id"],
-                    name=converter_json["in"]["name"],
-                )
+            converter = connection_json.get("converter", None)
+            if converter is not None:
+                return DefaultTypeConverter
 
-                out_type = NodeDataType(
-                    id=converter_json["out"]["id"],
-                    name=converter_json["out"]["name"],
-                )
+            in_type = NodeDataType(
+                id=converter["in"]["id"],
+                name=converter["in"]["name"],
+            )
 
-                try:
-                    return self._registry.get_type_converter(out_type, in_type)
-                except KeyError:
-                    ...
+            out_type = NodeDataType(
+                id=converter["out"]["id"],
+                name=converter["out"]["name"],
+            )
 
-            return DefaultTypeConverter
+            return self._registry.get_type_converter(out_type, in_type)
 
-        connection = self.create_connection(node_in, port_index_in, node_out,
-                                            port_index_out, get_converter())
+        connection = self.create_connection(
+            node_in, port_index_in,
+            node_out, port_index_out,
+            converter=get_converter())
 
         # Note: the connection_created(...) signal has already been sent by
         # create_connection(...)
@@ -253,6 +252,7 @@ class FlowScene(QGraphicsScene):
                 if conn is not None:
                     self.delete_connection(conn)
 
+        node._cleanup()
         del self._nodes[node.id()]
 
     def registry(self) -> DataModelRegistry:
@@ -501,25 +501,31 @@ class FlowScene(QGraphicsScene):
         for node in list(self._nodes.values()):
             self.remove_node(node)
 
-    def save(self):
-        file_name = QFileDialog.getSaveFileName(None, "Open Flow Scene",
-                                               QDir.homePath(), "Flow Scene Files (.flow)")
+    def save(self, file_name=None):
+        if file_name is None:
+            file_name, _ = QFileDialog.getSaveFileName(
+                None, "Open Flow Scene", QDir.homePath(),
+                "Flow Scene Files (.flow)")
 
-        if not file_name.isEmpty():
-            if not file_name.endsWith("flow"):
+        if file_name:
+            if not file_name.endswith(".flow"):
                 file_name += ".flow"
 
             with open(file_name, 'wt') as f:
                 json.dump(self.save_to_memory(), f)
 
-    def load(self):
+    def load(self, file_name=None):
         self.clear_scene()
 
-        fn = QFileDialog.getOpenFileName(None, "Open Flow Scene", QDir.homePath(), "Flow Scene Files (.flow)")
-        if not QFileInfo.exists(fn):
+        if file_name is None:
+            file_name, _ = QFileDialog.getOpenFileName(
+                None, "Open Flow Scene", QDir.homePath(),
+                "Flow Scene Files (.flow)")
+
+        if not os.path.exists(file_name):
             return
 
-        with open(fn, 'rt') as f:
+        with open(file_name, 'rt') as f:
             self.load_from_memory(f.read())
 
     def save_to_memory(self) -> dict:
@@ -545,15 +551,18 @@ class FlowScene(QGraphicsScene):
         scene_json["connections"] = connection_json_array
         return scene_json
 
-    def load_from_memory(self, data: str):
+    def load_from_memory(self, doc: str):
         """
         load_from_memory
 
         Parameters
         ----------
-        data : QByteArray
+        doc : str or dict
+            JSON-formatted string or dictionary of settings
         """
-        doc = json.loads(data)
+        if not isinstance(doc, dict):
+            doc = json.loads(doc)
+
         for node in doc["nodes"]:
             self.restore_node(node)
 

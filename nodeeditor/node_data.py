@@ -17,7 +17,7 @@ class NodeDataType:
 class NodeData:
     """
     Class represents data transferred between nodes.
-    @param type is used for comparing the types
+
     The actual data is stored in subtypes
     """
 

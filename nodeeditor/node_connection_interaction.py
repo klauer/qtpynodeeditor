@@ -4,7 +4,7 @@ from .enums import ConnectionPolicy
 from .base import NodeBase, FlowSceneBase, ConnectionBase
 from .node_data import NodeDataModel
 from .port import PortType, PortIndex, opposite_port, INVALID
-from .type_converter import TypeConverter
+from .type_converter import TypeConverter, DefaultTypeConverter
 
 
 class NodeConnectionInteraction:
@@ -67,16 +67,18 @@ class NodeConnectionInteraction:
         model_target = self._node.node_data_model()
 
         candidate_node_data_type = model_target.data_type(required_port, port_index)
-        if connection_data_type.id != candidate_node_data_type.id:
-            if required_port == PortType.In:
-                converter = self._scene.registry().get_type_converter(connection_data_type, candidate_node_data_type)
-            elif required_port == PortType.Out:
-                converter = self._scene.registry().get_type_converter(candidate_node_data_type, connection_data_type)
-            else:
-                converter = None
-            return converter is not None, converter
+        if connection_data_type.id == candidate_node_data_type.id:
+            return True, DefaultTypeConverter
 
-        return True, None
+        registry = self._scene.registry()
+        if required_port == PortType.In:
+            return True, registry.get_type_converter(connection_data_type,
+                                                     candidate_node_data_type)
+        elif required_port == PortType.Out:
+            return True, registry.get_type_converter(candidate_node_data_type,
+                                                     connection_data_type)
+
+        return False, None
 
     def try_connect(self) -> bool:
         """

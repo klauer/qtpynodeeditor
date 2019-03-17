@@ -43,10 +43,15 @@ class ConnectionGraphicsObject(QGraphicsObject):
         # self.add_graphics_effect()
         self.setZValue(-1.0)
 
+    def _cleanup(self):
+        if self._scene is not None:
+            self._scene.removeItem(self)
+            self._scene = None
+
     def __del__(self):
         try:
-            self._scene.removeItem(self)
-        except:
+            self._cleanup()
+        except Exception:
             ...
 
     def connection(self) -> ConnectionBase:

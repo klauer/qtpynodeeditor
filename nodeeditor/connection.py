@@ -51,7 +51,8 @@ class Connection(QObject, Serializable, ConnectionBase):
         return inst
 
     @classmethod
-    def from_nodes(cls, node_in, port_index_in, node_out, port_index_out, converter=None):
+    def from_nodes(cls, node_in, port_index_in, node_out, port_index_out, *,
+                   converter):
         '''
         Create connection
 
@@ -69,18 +70,21 @@ class Connection(QObject, Serializable, ConnectionBase):
         inst.set_node_to_port(node_out, PortType.Out, port_index_out)
         return inst
 
+    def _cleanup(self):
+        if self.complete():
+            self.connection_made_incomplete(self)
+
+        self.propagate_empty_data()
+        if self._in_node:
+            self._in_node.node_graphics_object().update()
+
+        if self._out_node:
+            self._out_node.node_graphics_object().update()
+
     def __del__(self):
         try:
-            if self.complete():
-                self.connection_made_incomplete(self)
-
-            self.propagate_empty_data()
-            if self._in_node:
-                self._in_node.node_graphics_object().update()
-
-            if self._out_node:
-                self._out_node.node_graphics_object().update()
-        except:
+            self._cleanup()
+        except Exception:
             ...
 
     def save(self) -> dict:

@@ -97,19 +97,23 @@ class MyDataModel(NodeDataModel):
     #     return StyleCollection.instance().node_style()
 
 
-def register_data_models():
-    registry = nodeeditor.DataModelRegistry()
-    registry.register_model(MyDataModel(), category='My Category')
-    return registry
-
-
 app = QtWidgets.QApplication([])
-# set_style()
+model = MyDataModel()
 
-scene = nodeeditor.FlowScene(registry=register_data_models())
+registry = nodeeditor.DataModelRegistry()
+registry.register_model(model, category='My Category')
+
+set_style()
+
+scene = nodeeditor.FlowScene(registry=registry)
+
 view = nodeeditor.FlowView(scene)
 view.setWindowTitle("Style example")
 view.resize(800, 600)
 view.show()
 
+scene.create_node(model)
+scene.save('test.flow')
+scene.clear_scene()
+scene.load('test.flow')
 app.exec_()

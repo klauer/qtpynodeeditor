@@ -1,13 +1,18 @@
+import logging
+
 from .node_data import NodeDataModel, NodeDataType
-from .type_converter import TypeConverter, TypeConverterId
+from .type_converter import TypeConverter, TypeConverterId, DefaultTypeConverter
+
+
+logger = logging.getLogger(__name__)
 
 
 class DataModelRegistry:
     def __init__(self):
         self._registered_type_converters = {}
         self._registered_models_category = {}
-        self._categories = set()
         self._registered_item_creators = {}
+        self._categories = set()
 
     def register_model(self, creator, category=''):
         name = creator.name()
@@ -84,4 +89,8 @@ class DataModelRegistry:
         -------
         value : TypeConverter
         """
-        return self._registered_type_converters[(d1, d2)]
+        try:
+            return self._registered_type_converters[(d1, d2)]
+        except KeyError:
+            logger.debug('No type converter available for %s -> %s', d1, d2)
+            return DefaultTypeConverter

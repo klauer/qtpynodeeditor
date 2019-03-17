@@ -7,10 +7,13 @@ class ConnectionState:
         self._required_port = port
         self._last_hovered_node = None
 
+    def _cleanup(self):
+        self.reset_last_hovered_node()
+
     def __del__(self):
         try:
-            self.reset_last_hovered_node()
-        except:
+            self._cleanup()
+        except Exception:
             ...
 
     def set_required_port(self, end: PortType):
