@@ -1,7 +1,4 @@
-import collections
 from collections import OrderedDict
-from qtpy.QtCore import QUuid
-
 
 from .enums import ReactToConnectionState
 from .base import ConnectionBase
@@ -91,6 +88,7 @@ class NodeState:
         try:
             self._connections[port_type][port_index].remove(connection)
         except ValueError:
+            # TODO: should not be reaching this
             ...
 
     def reaction(self) -> ReactToConnectionState:

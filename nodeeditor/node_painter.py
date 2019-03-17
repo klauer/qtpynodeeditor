@@ -80,12 +80,12 @@ class NodePainter:
                          else node_style.pen_width))
         painter.setPen(p)
 
-        # gradient = QLinearGradient(QPointF(0.0, 0.0), QPointF(2.0, geom.height()))
-        # gradient.setColorAt(0.0, node_style.gradient_color0)
-        # gradient.setColorAt(0.03, node_style.gradient_color1)
-        # gradient.setColorAt(0.97, node_style.gradient_color2)
-        # gradient.setColorAt(1.0, node_style.gradient_color3)
-        # painter.setBrush(gradient)
+        gradient = QLinearGradient(QPointF(0.0, 0.0), QPointF(2.0, geom.height()))
+        gradient.setColorAt(0.0, node_style.gradient_color0)
+        gradient.setColorAt(0.03, node_style.gradient_color1)
+        gradient.setColorAt(0.97, node_style.gradient_color2)
+        gradient.setColorAt(1.0, node_style.gradient_color3)
+        painter.setBrush(gradient)
 
         diam = node_style.connection_point_diameter
         boundary = QRectF(-diam, -diam, 2.0 * diam + geom.width(), 2.0 * diam + geom.height())
