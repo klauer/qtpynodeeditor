@@ -176,7 +176,7 @@ class ConnectionStyle(Style):
         #   return QColor::fromHsl(hue, sat, 160);
         # }
         if type_id is None:
-            return self.normal_color
+            return self._normal_color
 
         hash = id(type_id)
         hue_range = 0xFF

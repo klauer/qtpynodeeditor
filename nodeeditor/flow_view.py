@@ -154,7 +154,6 @@ class FlowView(QGraphicsView):
 
         registry = self._scene.registry()
         for model, category in registry.registered_models_category_association().items():
-            print('model', model, 'category', category)
             self.parent = top_level_items[category]
             item = QTreeWidgetItem(self.parent)
             item.setText(0, model)

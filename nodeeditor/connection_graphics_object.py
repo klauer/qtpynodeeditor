@@ -104,7 +104,6 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
         for port_type in (PortType.In, PortType.Out):
             node = self._connection.get_node(port_type)
-            print('move', node)
             if node is None:
                 continue
 

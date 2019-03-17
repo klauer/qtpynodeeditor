@@ -1,3 +1,4 @@
+import logging
 import nodeeditor
 from nodeeditor import FlowViewStyle, NodeStyle, ConnectionStyle, StyleCollection
 
@@ -97,13 +98,14 @@ class MyDataModel(NodeDataModel):
     #     return StyleCollection.instance().node_style()
 
 
+logging.basicConfig(level='DEBUG')
 app = QtWidgets.QApplication([])
 model = MyDataModel()
 
 registry = nodeeditor.DataModelRegistry()
 registry.register_model(model, category='My Category')
 
-# set_style()
+set_style()
 
 scene = nodeeditor.FlowScene(registry=registry)
 
