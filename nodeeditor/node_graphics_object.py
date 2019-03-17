@@ -90,11 +90,8 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         Visits all attached connections and corrects their corresponding end points.
         """
-        node_state = self._node.node_state()
-        for port_type in (PortType.In, PortType.Out):
-            for conn in node_state.get_entries(port_type):
-                if conn is not None:
-                    conn.get_connection_graphics_object().move()
+        for conn in self._node.node_state().all_connections:
+            conn.get_connection_graphics_object().move()
 
     def lock(self, locked: bool):
         """

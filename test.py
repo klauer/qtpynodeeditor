@@ -84,7 +84,7 @@ class MyDataModel(NodeDataModel):
     def data_type(self, port_type, port_index):
         return MyNodeData._type
 
-    def out_data(self):
+    def out_data(self, data):
         return MyNodeData()
 
     def set_in_data(self, node_data, port):

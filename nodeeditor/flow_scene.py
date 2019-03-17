@@ -45,7 +45,7 @@ class FlowScene(QGraphicsScene):
 
     def __init__(self, registry=None, parent=None):
         super().__init__(parent=parent)
-        self._connections = {}
+        self._connections = []
         self._nodes = {}
         if registry is None:
             registry = DataModelRegistry()
@@ -89,7 +89,7 @@ class FlowScene(QGraphicsScene):
 
         # after self function connection points are set to node port
         connection.set_graphics_object(cgo)
-        self._connections[connection.id()] = connection
+        self._connections.append(connection)
 
         # Note: self connection isn't truly created yet. It's only partially created.
         # Thus, don't send the connection_created(...) signal.
@@ -127,7 +127,7 @@ class FlowScene(QGraphicsScene):
 
         # trigger data propagation
         node_out.on_data_updated(port_index_out)
-        self._connections[connection.id()] = connection
+        self._connections.append(connection)
         self.connection_created.emit(connection)
         return connection
 
@@ -186,8 +186,8 @@ class FlowScene(QGraphicsScene):
         connection : Connection
         """
         try:
-            self._connections.pop(connection.id())
-        except KeyError:
+            self._connections.remove(connection)
+        except ValueError:
             ...
         else:
             connection.remove_from_nodes()
@@ -246,11 +246,8 @@ class FlowScene(QGraphicsScene):
         """
         # call signal
         self.node_deleted.emit(node)
-        for port_type in (PortType.In, PortType.Out):
-            node_state = node.node_state()
-            for conn in node_state.get_entries(port_type):
-                if conn is not None:
-                    self.delete_connection(conn)
+        for conn in list(node.node_state().all_connections):
+            self.delete_connection(conn)
 
         node._cleanup()
         del self._nodes[node.id()]
@@ -475,9 +472,9 @@ class FlowScene(QGraphicsScene):
 
         Returns
         -------
-        value : dict<QUuid, <Connection>
+        conn : list of Connection
         """
-        return dict(self._connections)
+        return list(self._connections)
 
     def selected_nodes(self) -> list:
         """
@@ -495,7 +492,7 @@ class FlowScene(QGraphicsScene):
         # doesn't work, the code crashes when there are both nodes and
         # connections in the scene. (The data propagation internal logic tries
         # to propagate data through already freed connections.)
-        for conn in list(self._connections.values()):
+        for conn in list(self._connections):
             self.delete_connection(conn)
 
         for node in list(self._nodes.values()):
@@ -543,7 +540,7 @@ class FlowScene(QGraphicsScene):
             nodes_json_array.append(node.save())
 
         scene_json["nodes"] = nodes_json_array
-        for connection in self._connections.values():
+        for connection in self._connections:
             connection_json = connection.save()
             if not connection_json.isEmpty():
                 connection_json_array.append(connection_json)

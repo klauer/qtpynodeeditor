@@ -21,8 +21,8 @@ class NodeState:
         self._max_in = model.n_ports(PortType.In)
         self._max_out = model.n_ports(PortType.Out)
         self._connections = {
-            PortType.In: OrderedDict((i, None) for i in range(self._max_in)),
-            PortType.Out: OrderedDict((i, None) for i in range(self._max_out)),
+            PortType.In: OrderedDict((i, []) for i in range(self._max_in)),
+            PortType.Out: OrderedDict((i, []) for i in range(self._max_out)),
         }
         self._reaction = ReactToConnectionState.NOT_REACTING
         self._reacting_port_type = PortType.none
@@ -30,7 +30,7 @@ class NodeState:
 
     def get_entries(self, port_type: PortType) -> list:
         """
-        Returns vector of connections id. Some of them can be empty (null)
+        Returns vector of connections.
 
         Parameters
         ----------
@@ -39,11 +39,19 @@ class NodeState:
         Returns
         -------
         value : list
-            List of Connection
+            List of Connection lists
         """
         return list(self._connections[port_type].values())
 
-    def connections(self, port_type: PortType, port_index: PortIndex) -> set:
+    @property
+    def all_connections(self):
+        return [connection
+                for port_type in (PortType.In, PortType.Out)
+                for port, connections in self._connections[port_type].items()
+                for connection in connections
+                ]
+
+    def connections(self, port_type: PortType, port_index: PortIndex) -> list:
         """
         connections
 
@@ -54,9 +62,9 @@ class NodeState:
 
         Returns
         -------
-        value : set
+        value : list
         """
-        return self._connections[port_type][port_index]
+        return list(self._connections[port_type][port_index])
 
     def set_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """
@@ -68,9 +76,9 @@ class NodeState:
         port_index : PortIndex
         connection : Connection
         """
-        self._connections[port_type][port_index] = connection
+        self._connections[port_type][port_index].append(connection)
 
-    def erase_connection(self, port_type: PortType, port_index: PortIndex, id: QUuid):
+    def erase_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """
         erase_connection
 
@@ -78,9 +86,12 @@ class NodeState:
         ----------
         port_type : PortType
         port_index : PortIndex
-        id : QUuid
+        connection : Connection
         """
-        self._connections[port_type][port_index] = None
+        try:
+            self._connections[port_type][port_index].remove(connection)
+        except ValueError:
+            ...
 
     def reaction(self) -> ReactToConnectionState:
         """

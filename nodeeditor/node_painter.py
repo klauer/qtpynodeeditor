@@ -138,9 +138,9 @@ class NodePainter:
         for port_type in (PortType.Out, PortType.In):
             node_style = model.node_style()
 
-            for i, entry in enumerate(state.get_entries(port_type)):
+            for i, entries in enumerate(state.get_entries(port_type)):
                 p = geom.port_scene_position(i, port_type)
-                if entry is None:
+                if not entries:
                     painter.setPen(node_style.font_color_faded)
                 else:
                     painter.setPen(node_style.font_color)
@@ -179,11 +179,11 @@ class NodePainter:
         diameter = node_style.connection_point_diameter
         reduced_diameter = diameter * 0.6
         for port_type in (PortType.Out, PortType.In):
-            for i, entry in enumerate(state.get_entries(port_type)):
+            for i, entries in enumerate(state.get_entries(port_type)):
                 p = geom.port_scene_position(i, port_type)
                 data_type = model.data_type(port_type, i)
                 can_connect = (
-                    entry is None or
+                    not entries or
                     (port_type == PortType.Out and
                      model.port_out_connection_policy(i) == ConnectionPolicy.Many
                      )
@@ -238,8 +238,8 @@ class NodePainter:
         connection_style = StyleCollection.connection_style()
         diameter = node_style.connection_point_diameter
         for port_type in (PortType.Out, PortType.In):
-            for i, entry in enumerate(state.get_entries(port_type)):
-                if entry is None:
+            for i, entries in enumerate(state.get_entries(port_type)):
+                if not entries:
                     continue
 
                 p = geom.port_scene_position(i, port_type)

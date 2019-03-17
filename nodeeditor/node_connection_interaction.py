@@ -196,7 +196,7 @@ class NodeConnectionInteraction:
         geom = self._node.node_geometry()
         p = geom.port_scene_position(port_index, port_type)
         ngo = self._node.node_graphics_object()
-        return ngo.scene_transform().map(p)
+        return ngo.sceneTransform().map(p)
 
     def node_port_index_under_scene_point(self, port_type: PortType, scene_point: QPointF) -> PortIndex:
         """
@@ -212,7 +212,7 @@ class NodeConnectionInteraction:
         value : PortIndex
         """
         node_geom = self._node.node_geometry()
-        scene_transform = self._node.node_graphics_object().scene_transform()
+        scene_transform = self._node.node_graphics_object().sceneTransform()
         port_index = node_geom.check_hit_scene_point(port_type, scene_point, scene_transform)
         return port_index
 

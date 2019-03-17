@@ -187,7 +187,7 @@ class Node(QObject, Serializable, NodeBase):
         """
         node_data = self._node_data_model.out_data(index)
         connections = self._node_state.connections(PortType.Out, index)
-        for c in connections.values():
+        for c in connections:
             c.propagate_data(node_data)
 
     def on_node_size_updated(self):
@@ -199,7 +199,5 @@ class Node(QObject, Serializable, NodeBase):
             widget.adjustSize()
 
         self.node_geometry().recalculate_size()
-        for type_ in (PortType.In, PortType.Out):
-            for conn in self.node_state().get_entries(type):
-                if conn is not None:
-                    conn.get_connection_graphics_object().move()
+        for conn in self.node_state().all_connections:
+            conn.get_connection_graphics_object().move()
