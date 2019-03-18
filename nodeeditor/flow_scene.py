@@ -567,43 +567,43 @@ class FlowScene(QGraphicsScene):
         for connection in doc["connections"]:
             self.restore_connection(connection)
 
-    def setup_connection_signals(self, c: Connection):
+    def setup_connection_signals(self, conn: Connection):
         """
         setup_connection_signals
 
         Parameters
         ----------
-        c : Connection
+        conn : Connection
         """
-        c.connection_made_incomplete.connect(
+        conn.connection_made_incomplete.connect(
             self.connection_deleted.emit, Qt.UniqueConnection)
 
-    def send_connection_created_to_nodes(self, c: Connection):
+    def send_connection_created_to_nodes(self, conn: Connection):
         """
         send_connection_created_to_nodes
 
         Parameters
         ----------
-        c : Connection
+        conn : Connection
         """
-        from_ = c.get_node(PortType.Out)
-        to = c.get_node(PortType.In)
+        from_ = conn.get_node(PortType.Out)
+        to = conn.get_node(PortType.In)
         assert from_ is not None
         assert to is not None
-        from_.node_data_model().output_connection_created(c)
-        to.node_data_model().input_connection_created(c)
+        from_.node_data_model().output_connection_created(conn)
+        to.node_data_model().input_connection_created(conn)
 
-    def send_connection_deleted_to_nodes(self, c: Connection):
+    def send_connection_deleted_to_nodes(self, conn: Connection):
         """
         send_connection_deleted_to_nodes
 
         Parameters
         ----------
-        c : Connection
+        conn : Connection
         """
-        from_ = c.get_node(PortType.Out)
-        to = c.get_node(PortType.In)
+        from_ = conn.get_node(PortType.Out)
+        to = conn.get_node(PortType.In)
         assert from_ is not None
         assert to is not None
-        from_.node_data_model().output_connection_deleted(c)
-        to.node_data_model().input_connection_deleted(c)
+        from_.node_data_model().output_connection_deleted(conn)
+        to.node_data_model().input_connection_deleted(conn)
