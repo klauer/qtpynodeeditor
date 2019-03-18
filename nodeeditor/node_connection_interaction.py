@@ -54,7 +54,7 @@ class NodeConnectionInteraction:
         # 1) Connection requires a port
         required_port = self.connection_required_port()
         if required_port == PortType.none:
-            raise ConnectionRequiresPortFailure(f'Connection {self.connection} requires a port')
+            raise ConnectionRequiresPortFailure(f'Connection requires a port')
         elif required_port not in (PortType.In, PortType.Out):
             raise ValueError(f'Invalid port specified {required_port}')
 
@@ -157,7 +157,8 @@ class NodeConnectionInteraction:
         state = self._node.node_state()
 
         # clear pointer to Connection in the NodeState
-        state.erase_connection(port_to_disconnect, port_index)
+        state.erase_connection(port_to_disconnect, port_index,
+                               self._connection)
 
         # 4) Propagate invalid data to IN node
         self._connection.propagate_empty_data()

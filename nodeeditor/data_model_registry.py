@@ -92,5 +92,7 @@ class DataModelRegistry:
         try:
             return self._registered_type_converters[(d1, d2)]
         except KeyError:
-            logger.debug('No type converter available for %s -> %s', d1, d2)
+            if d1 != d2:
+                logger.debug('No type converter available for %s -> %s',
+                             d1, d2)
             return DefaultTypeConverter

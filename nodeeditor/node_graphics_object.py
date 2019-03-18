@@ -161,25 +161,28 @@ class NodeGraphicsObject(QGraphicsObject):
             port_index = node_geometry.check_hit_scene_point(port_to_check,
                                                              event.scenePos(),
                                                              self.sceneTransform())
-            if port_index != INVALID:
-                node_state = self._node.node_state()
-                connections = node_state.connections(port_to_check, port_index)
+            if port_index == INVALID:
+                continue
 
-                # start dragging existing connection
-                if connections and port_to_check == PortType.In:
-                    con = list(connections.values())[0]
-                    interaction = NodeConnectionInteraction(self._node, con, self._scene)
-                    interaction.disconnect(port_to_check)
-                elif port_to_check == PortType.Out:
-                    # initialize new Connection
-                    out_policy = self._node.node_data_model().port_out_connection_policy(port_index)
-                    if connections and out_policy == ConnectionPolicy.One:
-                        self._scene.delete_connection(list(connections.values())[0])
+            node_state = self._node.node_state()
+            connections = node_state.connections(port_to_check, port_index)
 
-                    # TODO_UPSTREAM: add to FlowScene
-                    connection = self._scene.create_connection_node(port_to_check, self._node, port_index)
-                    self._node.node_state().set_connection(port_to_check, port_index, connection)
-                    connection.get_connection_graphics_object().grabMouse()
+            # start dragging existing connection
+            if connections and port_to_check == PortType.In:
+                conn, = connections
+                interaction = NodeConnectionInteraction(self._node, conn, self._scene)
+                interaction.disconnect(port_to_check)
+            elif port_to_check == PortType.Out:
+                # initialize new Connection
+                out_policy = self._node.node_data_model().port_out_connection_policy(port_index)
+                if connections and out_policy == ConnectionPolicy.One:
+                    conn, = connections
+                    self._scene.delete_connection(conn)
+
+                # TODO_UPSTREAM: add to FlowScene
+                connection = self._scene.create_connection_node(port_to_check, self._node, port_index)
+                self._node.node_state().set_connection(port_to_check, port_index, connection)
+                connection.get_connection_graphics_object().grabMouse()
 
         pos = QPoint(event.pos().x(), event.pos().y())
         geom = self._node.node_geometry()

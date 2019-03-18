@@ -209,11 +209,11 @@ class Connection(QObject, Serializable, ConnectionBase):
         if self._in_node:
             self._in_node.node_state().erase_connection(PortType.In,
                                                         self._in_port_index,
-                                                        self.id())
+                                                        self)
         if self._out_node:
             self._out_node.node_state().erase_connection(PortType.Out,
                                                          self._out_port_index,
-                                                         self.id())
+                                                         self)
 
     def get_connection_graphics_object(self) -> ConnectionGraphicsObject:
         """

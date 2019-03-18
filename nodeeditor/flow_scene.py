@@ -191,6 +191,7 @@ class FlowScene(QGraphicsScene):
             ...
         else:
             connection.remove_from_nodes()
+            connection._cleanup()
 
     def create_node(self, data_model: NodeDataModel) -> Node:
         """
