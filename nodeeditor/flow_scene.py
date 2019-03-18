@@ -574,7 +574,8 @@ class FlowScene(QGraphicsScene):
         ----------
         c : Connection
         """
-        c.connection_made_incomplete.connect(self.connection_deleted, Qt.UniqueConnection)
+        c.connection_made_incomplete.connect(
+            self.connection_deleted.emit, Qt.UniqueConnection)
 
     def send_connection_created_to_nodes(self, c: Connection):
         """

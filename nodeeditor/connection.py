@@ -72,7 +72,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def _cleanup(self):
         if self.complete():
-            self.connection_made_incomplete(self)
+            self.connection_made_incomplete.emit(self)
 
         self.propagate_empty_data()
         if self._in_node:
