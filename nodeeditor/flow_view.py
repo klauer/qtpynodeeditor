@@ -83,6 +83,7 @@ class FlowView(QGraphicsView):
         del self._delete_selection_action
         self._delete_selection_action = QAction("Delete Selection", self)
         self._delete_selection_action.setShortcut(Qt.Key_Delete)
+        self._delete_selection_action.setShortcut(Qt.Key_Backspace)
         self._delete_selection_action.triggered.connect(self.delete_selected_nodes)
         self.addAction(self._delete_selection_action)
 
