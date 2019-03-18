@@ -77,9 +77,15 @@ class Connection(QObject, Serializable, ConnectionBase):
         self.propagate_empty_data()
         if self._in_node:
             self._in_node.node_graphics_object().update()
+            self._in_node = None
 
         if self._out_node:
             self._out_node.node_graphics_object().update()
+            self._out_node = None
+
+        if self._connection_graphics_object is not None:
+            self._connection_graphics_object._cleanup()
+            self._connection_graphics_object = None
 
     def __del__(self):
         try:
