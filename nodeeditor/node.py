@@ -123,7 +123,7 @@ class Node(QObject, Serializable, NodeBase):
 
         Parameters
         ----------
-        graphics : unique_ptr<NodeGraphicsObject
+        graphics : NodeGraphicsObject
         """
         self._node_graphics_object = graphics
         self._node_geometry.recalculate_size()

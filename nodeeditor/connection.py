@@ -168,7 +168,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         Parameters
         ----------
-        graphics : unique_ptr<ConnectionGraphicsObject
+        graphics : ConnectionGraphicsObject
         """
         self._connection_graphics_object = graphics
 

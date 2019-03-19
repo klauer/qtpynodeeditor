@@ -199,7 +199,7 @@ class FlowScene(QGraphicsScene):
 
         Parameters
         ----------
-        data_model : unique_ptr<NodeDataModel
+        data_model : NodeDataModel
 
         Returns
         -------
