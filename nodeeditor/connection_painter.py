@@ -176,7 +176,7 @@ class ConnectionPainter:
     @staticmethod
     def paint(painter: QPainter, connection):  # connection : Connection):
         """
-        paint
+        Paint
 
         Parameters
         ----------
@@ -204,7 +204,7 @@ class ConnectionPainter:
     @staticmethod
     def get_painter_stroke(geom: ConnectionGeometry) -> QPainterPath:
         """
-        get_painter_stroke
+        Get painter stroke
 
         Parameters
         ----------

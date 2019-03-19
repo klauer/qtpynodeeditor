@@ -1,7 +1,7 @@
 class Serializable:
     def save(self) -> dict:
         """
-        save
+        Save
 
         Returns
         -------
@@ -11,7 +11,7 @@ class Serializable:
 
     def restore(self, q_json_object: dict):
         """
-        restore
+        Restore
 
         Parameters
         ----------

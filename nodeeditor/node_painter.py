@@ -15,7 +15,7 @@ from .style import StyleCollection
 class NodePainterDelegate:
     def paint(self, painter: QPainter, geom: NodeGeometry, model: NodeDataModel):
         """
-        paint
+        Paint
 
         Parameters
         ----------
@@ -30,7 +30,7 @@ class NodePainter:
     @staticmethod
     def paint(painter: QPainter, node: NodeBase, scene: FlowSceneBase):
         """
-        paint
+        Paint
 
         Parameters
         ----------
@@ -61,7 +61,7 @@ class NodePainter:
     def draw_node_rect(painter: QPainter, geom: NodeGeometry, model:
                        NodeDataModel, graphics_object: NodeGraphicsObject):
         """
-        draw_node_rect
+        Draw node rect
 
         Parameters
         ----------
@@ -97,7 +97,7 @@ class NodePainter:
                         state: NodeState,
                         model: NodeDataModel):
         """
-        draw_model_name
+        Draw model name
 
         Parameters
         ----------
@@ -125,7 +125,7 @@ class NodePainter:
     @staticmethod
     def draw_entry_labels(painter: QPainter, geom: NodeGeometry, state: NodeState, model: NodeDataModel):
         """
-        draw_entry_labels
+        Draw entry labels
 
         Parameters
         ----------
@@ -164,7 +164,7 @@ class NodePainter:
         painter: QPainter, geom: NodeGeometry, state: NodeState, model: NodeDataModel, scene: FlowSceneBase
     ):
         """
-        draw_connection_points
+        Draw connection points
 
         Parameters
         ----------
@@ -225,7 +225,7 @@ class NodePainter:
     @staticmethod
     def draw_filled_connection_points(painter: QPainter, geom: NodeGeometry, state: NodeState, model: NodeDataModel):
         """
-        draw_filled_connection_points
+        Draw filled connection points
 
         Parameters
         ----------
@@ -255,7 +255,7 @@ class NodePainter:
     @staticmethod
     def draw_resize_rect(painter: QPainter, geom: NodeGeometry, model: NodeDataModel):
         """
-        draw_resize_rect
+        Draw resize rect
 
         Parameters
         ----------
@@ -272,7 +272,7 @@ class NodePainter:
         painter: QPainter, geom: NodeGeometry, model: NodeDataModel, graphics_object: NodeGraphicsObject
     ):
         """
-        draw_validation_rect
+        Draw validation rect
 
         Parameters
         ----------

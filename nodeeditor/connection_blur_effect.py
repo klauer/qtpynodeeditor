@@ -13,18 +13,18 @@ from qtpy.QtWidgets import QGraphicsBlurEffect
 
 class ConnectionBlurEffect(QGraphicsBlurEffect):
     def __init__(self, item: ConnectionGraphicsObject):
-        '''
-        connection_blur_effect
+        """
+        Connection blur effect
 
         Parameters
         ----------
         item : ConnectionGraphicsObject
-        '''
+        """
         super().__init__(item)
 
     def draw(self, painter: QPainter):
         """
-        draw
+        Draw
 
         Parameters
         ----------

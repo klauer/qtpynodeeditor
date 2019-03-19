@@ -23,7 +23,7 @@ class DataModelRegistry:
     def register_type_converter(self, id_: TypeConverterId,
                                 type_converter: TypeConverter):
         """
-        register_type_converter
+        Register type converter
 
         Parameters
         ----------
@@ -34,7 +34,7 @@ class DataModelRegistry:
 
     def create(self, model_name: str) -> NodeDataModel:
         """
-        create
+        Create
 
         Parameters
         ----------
@@ -48,7 +48,7 @@ class DataModelRegistry:
 
     def registered_model_creators(self) -> dict:
         """
-        registered_model_creators
+        Registered model creators
 
         Returns
         -------
@@ -58,7 +58,7 @@ class DataModelRegistry:
 
     def registered_models_category_association(self) -> dict:
         """
-        registered_models_category_association
+        Registered models category association
 
         Returns
         -------
@@ -68,7 +68,7 @@ class DataModelRegistry:
 
     def categories(self) -> set:
         """
-        categories
+        Categories
 
         Returns
         -------
@@ -78,7 +78,7 @@ class DataModelRegistry:
 
     def get_type_converter(self, d1: NodeDataType, d2: NodeDataType) -> TypeConverter:
         """
-        get_type_converter
+        Get type converter
 
         Parameters
         ----------

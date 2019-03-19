@@ -50,7 +50,7 @@ class NodeState:
 
     def connections(self, port_type: PortType, port_index: PortIndex) -> list:
         """
-        connections
+        Connections
 
         Parameters
         ----------
@@ -65,7 +65,7 @@ class NodeState:
 
     def set_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """
-        set_connection
+        Set connection
 
         Parameters
         ----------
@@ -77,7 +77,7 @@ class NodeState:
 
     def erase_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """
-        erase_connection
+        Erase connection
 
         Parameters
         ----------
@@ -93,7 +93,7 @@ class NodeState:
 
     def reaction(self) -> ReactToConnectionState:
         """
-        reaction
+        Reaction
 
         Returns
         -------
@@ -103,7 +103,7 @@ class NodeState:
 
     def reacting_port_type(self) -> PortType:
         """
-        reacting_port_type
+        Reacting port type
 
         Returns
         -------
@@ -113,7 +113,7 @@ class NodeState:
 
     def reacting_data_type(self) -> NodeDataType:
         """
-        reacting_data_type
+        Reacting data type
 
         Returns
         -------
@@ -127,7 +127,7 @@ class NodeState:
             reacting_data_type: NodeDataType = None
     ):
         """
-        set_reaction
+        Set reaction
 
         Parameters
         ----------
@@ -141,7 +141,7 @@ class NodeState:
 
     def is_reacting(self) -> bool:
         """
-        is_reacting
+        Is reacting
 
         Returns
         -------
@@ -151,7 +151,7 @@ class NodeState:
 
     def set_resizing(self, resizing: bool):
         """
-        set_resizing
+        Set resizing
 
         Parameters
         ----------
@@ -161,7 +161,7 @@ class NodeState:
 
     def resizing(self) -> bool:
         """
-        resizing
+        Resizing
 
         Returns
         -------

@@ -65,7 +65,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
     def node(self):
         """
-        node
+        Node
 
         Returns
         -------
@@ -95,7 +95,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
     def lock(self, locked: bool):
         """
-        lock
+        Lock
 
         Parameters
         ----------
@@ -108,7 +108,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
         """
-        paint
+        Paint
 
         Parameters
         ----------

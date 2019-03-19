@@ -45,7 +45,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def save(self) -> dict:
         """
-        save
+        Save
 
         Returns
         -------
@@ -60,7 +60,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def restore(self, json: dict):
         """
-        restore
+        Restore
 
         Parameters
         ----------
@@ -74,7 +74,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def id(self) -> QUuid:
         """
-        id
+        Id
 
         Returns
         -------
@@ -86,7 +86,7 @@ class Node(QObject, Serializable, NodeBase):
         self, reacting_port_type: PortType, reacting_data_type: NodeDataType, scene_point: QPointF
     ):
         """
-        react_to_possible_connection
+        React to possible connection
 
         Parameters
         ----------
@@ -109,7 +109,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def node_graphics_object(self) -> NodeGraphicsObject:
         """
-        node_graphics_object
+        Node graphics object
 
         Returns
         -------
@@ -119,7 +119,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def set_graphics_object(self, graphics: NodeGraphicsObject):
         """
-        set_graphics_object
+        Set graphics object
 
         Parameters
         ----------
@@ -130,7 +130,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def node_geometry(self) -> NodeGeometry:
         """
-        node_geometry
+        Node geometry
 
         Returns
         -------
@@ -140,7 +140,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def node_state(self) -> NodeState:
         """
-        node_state
+        Node state
 
         Returns
         -------
@@ -150,7 +150,7 @@ class Node(QObject, Serializable, NodeBase):
 
     def node_data_model(self) -> NodeDataModel:
         """
-        node_data_model
+        Node data model
 
         Returns
         -------

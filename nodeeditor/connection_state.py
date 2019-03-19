@@ -18,7 +18,7 @@ class ConnectionState:
 
     def set_required_port(self, end: PortType):
         """
-        set_required_port
+        Set required port
 
         Parameters
         ----------
@@ -28,7 +28,7 @@ class ConnectionState:
 
     def required_port(self) -> PortType:
         """
-        required_port
+        Required port
 
         Returns
         -------
@@ -38,7 +38,7 @@ class ConnectionState:
 
     def requires_port(self) -> bool:
         """
-        requires_port
+        Requires port
 
         Returns
         -------
@@ -51,7 +51,7 @@ class ConnectionState:
 
     def interact_with_node(self, node: Node):
         """
-        interact_with_node
+        Interact with node
 
         Parameters
         ----------
@@ -64,7 +64,7 @@ class ConnectionState:
 
     def set_last_hovered_node(self, node: Node):
         """
-        set_last_hovered_node
+        Set last hovered node
 
         Parameters
         ----------
@@ -74,7 +74,7 @@ class ConnectionState:
 
     def last_hovered_node(self) -> Node:
         """
-        last_hovered_node
+        Last hovered node
 
         Returns
         -------

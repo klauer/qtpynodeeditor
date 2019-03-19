@@ -58,7 +58,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
     def connection(self) -> ConnectionBase:
         """
-        connection
+        Connection
 
         Returns
         -------
@@ -78,7 +78,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
     def shape(self) -> QPainterPath:
         """
-        shape
+        Shape
 
         Returns
         -------
@@ -123,7 +123,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
     def lock(self, locked: bool):
         """
-        lock
+        Lock
 
         Parameters
         ----------
@@ -135,7 +135,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
         """
-        paint
+        Paint
 
         Parameters
         ----------

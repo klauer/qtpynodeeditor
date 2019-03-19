@@ -128,7 +128,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def id(self) -> QUuid:
         """
-        id
+        Id
 
         Returns
         -------
@@ -154,7 +154,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def required_port(self) -> PortType:
         """
-        required_port
+        Required port
 
         Returns
         -------
@@ -164,7 +164,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def set_graphics_object(self, graphics: ConnectionGraphicsObject):
         """
-        set_graphics_object
+        Set graphics object
 
         Parameters
         ----------
@@ -223,7 +223,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def get_connection_graphics_object(self) -> ConnectionGraphicsObject:
         """
-        get_connection_graphics_object
+        Get connection graphics object
 
         Returns
         -------
@@ -233,7 +233,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def connection_state(self) -> ConnectionState:
         """
-        connection_state
+        Connection state
 
         Returns
         -------
@@ -243,7 +243,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def connection_geometry(self) -> ConnectionGeometry:
         """
-        connection_geometry
+        Connection geometry
 
         Returns
         -------
@@ -253,7 +253,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def get_node(self, port_type: PortType) -> NodeBase:
         """
-        get_node
+        Get node
 
         Parameters
         ----------
@@ -272,7 +272,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def get_port_index(self, port_type: PortType) -> PortIndex:
         """
-        get_port_index
+        Get port index
 
         Parameters
         ----------
@@ -290,7 +290,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def clear_node(self, port_type: PortType):
         """
-        clear_node
+        Clear node
 
         Parameters
         ----------
@@ -308,7 +308,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def data_type(self, port_type: PortType) -> NodeDataType:
         """
-        data_type
+        Data type
 
         Parameters
         ----------
@@ -347,7 +347,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def set_type_converter(self, converter: TypeConverter):
         """
-        set_type_converter
+        Set type converter
 
         Parameters
         ----------
@@ -357,7 +357,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def complete(self) -> bool:
         """
-        complete
+        Complete
 
         Returns
         -------
@@ -367,7 +367,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def propagate_data(self, node_data: NodeData):
         """
-        propagate_data
+        Propagate data
 
         Parameters
         ----------

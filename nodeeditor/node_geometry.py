@@ -37,7 +37,7 @@ class NodeGeometry:
 
     def height(self) -> int:
         """
-        height
+        Height
 
         Returns
         -------
@@ -47,7 +47,7 @@ class NodeGeometry:
 
     def set_height(self, h: int):
         """
-        set_height
+        Set height
 
         Parameters
         ----------
@@ -57,7 +57,7 @@ class NodeGeometry:
 
     def width(self) -> int:
         """
-        width
+        Width
 
         Returns
         -------
@@ -67,7 +67,7 @@ class NodeGeometry:
 
     def set_width(self, w: int):
         """
-        set_width
+        Set width
 
         Parameters
         ----------
@@ -77,7 +77,7 @@ class NodeGeometry:
 
     def entry_height(self) -> int:
         """
-        entry_height
+        Entry height
 
         Returns
         -------
@@ -87,7 +87,7 @@ class NodeGeometry:
 
     def set_entry_height(self, h: int):
         """
-        set_entry_height
+        Set entry height
 
         Parameters
         ----------
@@ -97,7 +97,7 @@ class NodeGeometry:
 
     def entry_width(self) -> int:
         """
-        entry_width
+        Entry width
 
         Returns
         -------
@@ -107,7 +107,7 @@ class NodeGeometry:
 
     def set_entry_width(self, w: int):
         """
-        set_entry_width
+        Set entry width
 
         Parameters
         ----------
@@ -117,7 +117,7 @@ class NodeGeometry:
 
     def spacing(self) -> int:
         """
-        spacing
+        Spacing
 
         Returns
         -------
@@ -127,7 +127,7 @@ class NodeGeometry:
 
     def set_spacing(self, s: int):
         """
-        set_spacing
+        Set spacing
 
         Parameters
         ----------
@@ -137,7 +137,7 @@ class NodeGeometry:
 
     def hovered(self) -> bool:
         """
-        hovered
+        Hovered
 
         Returns
         -------
@@ -147,7 +147,7 @@ class NodeGeometry:
 
     def set_hovered(self, h: int):
         """
-        set_hovered
+        Set hovered
 
         Parameters
         ----------
@@ -157,7 +157,7 @@ class NodeGeometry:
 
     def n_sources(self) -> int:
         """
-        n_sources
+        N sources
 
         Returns
         -------
@@ -167,7 +167,7 @@ class NodeGeometry:
 
     def n_sinks(self) -> int:
         """
-        n_sinks
+        N sinks
 
         Returns
         -------
@@ -177,7 +177,7 @@ class NodeGeometry:
 
     def dragging_pos(self) -> QPointF:
         """
-        dragging_pos
+        Dragging pos
 
         Returns
         -------
@@ -187,7 +187,7 @@ class NodeGeometry:
 
     def set_dragging_position(self, pos: QPointF):
         """
-        set_dragging_position
+        Set dragging position
 
         Parameters
         ----------
@@ -197,7 +197,7 @@ class NodeGeometry:
 
     def entry_bounding_rect(self, *, addon=0.0) -> QRectF:
         """
-        entry_bounding_rect
+        Entry bounding rect
 
         Returns
         -------
@@ -209,7 +209,7 @@ class NodeGeometry:
 
     def bounding_rect(self) -> QRectF:
         """
-        bounding_rect
+        Bounding rect
 
         Returns
         -------
@@ -268,7 +268,7 @@ class NodeGeometry:
 
     def port_scene_position(self, index: PortIndex, port_type: PortType, t: QTransform = None) -> QPointF:
         """
-        port_scene_position
+        Port scene position
 
         Parameters
         ----------
@@ -303,7 +303,7 @@ class NodeGeometry:
     def check_hit_scene_point(self, port_type: PortType, scene_point: QPointF,
                               scene_transform: QTransform) -> PortIndex:
         """
-        check_hit_scene_point
+        Check hit scene point
 
         Parameters
         ----------
@@ -331,7 +331,7 @@ class NodeGeometry:
 
     def resize_rect(self) -> QRect:
         """
-        resize_rect
+        Resize rect
 
         Returns
         -------
@@ -364,7 +364,7 @@ class NodeGeometry:
 
     def validation_height(self) -> int:
         """
-        validation_height
+        Validation height
 
         Returns
         -------
@@ -375,7 +375,7 @@ class NodeGeometry:
 
     def validation_width(self) -> int:
         """
-        validation_width
+        Validation width
 
         Returns
         -------
@@ -426,7 +426,7 @@ class NodeGeometry:
 
     def caption_height(self) -> int:
         """
-        caption_height
+        Caption height
 
         Returns
         -------
@@ -439,7 +439,7 @@ class NodeGeometry:
 
     def caption_width(self) -> int:
         """
-        caption_width
+        Caption width
 
         Returns
         -------
@@ -452,7 +452,7 @@ class NodeGeometry:
 
     def port_width(self, port_type: PortType) -> int:
         """
-        port_width
+        Port width
 
         Parameters
         ----------

@@ -171,7 +171,7 @@ class NodeConnectionInteraction:
 
     def connection_required_port(self) -> PortType:
         """
-        connection_required_port
+        Connection required port
 
         Returns
         -------
@@ -182,7 +182,7 @@ class NodeConnectionInteraction:
 
     def connection_end_scene_position(self, port_type: PortType) -> QPointF:
         """
-        connection_end_scene_position
+        Connection end scene position
 
         Parameters
         ----------
@@ -199,7 +199,7 @@ class NodeConnectionInteraction:
 
     def node_port_scene_position(self, port_type: PortType, port_index: PortIndex) -> QPointF:
         """
-        node_port_scene_position
+        Node port scene position
 
         Parameters
         ----------
@@ -217,7 +217,7 @@ class NodeConnectionInteraction:
 
     def node_port_index_under_scene_point(self, port_type: PortType, scene_point: QPointF) -> PortIndex:
         """
-        node_port_index_under_scene_point
+        Node port index under scene point
 
         Parameters
         ----------
@@ -235,7 +235,7 @@ class NodeConnectionInteraction:
 
     def node_port_is_empty(self, port_type: PortType, port_index: PortIndex) -> bool:
         """
-        node_port_is_empty
+        Node port is empty
 
         Parameters
         ----------

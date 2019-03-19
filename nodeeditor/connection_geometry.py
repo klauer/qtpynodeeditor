@@ -16,7 +16,7 @@ class ConnectionGeometry:
 
     def get_end_point(self, port_type: PortType) -> QPointF:
         """
-        get_end_point
+        Get end point
 
         Parameters
         ----------
@@ -33,7 +33,7 @@ class ConnectionGeometry:
 
     def set_end_point(self, port_type: PortType, point: QPointF):
         """
-        set_end_point
+        Set end point
 
         Parameters
         ----------
@@ -49,7 +49,7 @@ class ConnectionGeometry:
 
     def move_end_point(self, port_type: PortType, offset: QPointF):
         """
-        move_end_point
+        Move end point
 
         Parameters
         ----------
@@ -65,7 +65,7 @@ class ConnectionGeometry:
 
     def bounding_rect(self) -> QRectF:
         """
-        bounding_rect
+        Bounding rect
 
         Returns
         -------
@@ -113,7 +113,7 @@ class ConnectionGeometry:
 
     def source(self) -> QPointF:
         """
-        source
+        Source
 
         Returns
         -------
@@ -123,7 +123,7 @@ class ConnectionGeometry:
 
     def sink(self) -> QPointF:
         """
-        sink
+        Sink
 
         Returns
         -------
@@ -133,7 +133,7 @@ class ConnectionGeometry:
 
     def line_width(self) -> float:
         """
-        line_width
+        Line width
 
         Returns
         -------
@@ -143,7 +143,7 @@ class ConnectionGeometry:
 
     def hovered(self) -> bool:
         """
-        hovered
+        Hovered
 
         Returns
         -------
@@ -153,7 +153,7 @@ class ConnectionGeometry:
 
     def set_hovered(self, hovered: bool):
         """
-        set_hovered
+        Set hovered
 
         Parameters
         ----------

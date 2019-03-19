@@ -32,7 +32,7 @@ class Style:
 
     def load_json_text(self, json_text: str):
         """
-        load_json_text
+        Load json text
 
         Parameters
         ----------
@@ -42,7 +42,7 @@ class Style:
 
     def load_json_file(self, file_name: str):
         """
-        load_json_file
+        Load json file
 
         Parameters
         ----------
@@ -53,7 +53,7 @@ class Style:
 
     def load_from_json(self, byte_array: QByteArray):
         """
-        load_from_json
+        Load from json
 
         Parameters
         ----------
@@ -72,7 +72,7 @@ class FlowViewStyle(Style):
     @staticmethod
     def set_style(json_text: str):
         """
-        set_style
+        Set style
 
         Parameters
         ----------
@@ -83,7 +83,7 @@ class FlowViewStyle(Style):
 
     def load_from_json(self, byte_array: QByteArray):
         """
-        load_from_json
+        Load from json
 
         Parameters
         ----------
@@ -115,7 +115,7 @@ class ConnectionStyle(Style):
     @staticmethod
     def set_connection_style(json_text: str):
         """
-        set_connection_style
+        Set connection style
 
         Parameters
         ----------
@@ -126,7 +126,7 @@ class ConnectionStyle(Style):
 
     def load_from_json(self, byte_array: QByteArray):
         """
-        load_from_json
+        Load from json
 
         Parameters
         ----------
@@ -147,7 +147,7 @@ class ConnectionStyle(Style):
 
     def construction_color(self) -> QColor:
         """
-        construction_color
+        Construction color
 
         Returns
         -------
@@ -157,7 +157,7 @@ class ConnectionStyle(Style):
 
     def normal_color(self, type_id: str = None) -> QColor:
         """
-        normal_color
+        Normal color
 
         Parameters
         ----------
@@ -187,7 +187,7 @@ class ConnectionStyle(Style):
 
     def selected_color(self) -> QColor:
         """
-        selected_color
+        Selected color
 
         Returns
         -------
@@ -197,7 +197,7 @@ class ConnectionStyle(Style):
 
     def selected_halo_color(self) -> QColor:
         """
-        selected_halo_color
+        Selected halo color
 
         Returns
         -------
@@ -207,7 +207,7 @@ class ConnectionStyle(Style):
 
     def hovered_color(self) -> QColor:
         """
-        hovered_color
+        Hovered color
 
         Returns
         -------
@@ -217,7 +217,7 @@ class ConnectionStyle(Style):
 
     def line_width(self) -> float:
         """
-        line_width
+        Line width
 
         Returns
         -------
@@ -227,7 +227,7 @@ class ConnectionStyle(Style):
 
     def construction_line_width(self) -> float:
         """
-        construction_line_width
+        Construction line width
 
         Returns
         -------
@@ -237,7 +237,7 @@ class ConnectionStyle(Style):
 
     def point_diameter(self) -> float:
         """
-        point_diameter
+        Point diameter
 
         Returns
         -------
@@ -247,7 +247,7 @@ class ConnectionStyle(Style):
 
     def use_data_defined_colors(self) -> bool:
         """
-        use_data_defined_colors
+        Use data defined colors
 
         Returns
         -------
@@ -284,7 +284,7 @@ class NodeStyle(Style):
     @staticmethod
     def set_node_style(json_text: str):
         """
-        set_node_style
+        Set node style
 
         Parameters
         ----------
@@ -295,7 +295,7 @@ class NodeStyle(Style):
 
     def load_from_json(self, byte_array: QByteArray):
         """
-        load_from_json
+        Load from json
 
         Parameters
         ----------
@@ -332,7 +332,7 @@ class StyleCollection:
     @staticmethod
     def node_style() -> NodeStyle:
         """
-        node_style
+        Node style
 
         Returns
         -------
@@ -343,7 +343,7 @@ class StyleCollection:
     @staticmethod
     def connection_style() -> ConnectionStyle:
         """
-        connection_style
+        Connection style
 
         Returns
         -------
@@ -354,7 +354,7 @@ class StyleCollection:
     @staticmethod
     def flow_view_style() -> FlowViewStyle:
         """
-        flow_view_style
+        Flow view style
 
         Returns
         -------
@@ -365,7 +365,7 @@ class StyleCollection:
     @staticmethod
     def set_node_style(node_style: NodeStyle):
         """
-        set_node_style
+        Set node style
 
         Parameters
         ----------
@@ -376,7 +376,7 @@ class StyleCollection:
     @staticmethod
     def set_connection_style(connection_style: ConnectionStyle):
         """
-        set_connection_style
+        Set connection style
 
         Parameters
         ----------
@@ -387,7 +387,7 @@ class StyleCollection:
     @staticmethod
     def set_flow_view_style(flow_view_style: FlowViewStyle):
         """
-        set_flow_view_style
+        Set flow view style
 
         Parameters
         ----------
@@ -398,7 +398,7 @@ class StyleCollection:
     @staticmethod
     def instance():
         """
-        instance
+        Instance
 
         Returns
         -------

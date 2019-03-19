@@ -72,7 +72,7 @@ class FlowScene(QGraphicsScene):
 
     def create_connection_node(self, connected_port: PortType, node: Node, port_index: PortIndex) -> Connection:
         """
-        create_connection
+        Create connection
 
         Parameters
         ----------
@@ -101,7 +101,7 @@ class FlowScene(QGraphicsScene):
                           node_out: Node, port_index_out: PortIndex,
                           converter: TypeConverter) -> Connection:
         """
-        create_connection
+        Create connection
 
         Parameters
         ----------
@@ -133,7 +133,7 @@ class FlowScene(QGraphicsScene):
 
     def restore_connection(self, connection_json: dict) -> Connection:
         """
-        restore_connection
+        Restore connection
 
         Parameters
         ----------
@@ -179,7 +179,7 @@ class FlowScene(QGraphicsScene):
 
     def delete_connection(self, connection: Connection):
         """
-        delete_connection
+        Delete connection
 
         Parameters
         ----------
@@ -195,7 +195,7 @@ class FlowScene(QGraphicsScene):
 
     def create_node(self, data_model: NodeDataModel) -> Node:
         """
-        create_node
+        Create node
 
         Parameters
         ----------
@@ -215,7 +215,7 @@ class FlowScene(QGraphicsScene):
 
     def restore_node(self, node_json: dict) -> Node:
         """
-        restore_node
+        Restore node
 
         Parameters
         ----------
@@ -239,7 +239,7 @@ class FlowScene(QGraphicsScene):
 
     def remove_node(self, node: Node):
         """
-        remove_node
+        Remove node
 
         Parameters
         ----------
@@ -255,7 +255,7 @@ class FlowScene(QGraphicsScene):
 
     def registry(self) -> DataModelRegistry:
         """
-        registry
+        Registry
 
         Returns
         -------
@@ -265,7 +265,7 @@ class FlowScene(QGraphicsScene):
 
     def set_registry(self, registry: DataModelRegistry):
         """
-        set_registry
+        Set registry
 
         Parameters
         ----------
@@ -275,7 +275,7 @@ class FlowScene(QGraphicsScene):
 
     def iterate_over_nodes(self, visitor: callable):
         """
-        iterate_over_nodes
+        Iterate over nodes
 
         Parameters
         ----------
@@ -286,7 +286,7 @@ class FlowScene(QGraphicsScene):
 
     def iterate_over_node_data(self, visitor: callable):
         """
-        iterate_over_node_data
+        Iterate over node data
 
         Parameters
         ----------
@@ -297,7 +297,7 @@ class FlowScene(QGraphicsScene):
 
     def iterate_over_node_data_dependent_order(self, visitor: callable):
         """
-        iterate_over_node_data_dependent_order
+        Iterate over node data dependent order
 
         Parameters
         ----------
@@ -416,7 +416,7 @@ class FlowScene(QGraphicsScene):
 
     def get_node_position(self, node: Node) -> QPointF:
         """
-        get_node_position
+        Get node position
 
         Parameters
         ----------
@@ -430,7 +430,7 @@ class FlowScene(QGraphicsScene):
 
     def set_node_position(self, node: Node, pos: QPointF):
         """
-        set_node_position
+        Set node position
 
         Parameters
         ----------
@@ -443,7 +443,7 @@ class FlowScene(QGraphicsScene):
 
     def get_node_size(self, node: Node) -> QSizeF:
         """
-        get_node_size
+        Get node size
 
         Parameters
         ----------
@@ -457,7 +457,7 @@ class FlowScene(QGraphicsScene):
 
     def nodes(self) -> dict:
         """
-        nodes
+        Nodes
 
         Returns
         -------
@@ -469,7 +469,7 @@ class FlowScene(QGraphicsScene):
 
     def connections(self) -> dict:
         """
-        connections
+        Connections
 
         Returns
         -------
@@ -479,7 +479,7 @@ class FlowScene(QGraphicsScene):
 
     def selected_nodes(self) -> list:
         """
-        selected_nodes
+        Selected nodes
 
         Returns
         -------
@@ -528,7 +528,7 @@ class FlowScene(QGraphicsScene):
 
     def save_to_memory(self) -> dict:
         """
-        save_to_memory
+        Save to memory
 
         Returns
         -------
@@ -551,7 +551,7 @@ class FlowScene(QGraphicsScene):
 
     def load_from_memory(self, doc: str):
         """
-        load_from_memory
+        Load from memory
 
         Parameters
         ----------
@@ -569,7 +569,7 @@ class FlowScene(QGraphicsScene):
 
     def setup_connection_signals(self, conn: Connection):
         """
-        setup_connection_signals
+        Setup connection signals
 
         Parameters
         ----------
@@ -580,7 +580,7 @@ class FlowScene(QGraphicsScene):
 
     def send_connection_created_to_nodes(self, conn: Connection):
         """
-        send_connection_created_to_nodes
+        Send connection created to nodes
 
         Parameters
         ----------
@@ -595,7 +595,7 @@ class FlowScene(QGraphicsScene):
 
     def send_connection_deleted_to_nodes(self, conn: Connection):
         """
-        send_connection_deleted_to_nodes
+        Send connection deleted to nodes
 
         Parameters
         ----------

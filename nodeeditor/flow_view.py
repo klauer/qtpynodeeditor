@@ -44,7 +44,7 @@ class FlowView(QGraphicsView):
 
     def clear_selection_action(self) -> QAction:
         """
-        clear_selection_action
+        Clear selection action
 
         Returns
         -------
@@ -54,7 +54,7 @@ class FlowView(QGraphicsView):
 
     def delete_selection_action(self) -> QAction:
         """
-        delete_selection_action
+        Delete selection action
 
         Returns
         -------
@@ -320,7 +320,7 @@ class FlowView(QGraphicsView):
 
     def scene(self) -> FlowScene:
         """
-        scene
+        Scene
 
         Returns
         -------

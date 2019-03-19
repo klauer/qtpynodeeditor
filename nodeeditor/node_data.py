@@ -27,7 +27,7 @@ class NodeData:
 
     def same_type(self, node_data) -> bool:
         """
-        same_type
+        Same type
 
         Parameters
         ----------
@@ -125,7 +125,7 @@ class NodeDataModel(QObject, Serializable):
 
     def save(self) -> dict:
         """
-        save
+        Save
 
         Returns
         -------
@@ -135,7 +135,7 @@ class NodeDataModel(QObject, Serializable):
 
     def n_ports(self, port_type: PortType) -> int:
         """
-        n_ports
+        N ports
 
         Parameters
         ----------
@@ -149,7 +149,7 @@ class NodeDataModel(QObject, Serializable):
 
     def data_type(self, port_type: PortType, port_index: PortIndex):
         """
-        data_type
+        Data type
 
         Parameters
         ----------
@@ -164,7 +164,7 @@ class NodeDataModel(QObject, Serializable):
 
     def port_out_connection_policy(self, port_index: PortIndex) -> ConnectionPolicy:
         """
-        port_out_connection_policy
+        Port out connection policy
 
         Parameters
         ----------
@@ -178,7 +178,7 @@ class NodeDataModel(QObject, Serializable):
 
     def node_style(self) -> NodeStyle:
         """
-        node_style
+        Node style
 
         Returns
         -------
@@ -188,7 +188,7 @@ class NodeDataModel(QObject, Serializable):
 
     def set_node_style(self, style: NodeStyle):
         """
-        set_node_style
+        Set node style
 
         Parameters
         ----------
@@ -209,7 +209,7 @@ class NodeDataModel(QObject, Serializable):
 
     def out_data(self, port: PortIndex) -> NodeData:
         """
-        out_data
+        Out data
 
         Parameters
         ----------
@@ -223,7 +223,7 @@ class NodeDataModel(QObject, Serializable):
 
     def embedded_widget(self) -> QWidget:
         """
-        embedded_widget
+        Embedded widget
 
         Returns
         -------
@@ -233,7 +233,7 @@ class NodeDataModel(QObject, Serializable):
 
     def resizable(self) -> bool:
         """
-        resizable
+        Resizable
 
         Returns
         -------
@@ -243,7 +243,7 @@ class NodeDataModel(QObject, Serializable):
 
     def validation_state(self) -> NodeValidationState:
         """
-        validation_state
+        Validation state
 
         Returns
         -------
@@ -253,7 +253,7 @@ class NodeDataModel(QObject, Serializable):
 
     def validation_message(self) -> str:
         """
-        validation_message
+        Validation message
 
         Returns
         -------
@@ -263,7 +263,7 @@ class NodeDataModel(QObject, Serializable):
 
     def painter_delegate(self):
         """
-        painter_delegate
+        Painter delegate
 
         Returns
         -------
@@ -273,7 +273,7 @@ class NodeDataModel(QObject, Serializable):
 
     def input_connection_created(self, connection):
         """
-        input_connection_created
+        Input connection created
 
         Parameters
         ----------
@@ -283,7 +283,7 @@ class NodeDataModel(QObject, Serializable):
 
     def input_connection_deleted(self, connection):
         """
-        input_connection_deleted
+        Input connection deleted
 
         Parameters
         ----------
@@ -293,7 +293,7 @@ class NodeDataModel(QObject, Serializable):
 
     def output_connection_created(self, connection):
         """
-        output_connection_created
+        Output connection created
 
         Parameters
         ----------
@@ -303,7 +303,7 @@ class NodeDataModel(QObject, Serializable):
 
     def output_connection_deleted(self, connection):
         """
-        output_connection_deleted
+        Output connection deleted
 
         Parameters
         ----------
