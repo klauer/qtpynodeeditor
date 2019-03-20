@@ -107,7 +107,7 @@ def test_create_connection(scene, model):
     assert out_port == 2
 
 
-def test_save_load(scene, view, model):
+def test_save_load(tmp_path, scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
 
@@ -119,11 +119,8 @@ def test_save_load(scene, view, model):
         assert node in scene.nodes().values()
         assert node.id() in scene.nodes()
 
-    # with tempfile.NamedTemporaryFile(mode='wt') as f:
-    fname = 'temp.flow'
+    fname = tmp_path / 'temp.flow'
     scene.save(fname)
-    # f.flush()
-    print(open(fname, 'rt').read())
     scene.load(fname)
 
     assert len(scene.nodes()) == len(created_nodes)

@@ -506,6 +506,7 @@ class FlowScene(QGraphicsScene):
                 "Flow Scene Files (.flow)")
 
         if file_name:
+            file_name = str(file_name)
             if not file_name.endswith(".flow"):
                 file_name += ".flow"
 
