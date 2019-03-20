@@ -1,5 +1,5 @@
 import pytest
-import tempfile
+import qtpy.QtCore
 
 import nodeeditor
 from nodeeditor import PortType
@@ -70,7 +70,6 @@ def view(qtbot, scene):
 
 
 def test_instantiation(view):
-    print(view)
     ...
 
 
@@ -80,7 +79,7 @@ def test_create_node(scene, model):
     assert node.id() in scene.nodes()
 
 
-def test_create_connection(scene, model):
+def test_create_connection(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
     scene.create_connection(
@@ -88,6 +87,9 @@ def test_create_connection(scene, model):
         node_out=node2, port_index_out=2,
         converter=None
     )
+
+    view.update()
+
     assert len(scene.connections()) == 1
     all_c1 = node1.node_state().all_connections
     assert len(all_c1) == 1
@@ -105,6 +107,14 @@ def test_create_connection(scene, model):
     assert in_port == 1
     assert out_node == node2
     assert out_port == 2
+
+    scene.delete_connection(conn)
+    assert len(scene.connections()) == 0
+    all_c1 = node1.node_state().all_connections
+    assert len(all_c1) == 0
+    all_c2 = node1.node_state().all_connections
+    assert len(all_c2) == 0
+
 
 
 def test_save_load(tmp_path, scene, view, model):
@@ -128,3 +138,21 @@ def test_save_load(tmp_path, scene, view, model):
     for node in created_nodes:
         assert node not in scene.nodes().values()
         assert node.id() in scene.nodes()
+
+
+def test_smoke_reacting(scene, view, model):
+    node = scene.create_node(model)
+    dtype = node.node_data_model().data_type(PortType.In, 0)
+    node.react_to_possible_connection(
+        reacting_port_type=PortType.In,
+        reacting_data_type=dtype,
+        scene_point=qtpy.QtCore.QPointF(0, 0),
+    )
+    view.update()
+    node.reset_reaction_to_connection()
+
+
+def test_smoke_node_size_updated(scene, view, model):
+    node = scene.create_node(model)
+    node.on_node_size_updated()
+    view.update()
