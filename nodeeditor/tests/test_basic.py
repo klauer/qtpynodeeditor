@@ -117,6 +117,26 @@ def test_create_connection(scene, view, model):
 
 
 
+def test_clear_scene(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    scene.create_connection(
+        node_in=node1, port_index_in=1,
+        node_out=node2, port_index_out=2,
+        converter=None
+    )
+
+    scene.clear_scene()
+
+    assert len(scene.nodes()) == 0
+    assert len(scene.connections()) == 0
+    all_c1 = node1.node_state().all_connections
+    assert len(all_c1) == 0
+    all_c2 = node1.node_state().all_connections
+    assert len(all_c2) == 0
+
+
+
 def test_save_load(tmp_path, scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
