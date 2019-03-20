@@ -31,7 +31,8 @@ class NodeGraphicsObject(QGraphicsObject):
 
         self.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
 
-        node_style = node.node_data_model().node_style()
+        self._style = node.node_data_model().style
+        node_style = self._style.node
 
         effect = QGraphicsDropShadowEffect()
         effect.setOffset(4, 4)
@@ -119,7 +120,10 @@ class NodeGraphicsObject(QGraphicsObject):
         from .node_painter import NodePainter
         # TODO
         painter.setClipRect(option.exposedRect)
-        NodePainter.paint(painter, self._node, self._scene)
+        NodePainter.paint(painter, self._node, self._scene,
+                          node_style=self._style.node,
+                          connection_style=self._style.connection,
+                          )
 
     def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant) -> QVariant:
         """

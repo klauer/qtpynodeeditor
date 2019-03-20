@@ -2,17 +2,17 @@ from qtpy.QtCore import QPointF, QRectF
 
 
 from .port import PortType
-from .style import StyleCollection
 
 
 class ConnectionGeometry:
-    def __init__(self):
+    def __init__(self, style):
         # local object coordinates
         self._in = QPointF(0, 0)
         self._out = QPointF(0, 0)
         # self._animationPhase = 0
         self._line_width = 3.0
         self._hovered = False
+        self._point_diameter = style.connection.point_diameter
 
     def get_end_point(self, port_type: PortType) -> QPointF:
         """
@@ -74,10 +74,9 @@ class ConnectionGeometry:
         c1, c2 = self.points_c1_c2()
         basic_rect = QRectF(self._out, self._in).normalized()
         c1c2_rect = QRectF(c1, c2).normalized()
-        connection_style = StyleCollection.connection_style()
-        diam = connection_style.point_diameter()
+
         common_rect = basic_rect.united(c1c2_rect)
-        corner_offset = QPointF(diam, diam)
+        corner_offset = QPointF(self._point_diameter, self._point_diameter)
         common_rect.setTopLeft(common_rect.topLeft() - corner_offset)
         common_rect.setBottomRight(common_rect.bottomRight() + 2 * corner_offset)
         return common_rect

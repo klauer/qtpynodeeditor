@@ -22,6 +22,7 @@ class Node(QObject, Serializable, NodeBase):
         super().__init__()
         self._node_data_model = data_model
         self._uid = QUuid.createUuid()
+        self._style = data_model.node_style()
         self._node_state = NodeState(self._node_data_model)
         self._node_geometry = NodeGeometry(self._node_data_model)
         self._node_graphics_object = None
@@ -82,9 +83,10 @@ class Node(QObject, Serializable, NodeBase):
         """
         return self._uid
 
-    def react_to_possible_connection(
-        self, reacting_port_type: PortType, reacting_data_type: NodeDataType, scene_point: QPointF
-    ):
+    def react_to_possible_connection(self, reacting_port_type: PortType,
+                                     reacting_data_type: NodeDataType,
+                                     scene_point: QPointF
+                                     ):
         """
         React to possible connection
 

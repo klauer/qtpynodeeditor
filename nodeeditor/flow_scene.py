@@ -5,6 +5,7 @@ from qtpy.QtCore import (QByteArray, QDir, QFile, QFileInfo, QIODevice,
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
+from . import style as style_module
 from .connection import Connection
 from .connection_graphics_object import ConnectionGraphicsObject
 from .data_model_registry import DataModelRegistry
@@ -43,14 +44,29 @@ class FlowScene(QGraphicsScene):
     node_hovered = Signal(Node, QPoint)
     node_moved = Signal(Node, QPointF)
 
-    def __init__(self, registry=None, parent=None):
+    def __init__(self, registry=None, style=None, parent=None):
+        '''
+        Create a new flow scene
+
+        Parameters
+        ----------
+        registry : DataModelRegistry, optional
+        style : StyleCollection, optional
+        parent : QObject, optional
+        '''
         super().__init__(parent=parent)
         self._connections = []
         self._nodes = {}
+
         if registry is None:
             registry = DataModelRegistry()
 
+        if style is None:
+            style = style_module.default_style
+
+        self._style = style
         self._registry = registry
+
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
         # self connection should come first
@@ -84,7 +100,8 @@ class FlowScene(QGraphicsScene):
         -------
         value : Connection
         """
-        connection = Connection.from_node(connected_port, node, port_index)
+        connection = Connection.from_node(connected_port, node, port_index,
+                                          style=self._style)
         cgo = ConnectionGraphicsObject(self, connection)
 
         # after self function connection points are set to node port
@@ -117,7 +134,8 @@ class FlowScene(QGraphicsScene):
         """
         connection = Connection.from_nodes(node_in, port_index_in,
                                            node_out, port_index_out,
-                                           converter=converter)
+                                           converter=converter,
+                                           style=self._style)
         cgo = ConnectionGraphicsObject(self, connection)
         node_in.node_state().set_connection(PortType.In, port_index_in, connection)
         node_out.node_state().set_connection(PortType.Out, port_index_out, connection)

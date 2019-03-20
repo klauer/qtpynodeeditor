@@ -15,21 +15,20 @@ class NodeGeometry:
     def __init__(self, data_model: NodeDataModel):
         super().__init__()
         self._node_data_model = data_model
-        # some variables are mutable because we need to change drawing metrics
-        # corresponding to font_metrics but self doesn't change constness of
-        # Node
-        self._width = 100
-        self._height = 150
-        self._input_port_width = 70
-        self._output_port_width = 70
-        self._entry_height = 20
-        self._spacing = 20
-        self._hovered = False
-        self._n_sources = data_model.n_ports(PortType.Out)
-        self._n_sinks = data_model.n_ports(PortType.In)
-        self._dragging_pos = QPointF(-1000, -1000)
+
         self._data_model = data_model
+        self._dragging_pos = QPointF(-1000, -1000)
+        self._entry_height = 20
         self._font_metrics = QFontMetrics(QFont())
+        self._height = 150
+        self._hovered = False
+        self._input_port_width = 70
+        self._n_sinks = data_model.n_ports(PortType.In)
+        self._n_sources = data_model.n_ports(PortType.Out)
+        self._output_port_width = 70
+        self._spacing = 20
+        self._style = data_model.style.node
+        self._width = 100
 
         f = QFont()
         f.setBold(True)
@@ -215,8 +214,7 @@ class NodeGeometry:
         -------
         value : QRectF
         """
-        node_style = StyleCollection.node_style()
-        addon = 4 * node_style.connection_point_diameter
+        addon = 4 * self._style.connection_point_diameter
         return QRectF(0 - addon, 0 - addon,
                       self._width + 2 * addon, self._height + 2 * addon)
 
@@ -282,7 +280,7 @@ class NodeGeometry:
         """
         if t is None:
             t = QTransform()
-        node_style = StyleCollection.node_style()
+
         step = self._entry_height + self._spacing
 
         total_height = float(self.caption_height()) + step * index
@@ -290,10 +288,10 @@ class NodeGeometry:
         total_height += step / 2.0
 
         if port_type == PortType.Out:
-            x = self._width + node_style.connection_point_diameter
+            x = self._width + self._style.connection_point_diameter
             result = QPointF(x, total_height)
         elif port_type == PortType.In:
-            x = 0.0 - node_style.connection_point_diameter
+            x = 0.0 - self._style.connection_point_diameter
             result = QPointF(x, total_height)
         else:
             raise ValueError(port_type)
@@ -315,11 +313,10 @@ class NodeGeometry:
         -------
         value : PortIndex
         """
-        node_style = StyleCollection.node_style()
         if port_type == PortType.none:
             return INVALID
 
-        tolerance = 2.0 * node_style.connection_point_diameter
+        tolerance = 2.0 * self._style.connection_point_diameter
         for i in range(self._data_model.n_ports(port_type)):
             pp = self.port_scene_position(i, port_type, scene_transform)
             p = pp - scene_point
