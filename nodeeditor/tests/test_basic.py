@@ -79,6 +79,12 @@ def test_create_node(scene, model):
     assert node.id() in scene.nodes()
 
 
+def test_selected_nodes(scene, model):
+    node = scene.create_node(model)
+    node.node_graphics_object().setSelected(True)
+    assert scene.selected_nodes() == [node]
+
+
 def test_create_connection(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
