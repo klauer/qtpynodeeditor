@@ -86,7 +86,8 @@ class FlowScene(QGraphicsScene):
     def locate_node_at(self, point, transform):
         return locate_node_at(point, self, transform)
 
-    def create_connection_node(self, connected_port: PortType, node: Node, port_index: PortIndex) -> Connection:
+    def create_connection_node(self, connected_port: PortType, node: Node,
+                               port_index: PortIndex) -> Connection:
         """
         Create connection
 
@@ -223,10 +224,10 @@ class FlowScene(QGraphicsScene):
         -------
         value : Node
         """
-        node = Node(data_model)
+        model = self._registry.create(data_model.name())
+        node = Node(model)
         ngo = NodeGraphicsObject(self, node)
         node.set_graphics_object(ngo)
-
         self._nodes[node.id()] = node
         self.node_created.emit(node)
         return node

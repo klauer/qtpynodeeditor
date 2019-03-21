@@ -465,6 +465,8 @@ class NodeGeometry:
             else:
                 return self._data_model.data_type(port_type, i).name
 
-        return max(self._font_metrics.width(get_name(i))
-                   for i in range(self._data_model.n_ports(port_type))
-                   )
+        names = [get_name(i) for i in range(self._data_model.n_ports(port_type))]
+        if not names:
+            return 0
+
+        return max(self._font_metrics.width(name) for name in names)

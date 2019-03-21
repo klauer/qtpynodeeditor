@@ -21,9 +21,8 @@ class NodeData:
     The actual data is stored in subtypes
     """
 
-    def __init__(self, data_type=None):
-        if data_type is not None:
-            self._type = data_type
+    def __init__(self):
+        ...
 
     def same_type(self, node_data) -> bool:
         """
@@ -39,7 +38,8 @@ class NodeData:
         """
         return self.type().id == node_data.type().id
 
-    def type(self) -> NodeDataType:
+    @classmethod
+    def type(cls) -> NodeDataType:
         """
         Type for inner use
 
@@ -47,7 +47,7 @@ class NodeData:
         -------
         value : NodeDataType
         """
-        return self._type
+        return cls._type
 
 
 class NodeDataModel(QObject, Serializable):
@@ -118,7 +118,8 @@ class NodeDataModel(QObject, Serializable):
         """
         return False
 
-    def name(self) -> str:
+    @staticmethod
+    def name() -> str:
         """
         Name makes self model unique
 
@@ -126,7 +127,7 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : str
         """
-        ...
+        return ''
 
     def save(self) -> dict:
         """

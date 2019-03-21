@@ -9,19 +9,19 @@ logger = logging.getLogger(__name__)
 
 class DataModelRegistry:
     def __init__(self):
-        self._registered_type_converters = {}
-        self._registered_models_category = {}
-        self._registered_item_creators = {}
+        self._type_converters = {}
+        self._models_category = {}
+        self._item_creators = {}
         self._categories = set()
 
-    def register_model(self, creator, category=''):
+    def register_model(self, creator, category='', *, style=None, **init_kwargs):
         name = creator.name()
-        self._registered_item_creators[name] = creator
+        self._item_creators[name] = (creator, {'style': style, **init_kwargs})
         self._categories.add(category)
-        self._registered_models_category[name] = category
+        self._models_category[name] = category
 
-    def register_type_converter(self, id_: TypeConverterId,
-                                type_converter: TypeConverter):
+    def register_type_converter(self, type_in: NodeDataType, type_out:
+                                NodeDataType, type_converter: TypeConverter):
         """
         Register type converter
 
@@ -30,7 +30,7 @@ class DataModelRegistry:
         id_ : TypeConverterId
         type_converter : TypeConverter
         """
-        self._registered_type_converters[id_] = type_converter
+        self._type_converters[(type_in, type_out)] = type_converter
 
     def create(self, model_name: str) -> NodeDataModel:
         """
@@ -42,9 +42,10 @@ class DataModelRegistry:
 
         Returns
         -------
-        value : NodeDataModel
+        value : (NodeDataModel, init_kwargs)
         """
-        return self._registered_item_creators[model_name]
+        cls, kwargs = self._item_creators[model_name]
+        return cls(**kwargs)
 
     def registered_model_creators(self) -> dict:
         """
@@ -52,9 +53,9 @@ class DataModelRegistry:
 
         Returns
         -------
-        value : DataModelRegistry.RegisteredModelCreatorsMap
+        value : dict
         """
-        return self._registered_item_creators
+        return dict(self._item_creators)
 
     def registered_models_category_association(self) -> dict:
         """
@@ -64,7 +65,7 @@ class DataModelRegistry:
         -------
         value : DataModelRegistry.RegisteredModelsCategoryMap
         """
-        return self._registered_models_category
+        return self._models_category
 
     def categories(self) -> set:
         """
@@ -90,7 +91,7 @@ class DataModelRegistry:
         value : TypeConverter
         """
         try:
-            return self._registered_type_converters[(d1, d2)]
+            return self._type_converters[(d1, d2)]
         except KeyError:
             if d1 != d2:
                 logger.debug('No type converter available for %s -> %s',

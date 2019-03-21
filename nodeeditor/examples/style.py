@@ -52,7 +52,8 @@ class MyNodeData(NodeData):
 
 
 class MyDataModel(NodeDataModel):
-    def name(self):
+    @staticmethod
+    def name():
         return 'MyDataModel'
 
     def model(self):
@@ -85,10 +86,9 @@ app = QtWidgets.QApplication([])
 
 style = StyleCollection.from_json(style_json)
 # style = StyleCollection()
-model = MyDataModel(style=style)
 
 registry = nodeeditor.DataModelRegistry()
-registry.register_model(model, category='My Category')
+registry.register_model(MyDataModel, category='My Category', style=style)
 scene = nodeeditor.FlowScene(registry=registry)
 
 view = nodeeditor.FlowView(scene)
@@ -96,6 +96,6 @@ view.setWindowTitle("Style example")
 view.resize(800, 600)
 view.show()
 
-node = scene.create_node(model)
+node = scene.create_node(MyDataModel)
 
 app.exec_()
