@@ -90,13 +90,17 @@ class NodePainter:
                          else node_style.pen_width))
         painter.setPen(p)
 
-        gradient = QLinearGradient(QPointF(0.0, 0.0), QPointF(2.0, geom.height()))
+        gradient = QLinearGradient(QPointF(0.0, 0.0),
+                                   QPointF(2.0, geom.height()))
         for at_, color in node_style.gradient_colors:
             gradient.setColorAt(at_, color)
         painter.setBrush(gradient)
 
         diam = node_style.connection_point_diameter
-        boundary = QRectF(-diam, -diam, 2.0 * diam + geom.width(), 2.0 * diam + geom.height())
+        boundary = QRectF(-diam,
+                          -diam,
+                          2.0 * diam + geom.width(),
+                          2.0 * diam + geom.height())
         radius = 3.0
         painter.drawRoundedRect(boundary, radius, radius)
 

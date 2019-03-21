@@ -14,9 +14,12 @@ def _get_qcolor(style_dict, key):
 
     name_or_list = style_dict[key]
     if isinstance(name_or_list, list):
-        return QColor(*name_or_list)
-
-    return QColor(name_or_list)
+        color = QColor(*name_or_list)
+    else:
+        color = QColor(name_or_list)
+    logger.debug('Loaded color %s = %s -> %d %d %d %d', key, name_or_list,
+                 *color.getRgb())
+    return color
 
 
 class Style:
@@ -62,8 +65,10 @@ class Style:
     }
 
     def __init__(self, json_style=None):
-        if json_style:
-            self.load_from_json(json_style)
+        if json_style is None:
+            json_style = self.default_style
+
+        self.load_from_json(json_style)
 
     def load_from_json(self, json_style: str):
         """
@@ -189,7 +194,7 @@ class NodeStyle(Style):
     def __init__(self, json_style=None):
         self.normal_boundary_color = QColor()
         self.selected_boundary_color = QColor()
-        self.gradient_colors = [QColor()]
+        self.gradient_colors = ((0, QColor()), )
         self.shadow_color = QColor()
         self.font_color = QColor()
         self.font_color_faded = QColor()
