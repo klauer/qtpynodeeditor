@@ -143,7 +143,10 @@ class NodeConnectionInteraction:
 
     def disconnect(self, port_to_disconnect: PortType) -> bool:
         """
-        1) Node and Connection should be already connected 2) If so, clear Connection entry in the NodeState 3) Propagate invalid data to IN node 4) Set Connection end to 'requiring a port'
+        1) Node and Connection should be already connected
+        2) If so, clear Connection entry in the NodeState
+        3) Propagate invalid data to IN node
+        4) Set Connection end to 'requiring a port'
 
         Parameters
         ----------
@@ -160,7 +163,7 @@ class NodeConnectionInteraction:
         state.erase_connection(port_to_disconnect, port_index,
                                self._connection)
 
-        # 4) Propagate invalid data to IN node
+        # Propagate invalid data to IN node
         self._connection.propagate_empty_data()
 
         # clear Connection side

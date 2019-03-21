@@ -8,14 +8,14 @@ from qtpy.QtWidgets import QAction, QGraphicsView, QLineEdit, QMenu, QTreeWidget
 from .connection_graphics_object import ConnectionGraphicsObject
 from .flow_scene import FlowScene
 from .node_graphics_object import NodeGraphicsObject
-from .style import StyleCollection
+from . import style as style_module
 
 
 logger = logging.getLogger(__name__)
 
 
 class FlowView(QGraphicsView):
-    def __init__(self, scene, parent=None):
+    def __init__(self, scene, style=None, parent=None):
         super().__init__(parent=parent)
 
         self._clear_selection_action = None
@@ -26,9 +26,11 @@ class FlowView(QGraphicsView):
         self.setDragMode(QGraphicsView.ScrollHandDrag)
         self.setRenderHint(QPainter.Antialiasing)
 
-        style = StyleCollection.flow_view_style()
+        if style is None:
+            style = style_module.default_style
 
-        self.setBackgroundBrush(style.background_color)
+        self._style = style
+        self.setBackgroundBrush(style.flow_view.background_color)
 
         # setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
         # setViewportUpdateMode(QGraphicsView.MinimalViewportUpdate)
@@ -297,13 +299,12 @@ class FlowView(QGraphicsView):
 
             painter.drawLines(lines)
 
-        flow_view_style = StyleCollection.flow_view_style()
-
+        style = self._style.flow_view
         brush = self.backgroundBrush()
-        pfine = QPen(flow_view_style.fine_grid_color, 1.0)
+        pfine = QPen(style.fine_grid_color, 1.0)
         painter.setPen(pfine)
         draw_grid(15)
-        p = QPen(flow_view_style.coarse_grid_color, 1.0)
+        p = QPen(style.coarse_grid_color, 1.0)
         painter.setPen(p)
         draw_grid(150)
 

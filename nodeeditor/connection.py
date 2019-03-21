@@ -10,6 +10,7 @@ from .node import NodeDataType
 from .node_data import NodeData
 from .port import PortType, INVALID, opposite_port, PortIndex
 from .serializable import Serializable
+from .style import StyleCollection
 from .type_converter import TypeConverter
 
 
@@ -19,7 +20,7 @@ class Connection(QObject, Serializable, ConnectionBase):
     updated = Signal(QObject)
 
     def __init__(self, in_node: NodeBase, out_node: NodeBase, *,
-                 port_index_in=INVALID, port_index_out=INVALID,
+                 style, port_index_in=INVALID, port_index_out=INVALID,
                  converter=None):
         super().__init__()
         self._uid = QUuid.createUuid()
@@ -29,11 +30,13 @@ class Connection(QObject, Serializable, ConnectionBase):
         self._out_port_index = port_index_out
         self._connection_state = ConnectionState()
         self._converter = converter
-        self._connection_geometry = ConnectionGeometry()
+        self._style = style
+        self._connection_geometry = ConnectionGeometry(style)
         self._connection_graphics_object = None
 
     @classmethod
-    def from_node(cls, port_type: PortType, node: NodeBase, port_index: PortIndex):
+    def from_node(cls, port_type: PortType, node: NodeBase, port_index: PortIndex,
+                  style: StyleCollection):
         '''
         New Connection is attached to the port of the given Node. The port has
         parameters (port_type, port_index). The opposite connection end will
@@ -44,15 +47,16 @@ class Connection(QObject, Serializable, ConnectionBase):
         port_type : PortType
         node : Node
         port_index : PortIndex
+        style : StyleCollection
         '''
-        inst = cls(None, None)
+        inst = cls(None, None, style=style)
         inst.set_node_to_port(node, port_type, port_index)
         inst.set_required_port(opposite_port(port_type))
         return inst
 
     @classmethod
     def from_nodes(cls, node_in, port_index_in, node_out, port_index_out, *,
-                   converter):
+                   converter, style):
         '''
         Create connection
 
@@ -63,8 +67,9 @@ class Connection(QObject, Serializable, ConnectionBase):
         node_out : Node
         port_index_out : PortIndex
         converter : TypeConverter
+        style : StyleCollection
         '''
-        inst = cls(node_in, node_out, port_index_in=port_index_in,
+        inst = cls(node_in, node_out, style=style, port_index_in=port_index_in,
                    port_index_out=port_index_out, converter=converter)
         inst.set_node_to_port(node_in, PortType.In, port_index_in)
         inst.set_node_to_port(node_out, PortType.Out, port_index_out)
@@ -92,6 +97,10 @@ class Connection(QObject, Serializable, ConnectionBase):
             self._cleanup()
         except Exception:
             ...
+
+    @property
+    def style(self):
+        return self._style
 
     def save(self) -> dict:
         """

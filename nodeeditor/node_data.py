@@ -1,8 +1,8 @@
-from qtpy.QtCore import QObject, Qt
+from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
 from qtpy.QtCore import Signal
 
-from .style import NodeStyle, StyleCollection
+from . import style as style_module
 from .enums import NodeValidationState, PortType, ConnectionPolicy
 from .serializable import Serializable
 from .port import PortIndex
@@ -57,11 +57,16 @@ class NodeDataModel(QObject, Serializable):
     computing_finished = Signal()
     embedded_widget_size_updated = Signal()
 
-    def __init__(self, node_style=None, parent=None):
+    def __init__(self, style=None, parent=None):
         super().__init__(parent=parent)
-        if node_style is None:
-            node_style = StyleCollection.node_style()
-        self._node_style = node_style
+        if style is None:
+            style = style_module.default_style
+        self._style = style
+
+    @property
+    def style(self):
+        'Style collection for drawing this data model'
+        return self._style
 
     def caption(self) -> str:
         """
@@ -176,7 +181,8 @@ class NodeDataModel(QObject, Serializable):
         """
         return ConnectionPolicy.Many
 
-    def node_style(self) -> NodeStyle:
+    # @property
+    def node_style(self) -> style_module.NodeStyle:
         """
         Node style
 
@@ -184,17 +190,7 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : NodeStyle
         """
-        return self._node_style
-
-    def set_node_style(self, style: NodeStyle):
-        """
-        Set node style
-
-        Parameters
-        ----------
-        style : NodeStyle
-        """
-        self._node_style = style
+        return self._style.node
 
     def set_in_data(self, node_data: NodeData, port: PortIndex):
         """

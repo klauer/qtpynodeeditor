@@ -4,7 +4,7 @@ from qtpy.QtGui import QPainter, QPainterPath, QPainterPathStroker, QIcon, QPen
 
 from .enums import PortType
 from .connection_geometry import ConnectionGeometry
-from .style import StyleCollection
+from .style import ConnectionStyle
 
 
 use_debug_drawing = False
@@ -47,15 +47,13 @@ def debug_drawing(painter, connection):
     painter.drawRect(geom.boundingRect())
 
 
-def draw_sketch_line(painter, connection):
+def draw_sketch_line(painter, connection, style):
     state = connection.connection_state()
 
     if state.requires_port():
-        connection_style = StyleCollection.connection_style()
-
         p = QPen()
-        p.setWidth(connection_style.construction_line_width())
-        p.setColor(connection_style.construction_color())
+        p.setWidth(style.construction_line_width)
+        p.setColor(style.construction_color)
         p.setStyle(Qt.DashLine)
 
         painter.setPen(p)
@@ -68,7 +66,7 @@ def draw_sketch_line(painter, connection):
         painter.drawPath(cubic)
 
 
-def draw_hovered_or_selected(painter, connection):
+def draw_hovered_or_selected(painter, connection, style):
     geom = connection.connection_geometry()
     hovered = geom.hovered()
 
@@ -79,11 +77,12 @@ def draw_hovered_or_selected(painter, connection):
     if hovered or selected:
         p = QPen()
 
-        connection_style = StyleCollection.connection_style()
-        line_width = connection_style.line_width()
+        line_width = style.line_width
 
         p.setWidth(2 * line_width)
-        p.setColor((connection_style.selected_halo_color() if selected else connection_style.hovered_color()))
+        p.setColor((style.selected_halo_color
+                    if selected
+                    else style.hovered_color))
 
         painter.setPen(p)
         painter.setBrush(Qt.NoBrush)
@@ -93,34 +92,32 @@ def draw_hovered_or_selected(painter, connection):
         painter.drawPath(cubic)
 
 
-def draw_normal_line(painter, connection):
+def draw_normal_line(painter, connection, style):
     state = connection.connection_state()
 
     if state.requires_port():
         return
 
     # colors
+    normal_color_out = style.get_normal_color()
+    normal_color_in = normal_color_out
 
-    connection_style = StyleCollection.connection_style()
-
-    normal_color_out = connection_style.normal_color()
-    normal_color_in = connection_style.normal_color()
-    selected_color = connection_style.selected_color()
+    selected_color = style.selected_color
 
     gradient_color = False
-    if connection_style.use_data_defined_colors():
+    if style.use_data_defined_colors:
         data_type_out = connection.data_type(PortType.Out)
         data_type_in = connection.data_type(PortType.In)
 
         gradient_color = data_type_out.id != data_type_in.id
 
-        normal_color_out = connection_style.normal_color(data_type_out.id)
-        normal_color_in = connection_style.normal_color(data_type_in.id)
+        normal_color_out = style.get_normal_color(data_type_out.id)
+        normal_color_in = style.get_normal_color(data_type_in.id)
         selected_color = normal_color_out.darker(200)
 
     # geometry
     geom = connection.connection_geometry()
-    line_width = connection_style.line_width()
+    line_width = style.line_width
 
     # draw normal line
     p = QPen()
@@ -174,7 +171,7 @@ def draw_normal_line(painter, connection):
 
 class ConnectionPainter:
     @staticmethod
-    def paint(painter: QPainter, connection):  # connection : Connection):
+    def paint(painter: QPainter, connection, style):
         """
         Paint
 
@@ -182,10 +179,11 @@ class ConnectionPainter:
         ----------
         painter : QPainter
         connection : Connection
+        style : ConnectionStyle
         """
-        draw_hovered_or_selected(painter, connection)
-        draw_sketch_line(painter, connection)
-        draw_normal_line(painter, connection)
+        draw_hovered_or_selected(painter, connection, style)
+        draw_sketch_line(painter, connection, style)
+        draw_normal_line(painter, connection, style)
         if use_debug_drawing:
             debug_drawing(painter, connection)
 
@@ -193,10 +191,10 @@ class ConnectionPainter:
         geom = connection.connection_geometry()
         source = geom.source()
         sink = geom.sink()
-        connection_style = StyleCollection.connection_style()
-        point_diameter = connection_style.point_diameter()
-        painter.setPen(connection_style.construction_color())
-        painter.setBrush(connection_style.construction_color())
+
+        point_diameter = style.point_diameter
+        painter.setPen(style.construction_color)
+        painter.setBrush(style.construction_color)
         point_radius = point_diameter / 2.0
         painter.drawEllipse(source, point_radius, point_radius)
         painter.drawEllipse(sink, point_radius, point_radius)

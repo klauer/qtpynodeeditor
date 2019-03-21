@@ -35,6 +35,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         self._connection = connection
         self._state = connection.connection_state()
         self._geometry = connection.connection_geometry()
+        self._style = connection.style.connection
 
         self._scene.addItem(self)
         self.setFlag(QGraphicsItem.ItemIsMovable, True)
@@ -144,7 +145,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         widget : QWidget
         """
         painter.setClipRect(option.exposedRect)
-        ConnectionPainter.paint(painter, self._connection)
+        ConnectionPainter.paint(painter, self._connection, self._style)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent):
         """

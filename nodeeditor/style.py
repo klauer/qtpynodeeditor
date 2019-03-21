@@ -1,9 +1,7 @@
-import pathlib
 import json
 import logging
 import random
 
-from qtpy.QtCore import QByteArray, QFile, QIODevice, QJsonDocument, QJsonValue
 from qtpy.QtGui import QColor
 
 
@@ -16,80 +14,92 @@ def _get_qcolor(style_dict, key):
 
     name_or_list = style_dict[key]
     if isinstance(name_or_list, list):
-        return QColor(*name_or_list)
-
-    return QColor(name_or_list)
+        color = QColor(*name_or_list)
+    else:
+        color = QColor(name_or_list)
+    logger.debug('Loaded color %s = %s -> %d %d %d %d', key, name_or_list,
+                 *color.getRgb())
+    return color
 
 
 class Style:
-    default_json = pathlib.Path(__file__).parent / 'DefaultStyle.json'
+    default_style = {
+        "FlowViewStyle": {
+            "BackgroundColor": [53, 53, 53],
+            "FineGridColor": [60, 60, 60],
+            "CoarseGridColor": [25, 25, 25]
+        },
+        "NodeStyle": {
+            "NormalBoundaryColor": [255, 255, 255],
+            "SelectedBoundaryColor": [255, 165, 0],
+            "GradientColor0": "gray",
+            "GradientColor1": [80, 80, 80],
+            "GradientColor2": [64, 64, 64],
+            "GradientColor3": [58, 58, 58],
+            "ShadowColor": [20, 20, 20],
+            "FontColor": "white",
+            "FontColorFaded": "gray",
+            "ConnectionPointColor": [169, 169, 169],
+            "FilledConnectionPointColor": "cyan",
+            "ErrorColor": "red",
+            "WarningColor": [128, 128, 0],
 
-    def __init__(self, json_text=None):
-        if json_text:
-            self.load_json_text(json_text)
-        else:
-            self.load_json_file(self.default_json)
+            "PenWidth": 1.0,
+            "HoveredPenWidth": 1.5,
 
-    def load_json_text(self, json_text: str):
-        """
-        Load json text
+            "ConnectionPointDiameter": 8.0,
 
-        Parameters
-        ----------
-        json_text : str
-        """
-        self.load_from_json(json_text)
+            "Opacity": 0.8
+        },
+        "ConnectionStyle": {
+            "ConstructionColor": "gray",
+            "NormalColor": "darkcyan",
+            "SelectedColor": [100, 100, 100],
+            "SelectedHaloColor": "orange",
+            "HoveredColor": "lightcyan",
+            "LineWidth": 3.0,
+            "ConstructionLineWidth": 2.0,
+            "PointDiameter": 10.0,
+            "UseDataDefinedColors": False
+        }
+    }
 
-    def load_json_file(self, file_name: str):
-        """
-        Load json file
+    def __init__(self, json_style=None):
+        if json_style is None:
+            json_style = self.default_style
 
-        Parameters
-        ----------
-        file_name : str
-        """
-        with open(file_name, 'rt') as f:
-            self.load_from_json(f.read())
+        self.load_from_json(json_style)
 
-    def load_from_json(self, byte_array: QByteArray):
+    def load_from_json(self, json_style: str):
         """
         Load from json
 
         Parameters
         ----------
-        byte_array : QByteArray
+        json_style : str or dict
         """
-        ...
+        if isinstance(json_style, dict):
+            return json_style
+        else:
+            return json.loads(json_style)
 
 
 class FlowViewStyle(Style):
-    def __init__(self, json_text=None):
+    def __init__(self, json_style=None):
         self.background_color = QColor()
         self.fine_grid_color = QColor()
         self.coarse_grid_color = QColor()
-        super().__init__(json_text=json_text)
+        super().__init__(json_style=json_style)
 
-    @staticmethod
-    def set_style(json_text: str):
-        """
-        Set style
-
-        Parameters
-        ----------
-        json_text : str
-        """
-        style = FlowViewStyle(json_text)
-        StyleCollection.set_flow_view_style(style)
-
-    def load_from_json(self, byte_array: QByteArray):
+    def load_from_json(self, json_style: str):
         """
         Load from json
 
         Parameters
         ----------
-        byte_array : QByteArray
+        json_style : str or dict
         """
-        doc = json.loads(byte_array)
+        doc = super().load_from_json(json_style)
         style = doc["FlowViewStyle"]
         self.background_color = _get_qcolor(style, 'BackgroundColor')
         self.fine_grid_color = _get_qcolor(style, 'FineGridColor')
@@ -97,65 +107,59 @@ class FlowViewStyle(Style):
 
 
 class ConnectionStyle(Style):
-    def __init__(self, json_text=None):
-        self._construction_color = QColor()
-        self._normal_color = QColor()
-        self._selected_color = QColor()
-        self._selected_halo_color = QColor()
-        self._hovered_color = QColor()
+    '''
+    Style for connections
 
-        self._line_width = 0.0
-        self._construction_line_width = 0.0
-        self._point_diameter = 0.0
+    Attributes
+    ----------
+    construction_color : QColor
+    normal_color : QColor
+    selected_color : QColor
+    selected_halo_color : QColor
+    hovered_color : QColor
+    line_width : float
+    construction_line_width : float
+    point_diameter : float
+    use_data_defined_colors : bool
+    '''
 
-        self._use_data_defined_colors = True
+    def __init__(self, json_style=None):
+        self.construction_color = QColor()
+        self.normal_color = QColor()
+        self.selected_color = QColor()
+        self.selected_halo_color = QColor()
+        self.hovered_color = QColor()
 
-        super().__init__(json_text=json_text)
+        self.line_width = 0.0
+        self.construction_line_width = 0.0
+        self.point_diameter = 0.0
 
-    @staticmethod
-    def set_connection_style(json_text: str):
-        """
-        Set connection style
+        self.use_data_defined_colors = True
 
-        Parameters
-        ----------
-        json_text : str
-        """
-        style = ConnectionStyle(json_text)
-        StyleCollection.set_connection_style(style)
+        super().__init__(json_style=json_style)
 
-    def load_from_json(self, byte_array: QByteArray):
+    def load_from_json(self, json_style: str):
         """
         Load from json
 
         Parameters
         ----------
-        byte_array : QByteArray
+        json_style : str
         """
-        doc = json.loads(byte_array)
+        doc = super().load_from_json(json_style)
         style = doc["ConnectionStyle"]
-        self._construction_color = _get_qcolor(style, 'ConstructionColor')
-        self._normal_color = _get_qcolor(style, 'NormalColor')
-        self._selected_color = _get_qcolor(style, 'SelectedColor')
-        self._selected_halo_color = _get_qcolor(style, 'SelectedHaloColor')
-        self._hovered_color = _get_qcolor(style, 'HoveredColor')
+        self.construction_color = _get_qcolor(style, 'ConstructionColor')
+        self.normal_color = _get_qcolor(style, 'NormalColor')
+        self.selected_color = _get_qcolor(style, 'SelectedColor')
+        self.selected_halo_color = _get_qcolor(style, 'SelectedHaloColor')
+        self.hovered_color = _get_qcolor(style, 'HoveredColor')
 
-        self._line_width = float(style['LineWidth'])
-        self._construction_line_width = float(style['ConstructionLineWidth'])
-        self._point_diameter = float(style['PointDiameter'])
-        self._use_data_defined_colors = bool(style['UseDataDefinedColors'])
+        self.line_width = float(style['LineWidth'])
+        self.construction_line_width = float(style['ConstructionLineWidth'])
+        self.point_diameter = float(style['PointDiameter'])
+        self.use_data_defined_colors = bool(style['UseDataDefinedColors'])
 
-    def construction_color(self) -> QColor:
-        """
-        Construction color
-
-        Returns
-        -------
-        value : QColor
-        """
-        return self._construction_color
-
-    def normal_color(self, type_id: str = None) -> QColor:
+    def get_normal_color(self, type_id: str = None) -> QColor:
         """
         Normal color
 
@@ -176,7 +180,7 @@ class ConnectionStyle(Style):
         #   return QColor::fromHsl(hue, sat, 160);
         # }
         if type_id is None:
-            return self._normal_color
+            return self.normal_color
 
         hash = id(type_id)
         hue_range = 0xFF
@@ -185,85 +189,12 @@ class ConnectionStyle(Style):
         sat = 120 + hash % 129
         return QColor.fromHsl(hue, sat, 160)
 
-    def selected_color(self) -> QColor:
-        """
-        Selected color
-
-        Returns
-        -------
-        value : QColor
-        """
-        return self._selected_color
-
-    def selected_halo_color(self) -> QColor:
-        """
-        Selected halo color
-
-        Returns
-        -------
-        value : QColor
-        """
-        return self._selected_halo_color
-
-    def hovered_color(self) -> QColor:
-        """
-        Hovered color
-
-        Returns
-        -------
-        value : QColor
-        """
-        return self._hovered_color
-
-    def line_width(self) -> float:
-        """
-        Line width
-
-        Returns
-        -------
-        value : float
-        """
-        return self._line_width
-
-    def construction_line_width(self) -> float:
-        """
-        Construction line width
-
-        Returns
-        -------
-        value : float
-        """
-        return self._construction_line_width
-
-    def point_diameter(self) -> float:
-        """
-        Point diameter
-
-        Returns
-        -------
-        value : float
-        """
-        return self._point_diameter
-
-    def use_data_defined_colors(self) -> bool:
-        """
-        Use data defined colors
-
-        Returns
-        -------
-        value : bool
-        """
-        return self._use_data_defined_colors
-
 
 class NodeStyle(Style):
-    def __init__(self, json_text=None):
+    def __init__(self, json_style=None):
         self.normal_boundary_color = QColor()
         self.selected_boundary_color = QColor()
-        self.gradient_color0 = QColor()
-        self.gradient_color1 = QColor()
-        self.gradient_color2 = QColor()
-        self.gradient_color3 = QColor()
+        self.gradient_colors = ((0, QColor()), )
         self.shadow_color = QColor()
         self.font_color = QColor()
         self.font_color_faded = QColor()
@@ -279,132 +210,73 @@ class NodeStyle(Style):
         self.connection_point_diameter = 5.0
         self.opacity = 1.0
 
-        super().__init__(json_text=json_text)
+        super().__init__(json_style=json_style)
 
-    @staticmethod
-    def set_node_style(json_text: str):
-        """
-        Set node style
-
-        Parameters
-        ----------
-        json_text : str
-        """
-        style = NodeStyle(json_text)
-        StyleCollection.set_node_style(style)
-
-    def load_from_json(self, byte_array: QByteArray):
+    def load_from_json(self, json_style: str):
         """
         Load from json
 
         Parameters
         ----------
-        byte_array : QByteArray
+        json_style : str
         """
-        doc = json.loads(byte_array)
+        doc = super().load_from_json(json_style)
         style = doc["NodeStyle"]
 
         self.normal_boundary_color = _get_qcolor(style, 'NormalBoundaryColor')
-        self.selected_boundary_color = _get_qcolor(style, 'SelectedBoundaryColor')
-        self.gradient_color0 = _get_qcolor(style, 'GradientColor0')
-        self.gradient_color1 = _get_qcolor(style, 'GradientColor1')
-        self.gradient_color2 = _get_qcolor(style, 'GradientColor2')
-        self.gradient_color3 = _get_qcolor(style, 'GradientColor3')
+        self.selected_boundary_color = _get_qcolor(
+            style, 'SelectedBoundaryColor')
+        self.gradient_colors = (
+            (0.0, _get_qcolor(style, 'GradientColor0')),
+            (0.03, _get_qcolor(style, 'GradientColor1')),
+            (0.97, _get_qcolor(style, 'GradientColor2')),
+            (1.0, _get_qcolor(style, 'GradientColor3')),
+        )
         self.shadow_color = _get_qcolor(style, 'ShadowColor')
         self.font_color = _get_qcolor(style, 'FontColor')
         self.font_color_faded = _get_qcolor(style, 'FontColorFaded')
-        self.connection_point_color = _get_qcolor(style, 'ConnectionPointColor')
-        self.filled_connection_point_color = _get_qcolor(style, 'FilledConnectionPointColor')
+        self.connection_point_color = _get_qcolor(
+            style, 'ConnectionPointColor')
+        self.filled_connection_point_color = _get_qcolor(
+            style, 'FilledConnectionPointColor')
         self.warning_color = _get_qcolor(style, 'WarningColor')
         self.error_color = _get_qcolor(style, 'ErrorColor')
 
         self.pen_width = float(style['PenWidth'])
         self.hovered_pen_width = float(style['HoveredPenWidth'])
-        self.connection_point_diameter = float(style['ConnectionPointDiameter'])
+        self.connection_point_diameter = float(
+            style['ConnectionPointDiameter'])
         self.opacity = float(style['Opacity'])
 
 
 class StyleCollection:
-    _node_style = NodeStyle()
-    _connection_style = ConnectionStyle()
-    _flow_view_style = FlowViewStyle()
+    'Container for all styles'
 
-    @staticmethod
-    def node_style() -> NodeStyle:
-        """
-        Node style
+    def __init__(self, *, node=None, connection=None, flow_view=None):
+        if node is None:
+            node = NodeStyle()
+        self.node = node
 
-        Returns
-        -------
-        value : NodeStyle
-        """
-        return _style_collection._node_style
+        if connection is None:
+            connection = ConnectionStyle()
+        self.connection = connection
 
-    @staticmethod
-    def connection_style() -> ConnectionStyle:
-        """
-        Connection style
+        if flow_view is None:
+            flow_view = FlowViewStyle()
+        self.flow_view = flow_view
 
-        Returns
-        -------
-        value : ConnectionStyle
-        """
-        return _style_collection._connection_style
+    @classmethod
+    def from_json(cls, json_doc):
+        if isinstance(json_doc, dict):
+            json_style = json_doc
+        else:
+            json_style = json.loads(json_doc)
 
-    @staticmethod
-    def flow_view_style() -> FlowViewStyle:
-        """
-        Flow view style
-
-        Returns
-        -------
-        value : FlowViewStyle
-        """
-        return _style_collection._flow_view_style
-
-    @staticmethod
-    def set_node_style(node_style: NodeStyle):
-        """
-        Set node style
-
-        Parameters
-        ----------
-        node_style : NodeStyle
-        """
-        _style_collection._node_style = node_style
-
-    @staticmethod
-    def set_connection_style(connection_style: ConnectionStyle):
-        """
-        Set connection style
-
-        Parameters
-        ----------
-        connection_style : ConnectionStyle
-        """
-        _style_collection._connection_style = connection_style
-
-    @staticmethod
-    def set_flow_view_style(flow_view_style: FlowViewStyle):
-        """
-        Set flow view style
-
-        Parameters
-        ----------
-        flow_view_style : FlowViewStyle
-        """
-        _style_collection._flow_view_style = flow_view_style
-
-    @staticmethod
-    def instance():
-        """
-        Instance
-
-        Returns
-        -------
-        value : StyleCollection
-        """
-        return _style_collection
+        return StyleCollection(
+            node=NodeStyle(json_style),
+            connection=ConnectionStyle(json_style),
+            flow_view=FlowViewStyle(json_style),
+        )
 
 
-_style_collection = StyleCollection()
+default_style = StyleCollection()
