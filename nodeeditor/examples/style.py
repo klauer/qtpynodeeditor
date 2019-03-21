@@ -1,11 +1,9 @@
 import logging
 
-import qtpy
-from qtpy import QtCore, QtWidgets
+from qtpy import QtWidgets
 
 import nodeeditor
-from nodeeditor import FlowViewStyle, NodeStyle, ConnectionStyle, StyleCollection
-from nodeeditor import NodeData, NodeDataType, NodeDataModel
+from nodeeditor import NodeData, NodeDataType, NodeDataModel, StyleCollection
 
 
 style_json = '''
@@ -86,6 +84,7 @@ logging.basicConfig(level='DEBUG')
 app = QtWidgets.QApplication([])
 
 style = StyleCollection.from_json(style_json)
+# style = StyleCollection()
 model = MyDataModel(style=style)
 
 registry = nodeeditor.DataModelRegistry()
@@ -97,21 +96,6 @@ view.setWindowTitle("Style example")
 view.resize(800, 600)
 view.show()
 
-node1 = scene.create_node(model)
-node2 = scene.create_node(model)
-scene.create_connection(
-    node_in=node1, port_index_in=1,
-    node_out=node2, port_index_out=2,
-    converter=None
-)
-
-from nodeeditor import PortType
-
-# dtype = model.data_type(PortType.In, 0)
-# node1.react_to_possible_connection(
-#     reacting_port_type=PortType.In,
-#     reacting_data_type=model.data_type,
-#     scene_point=qtpy.QtCore.QPointF(0, 0),
-# )
+node = scene.create_node(model)
 
 app.exec_()
