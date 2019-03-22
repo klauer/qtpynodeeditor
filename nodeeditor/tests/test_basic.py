@@ -6,12 +6,11 @@ from nodeeditor import PortType
 
 
 class MyNodeData(nodeeditor.NodeData):
-    _type = nodeeditor.NodeDataType('MyNodeData', 'My Node Data')
+    data_type = nodeeditor.NodeDataType('MyNodeData', 'My Node Data')
 
 
 class BasicDataModel(nodeeditor.NodeDataModel):
-    def name(self):
-        return 'MyDataModel'
+    name = 'MyDataModel'
 
     def model(self):
         return 'MyDataModel'
@@ -19,14 +18,11 @@ class BasicDataModel(nodeeditor.NodeDataModel):
     def caption(self):
         return 'Caption'
 
-    def save(self):
-        return {'name': self.name()}
-
     def n_ports(self, port_type):
         return 3
 
     def data_type(self, port_type, port_index):
-        return MyNodeData._type
+        return MyNodeData.data_type
 
     def out_data(self, data):
         return MyNodeData()
@@ -44,7 +40,7 @@ class BasicDataModel(nodeeditor.NodeDataModel):
 # @pytest.mark.parametrize("model_class", [...])
 @pytest.fixture(scope='function')
 def model():
-    return BasicDataModel()
+    return BasicDataModel
 
 
 @pytest.fixture(scope='function')
