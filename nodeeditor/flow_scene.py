@@ -224,7 +224,7 @@ class FlowScene(QGraphicsScene):
         -------
         value : Node
         """
-        model = self._registry.create(data_model.name())
+        model = self._registry.create(data_model.name)
         node = Node(model)
         ngo = NodeGraphicsObject(self, node)
         node.set_graphics_object(ngo)

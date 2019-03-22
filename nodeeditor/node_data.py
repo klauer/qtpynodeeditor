@@ -21,36 +21,30 @@ class NodeData:
     The actual data is stored in subtypes
     """
 
-    def __init__(self):
-        ...
+    data_type = None
 
-    def same_type(self, node_data) -> bool:
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if cls.data_type is None:
+            raise ValueError('Subclasses must set the `data_type` attribute')
+
+    def same_type(self, other) -> bool:
         """
-        Same type
+        Is another NodeData instance of the same type?
 
         Parameters
         ----------
-        node_data : NodeData
+        other : NodeData
 
         Returns
         -------
         value : bool
         """
-        return self.type().id == node_data.type().id
-
-    @classmethod
-    def type(cls) -> NodeDataType:
-        """
-        Type for inner use
-
-        Returns
-        -------
-        value : NodeDataType
-        """
-        return cls._type
+        return self.data_type.id == other.data_type.id
 
 
 class NodeDataModel(QObject, Serializable):
+    name = None
     data_updated = Signal(PortIndex)
     data_invalidated = Signal(PortIndex)
     computing_started = Signal()
@@ -62,6 +56,12 @@ class NodeDataModel(QObject, Serializable):
         if style is None:
             style = style_module.default_style
         self._style = style
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # For all subclasses, if no name is defined, default to the class name
+        if cls.name is None:
+            cls.name = cls.__name__
 
     @property
     def style(self):
@@ -118,17 +118,6 @@ class NodeDataModel(QObject, Serializable):
         """
         return False
 
-    @staticmethod
-    def name() -> str:
-        """
-        Name makes self model unique
-
-        Returns
-        -------
-        value : str
-        """
-        return ''
-
     def save(self) -> dict:
         """
         Save
@@ -137,7 +126,7 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : QJsonObject
         """
-        return {'name': self.name()}
+        return {'name': self.name}
 
     def n_ports(self, port_type: PortType) -> int:
         """

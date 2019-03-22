@@ -48,13 +48,11 @@ style_json = '''
 
 
 class MyNodeData(NodeData):
-    _type = NodeDataType('MyNodeData', 'My Node Data')
+    data_type = NodeDataType(id='MyNodeData', name='My Node Data')
 
 
 class MyDataModel(NodeDataModel):
-    @staticmethod
-    def name():
-        return 'MyDataModel'
+    name = 'MyDataModel'
 
     def model(self):
         return 'MyDataModel'
@@ -63,13 +61,13 @@ class MyDataModel(NodeDataModel):
         return 'Caption'
 
     def save(self):
-        return {'name': self.name()}
+        return {'name': self.name}
 
     def n_ports(self, port_type):
         return 3
 
     def data_type(self, port_type, port_index):
-        return MyNodeData._type
+        return MyNodeData.data_type
 
     def out_data(self, data):
         return MyNodeData()

@@ -2,7 +2,7 @@ import logging
 import contextlib
 import threading
 
-from qtpy.QtWidgets import QWidget, QLineEdit, QApplication
+from qtpy.QtWidgets import (QWidget, QLineEdit, QApplication, QLabel)
 from qtpy.QtGui import QDoubleValidator
 
 import nodeeditor
@@ -12,31 +12,16 @@ from nodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
 
 
 class DecimalData(NodeData):
-    def __init__(self, number: float=0.0):
-        '''
-        decimal_data
+    'Node data holding a decimal (floating point) number'
+    data_type = NodeDataType("decimal", "Decimal")
 
-        Parameters
-        ----------
-        number : float
-        '''
+    def __init__(self, number: float = 0.0):
         self._number = number
         self._lock = threading.RLock()
 
     @property
     def lock(self):
         return self._lock
-
-    @staticmethod
-    def type() -> NodeDataType:
-        '''
-        type
-
-        Returns
-        -------
-        value : NodeDataType
-        '''
-        return NodeDataType("decimal", "Decimal")
 
     @property
     def number(self) -> float:
@@ -61,14 +46,10 @@ class DecimalData(NodeData):
 
 
 class IntegerData(NodeData):
-    def __init__(self, number: int=0):
-        '''
-        integer_data
+    'Node data holding an integer value'
+    data_type = NodeDataType("integer", "Integer")
 
-        Parameters
-        ----------
-        number : int
-        '''
+    def __init__(self, number: int = 0):
         self._number = number
         self._lock = threading.RLock()
 
@@ -76,20 +57,9 @@ class IntegerData(NodeData):
     def lock(self):
         return self._lock
 
-    @staticmethod
-    def type() -> NodeDataType:
-        '''
-        type
-
-        Returns
-        -------
-        value : NodeDataType
-        '''
-        return NodeDataType("integer", "Integer")
-
     def number(self) -> int:
         '''
-        number
+        The number
 
         Returns
         -------
@@ -111,9 +81,17 @@ class IntegerData(NodeData):
 class MathOperationDataModel(NodeDataModel):
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
+        self._number1 = None
+        self._number2 = None
         self._result = None
         self.model_validation_state = NodeValidationState.Warning
         self.model_validation_error = 'Uninitialized'
+
+    def caption(self) -> str:
+        return self.name
+
+    def caption_visible(self) -> bool:
+        return True
 
     def n_ports(self, port_type: PortType) -> int:
         '''
@@ -133,6 +111,21 @@ class MathOperationDataModel(NodeDataModel):
             return 1
 
         raise ValueError('Unknown port type')
+
+    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
+        '''
+        port_caption_visible
+
+        Parameters
+        ----------
+        port_type : PortType
+        port_index : PortIndex
+
+        Returns
+        -------
+        value : bool
+        '''
+        return True
 
     def _check_inputs(self):
         if self._number1 is None or self._number2 is None:
@@ -164,7 +157,7 @@ class MathOperationDataModel(NodeDataModel):
         -------
         value : NodeDataType
         '''
-        return DecimalData().type()
+        return DecimalData.data_type
 
     def out_data(self, port: PortIndex) -> NodeData:
         '''
@@ -189,22 +182,12 @@ class MathOperationDataModel(NodeDataModel):
         data : NodeData
         port_index : PortIndex
         '''
-        if (port_index==0):
+        if port_index == 0:
             self._number1 = data
         elif port_index == 1:
             self._number2 = data
 
         self.compute()
-
-    def embedded_widget(self) -> QWidget:
-        '''
-        embedded_widget
-
-        Returns
-        -------
-        value : QWidget
-        '''
-        return None
 
     def validation_state(self) -> NodeValidationState:
         '''
@@ -231,12 +214,7 @@ class MathOperationDataModel(NodeDataModel):
 
 
 class AdditionModel(MathOperationDataModel):
-    def caption(self) -> str:
-        return "Addition"
-
-    @staticmethod
-    def name() -> str:
-        return "Addition"
+    name = "Addition"
 
     def compute(self):
         if self._check_inputs():
@@ -248,30 +226,7 @@ class AdditionModel(MathOperationDataModel):
 
 
 class DivisionModel(MathOperationDataModel):
-    def caption(self) -> str:
-        '''
-        caption
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Division"
-
-    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
-        '''
-        port_caption_visible
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : bool
-        '''
-        return True
+    name = "Division"
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
         '''
@@ -294,16 +249,6 @@ class DivisionModel(MathOperationDataModel):
         elif port_type == PortType.Out:
             return 'Result'
 
-    @staticmethod
-    def name() -> str:
-        '''
-        name
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Division"
 
     def compute(self):
         if self._check_inputs():
@@ -320,41 +265,8 @@ class DivisionModel(MathOperationDataModel):
         self.data_updated.emit(0)
 
 
-class ModuloModel(NodeDataModel):
-    def caption(self) -> str:
-        '''
-        caption
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Modulo"
-
-    def caption_visible(self) -> bool:
-        '''
-        caption_visible
-
-        Returns
-        -------
-        value : bool
-        '''
-        return True
-
-    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
-        '''
-        port_caption_visible
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : bool
-        '''
-        return True
+class ModuloModel(MathOperationDataModel):
+    name = 'Modulo'
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
         '''
@@ -377,48 +289,6 @@ class ModuloModel(NodeDataModel):
         elif port_type == PortType.Out:
             return 'Result'
 
-    @staticmethod
-    def name() -> str:
-        '''
-        name
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Modulo"
-
-    def save(self) -> dict:
-        '''
-        save
-
-        Returns
-        -------
-        value : dict
-        '''
-        doc = super().save()
-        doc['name'] = self.name()
-        return doc
-
-    def n_ports(self, port_type: PortType) -> int:
-        '''
-        n_ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        '''
-        if port_type==PortType.In:
-            return 2
-        elif port_type == PortType.Out:
-            return 1
-
-        raise ValueError('Unknown port type')
-
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         '''
         data_type
@@ -432,7 +302,7 @@ class ModuloModel(NodeDataModel):
         -------
         value : NodeDataType
         '''
-        return IntegerData().type()
+        return IntegerData.data_type
 
     def out_data(self, port: PortIndex) -> NodeData:
         '''
@@ -457,14 +327,14 @@ class ModuloModel(NodeDataModel):
         data : NodeData
         port_index : int
         '''
-        if (port_index==0):
+        if port_index == 0:
             self._number1 = data
-        else:
+        elif port_index == 1:
             self._number2 = data
 
         if self._check_inputs():
             with self._compute_lock():
-                if (self._number2.number==0.0):
+                if self._number2.number == 0.0:
                     self.model_validation_state = NodeValidationState.Error
                     self.model_validation_error = "Division by zero error"
                     self._result = None
@@ -505,55 +375,7 @@ class ModuloModel(NodeDataModel):
 
 
 class MultiplicationModel(MathOperationDataModel):
-    def caption(self) -> str:
-        '''
-        caption
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Multiplication"
-
-    @staticmethod
-    def name() -> str:
-        '''
-        name
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Result"
-
-    def caption_visible(self) -> bool:
-        '''
-        caption_visible
-
-        Returns
-        -------
-        value : bool
-        '''
-        return False
-
-    def n_ports(self, port_type: PortType) -> int:
-        '''
-        n_ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        '''
-        if port_type==PortType.In:
-            return 1
-        elif port_type == PortType.Out:
-            return 0
-
-        raise ValueError('Unknown port type')
+    name = 'Multiplication'
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         '''
@@ -568,7 +390,7 @@ class MultiplicationModel(MathOperationDataModel):
         -------
         value : NodeDataType
         '''
-        return DecimalData().type()
+        return DecimalData.data_type
 
     def out_data(self, port: PortIndex) -> NodeData:
         '''
@@ -636,47 +458,22 @@ class MultiplicationModel(MathOperationDataModel):
 
 
 class NumberSourceDataModel(NodeDataModel):
+    name = "NumberSource"
+
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
         self._number = None
         self._line_edit = QLineEdit()
-
-    def number_source_data_model(self):
         self._line_edit.setValidator(QDoubleValidator())
         self._line_edit.setMaximumSize(self._line_edit.sizeHint())
         self._line_edit.textChanged.connect(self.on_text_edited)
         self._line_edit.setText("0.0")
 
     def caption(self) -> str:
-        '''
-        caption
-
-        Returns
-        -------
-        value : str
-        '''
         return "Number Source"
 
     def caption_visible(self) -> bool:
-        '''
-        caption_visible
-
-        Returns
-        -------
-        value : bool
-        '''
         return False
-
-    @staticmethod
-    def name() -> str:
-        '''
-        name
-
-        Returns
-        -------
-        value : str
-        '''
-        return "NumberSource"
 
     def save(self) -> dict:
         '''
@@ -719,7 +516,7 @@ class NumberSourceDataModel(NodeDataModel):
         -------
         value : int
         '''
-        if (port_type == PortType.In):
+        if port_type == PortType.In:
             return 0
         elif port_type == PortType.Out:
             return 1
@@ -738,7 +535,7 @@ class NumberSourceDataModel(NodeDataModel):
         -------
         value : NodeDataType
         '''
-        return DecimalData().type()
+        return DecimalData.data_type
 
     def out_data(self, port: PortIndex) -> NodeData:
         '''
@@ -792,20 +589,39 @@ class NumberSourceDataModel(NodeDataModel):
             self.data_updated.emit(0)
 
 
-class SubtractionModel(MathOperationDataModel):
-    def caption(self) -> str:
+class NumberDisplayModel(NodeDataModel):
+    name = "NumberDisplay"
+
+    def __init__(self, style=None, parent=None):
+        super().__init__(style=style, parent=parent)
+        self._number = None
+        self._label = QLabel()
+        self._label.setMargin(3)
+
+    def caption_visible(self) -> bool:
+        return False
+
+    def n_ports(self, port_type: PortType) -> int:
         '''
-        caption
+        n_ports
+
+        Parameters
+        ----------
+        port_type : PortType
 
         Returns
         -------
-        value : str
+        value : int
         '''
-        return "Subtraction"
+        if port_type == PortType.In:
+            return 1
+        elif port_type == PortType.Out:
+            return 0
+        raise ValueError('Unknown port type')
 
-    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
+    def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         '''
-        port_caption_visible
+        data_type
 
         Parameters
         ----------
@@ -814,9 +630,45 @@ class SubtractionModel(MathOperationDataModel):
 
         Returns
         -------
-        value : bool
+        value : NodeDataType
         '''
-        return True
+        return DecimalData.data_type
+
+    def set_in_data(self, data: NodeData, int: int):
+        '''
+        set_in_data
+
+        Parameters
+        ----------
+        data : NodeData
+        int : int
+        '''
+        self._number = data
+
+        if self._number:
+            self.model_validation_state = NodeValidationState.Valid
+            self.model_validation_error = ''
+            self._label.setText(self._number.number_as_text())
+        else:
+            self.model_validation_state = NodeValidationState.Warning
+            self.model_validation_error = "Missing or incorrect inputs"
+            self._label.clear()
+
+        self._label.adjustSize()
+
+    def embedded_widget(self) -> QWidget:
+        '''
+        embedded_widget
+
+        Returns
+        -------
+        value : QWidget
+        '''
+        return self._label
+
+
+class SubtractionModel(MathOperationDataModel):
+    name = "Subtraction"
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
         '''
@@ -838,17 +690,6 @@ class SubtractionModel(MathOperationDataModel):
                 return 'Subtrahend'
         elif port_type == PortType.Out:
             return 'Result'
-
-    @staticmethod
-    def name() -> str:
-        '''
-        name
-
-        Returns
-        -------
-        value : str
-        '''
-        return "Subtraction"
 
     def compute(self):
         if self._check_inputs:
@@ -896,14 +737,15 @@ app = QApplication([])
 registry = nodeeditor.DataModelRegistry()
 
 models = (AdditionModel, DivisionModel, ModuloModel, MultiplicationModel,
-          NumberSourceDataModel, SubtractionModel)
+          NumberSourceDataModel, SubtractionModel,
+          NumberDisplayModel)
 for model in models:
     registry.register_model(model, category='Operations',
                             style=None)
 
-registry.register_type_converter(DecimalData.type(), IntegerData.type(),
+registry.register_type_converter(DecimalData, IntegerData,
                                  decimal_to_integer_converter)
-registry.register_type_converter(IntegerData.type(), DecimalData.type(),
+registry.register_type_converter(IntegerData, DecimalData,
                                  decimal_to_integer_converter)
 
 scene = nodeeditor.FlowScene(registry=registry)
@@ -913,6 +755,27 @@ view.setWindowTitle("Calculator example")
 view.resize(800, 600)
 view.show()
 
-node = scene.create_node(models[4])
+node_a = scene.create_node(NumberSourceDataModel)
+node_b = scene.create_node(NumberSourceDataModel)
+node_add = scene.create_node(AdditionModel)
+node_display = scene.create_node(NumberDisplayModel)
+
+scene.create_connection(
+    node_out=node_a, port_index_out=0,
+    node_in=node_add, port_index_in=0,
+    converter=None
+)
+
+scene.create_connection(
+    node_out=node_b, port_index_out=0,
+    node_in=node_add, port_index_in=1,
+    converter=None
+)
+
+scene.create_connection(
+    node_out=node_add, port_index_out=0,
+    node_in=node_display, port_index_in=0,
+    converter=None
+)
 
 app.exec_()

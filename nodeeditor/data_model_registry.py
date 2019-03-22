@@ -15,7 +15,7 @@ class DataModelRegistry:
         self._categories = set()
 
     def register_model(self, creator, category='', *, style=None, **init_kwargs):
-        name = creator.name()
+        name = creator.name
         self._item_creators[name] = (creator, {'style': style, **init_kwargs})
         self._categories.add(category)
         self._models_category[name] = category
@@ -27,9 +27,15 @@ class DataModelRegistry:
 
         Parameters
         ----------
-        id_ : TypeConverterId
+        id_ : NodeData subclass or TypeConverterId
         type_converter : TypeConverter
         """
+        # TODO typing annotation
+        if hasattr(type_in, 'type'):
+            type_in = type_in.type
+        if hasattr(type_out, 'type'):
+            type_out = type_out.type
+
         self._type_converters[(type_in, type_out)] = type_converter
 
     def create(self, model_name: str) -> NodeDataModel:
