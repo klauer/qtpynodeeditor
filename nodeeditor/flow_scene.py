@@ -291,35 +291,23 @@ class FlowScene(QGraphicsScene):
         """
         self._registry = registry
 
-    def iterate_over_nodes(self, visitor: callable):
+    def iterate_over_nodes(self):
         """
-        Iterate over nodes
-
-        Parameters
-        ----------
-        visitor callable(Node)
+        Generator: Iterate over nodes
         """
         for node in self._nodes.values():
-            visitor(node)
+            yield node
 
-    def iterate_over_node_data(self, visitor: callable):
+    def iterate_over_node_data(self):
         """
-        Iterate over node data
-
-        Parameters
-        ----------
-        visitor : callable(NodeDataModel)
+        Generator: Iterate over node data
         """
         for node in self._nodes.values():
-            visitor(node.node_data_model())
+            yield node.node_data_model()
 
-    def iterate_over_node_data_dependent_order(self, visitor: callable):
+    def iterate_over_node_data_dependent_order(self):
         """
-        Iterate over node data dependent order
-
-        Parameters
-        ----------
-        visitor : callable(NodeDataModel)
+        Generator: Iterate over node data dependent order
         """
         visited_nodes = []
 
@@ -336,7 +324,7 @@ class FlowScene(QGraphicsScene):
         for node in self._nodes.values():
             model = node.node_data_model()
             if is_node_leaf(node, model):
-                visitor(model)
+                yield model
                 visited_nodes.append(node)
 
         def are_node_inputs_visited_before(node, model):
@@ -356,7 +344,7 @@ class FlowScene(QGraphicsScene):
 
                 model = node.node_data_model()
                 if are_node_inputs_visited_before(node, model):
-                    visitor(model)
+                    yield model
                     visited_nodes.append(node)
 
     def get_node_position(self, node: Node) -> QPointF:
