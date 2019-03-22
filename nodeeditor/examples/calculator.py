@@ -140,6 +140,9 @@ class MathOperationDataModel(NodeDataModel):
 
     @contextlib.contextmanager
     def _compute_lock(self):
+        if not self._number1 or not self._number2:
+            raise RuntimeError('inputs unset')
+
         with self._number1.lock:
             with self._number2.lock:
                 yield
@@ -304,34 +307,7 @@ class ModuloModel(MathOperationDataModel):
         '''
         return IntegerData.data_type
 
-    def out_data(self, port: PortIndex) -> NodeData:
-        '''
-        out_data
-
-        Parameters
-        ----------
-        port : PortIndex
-
-        Returns
-        -------
-        value : NodeData
-        '''
-        return self._result
-
-    def set_in_data(self, data: NodeData, port_index: int):
-        '''
-        set_in_data
-
-        Parameters
-        ----------
-        data : NodeData
-        port_index : int
-        '''
-        if port_index == 0:
-            self._number1 = data
-        elif port_index == 1:
-            self._number2 = data
-
+    def compute(self):
         if self._check_inputs():
             with self._compute_lock():
                 if self._number2.number == 0.0:
@@ -343,43 +319,13 @@ class ModuloModel(MathOperationDataModel):
 
         self.data_updated.emit(0)
 
-    def embedded_widget(self) -> QWidget:
-        '''
-        embedded_widget
-
-        Returns
-        -------
-        value : QWidget
-        '''
-        return None
-
-    def validation_state(self) -> NodeValidationState:
-        '''
-        validation_state
-
-        Returns
-        -------
-        value : NodeValidationState
-        '''
-        return self.model_validation_state
-
-    def validation_message(self) -> str:
-        '''
-        validation_message
-
-        Returns
-        -------
-        value : str
-        '''
-        return self.model_validation_error
-
 
 class MultiplicationModel(MathOperationDataModel):
     name = 'Multiplication'
 
-    def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
+    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
         '''
-        data_type
+        port_caption
 
         Parameters
         ----------
@@ -388,73 +334,22 @@ class MultiplicationModel(MathOperationDataModel):
 
         Returns
         -------
-        value : NodeDataType
-        '''
-        return DecimalData.data_type
-
-    def out_data(self, port: PortIndex) -> NodeData:
-        '''
-        out_data
-
-        Parameters
-        ----------
-        port : PortIndex
-
-        Returns
-        -------
-        value : NodeData
-        '''
-        return self._result
-
-    def set_in_data(self, data: NodeData, int: int):
-        '''
-        set_in_data
-
-        Parameters
-        ----------
-        data : NodeData
-        int : int
-        '''
-        if data:
-            self.model_validation_state = NodeValidationState.valid
-            self.model_validation_error = ''
-            self._label.setText(data.numberAsText())
-        else:
-            self.model_validation_state = NodeValidationState.warning
-            self.model_validation_error = "Missing or incorrect inputs"
-            self._label.clear()
-
-        self._label.adjustSize()
-
-    def embedded_widget(self) -> QWidget:
-        '''
-        embedded_widget
-
-        Returns
-        -------
-        value : QWidget
-        '''
-        return self._label
-
-    def validation_state(self) -> NodeValidationState:
-        '''
-        validation_state
-
-        Returns
-        -------
-        value : NodeValidationState
-        '''
-        return self.model_validation_state
-
-    def validation_message(self) -> str:
-        '''
-        validation_message
-
-        Returns
-        -------
         value : str
         '''
-        return self.model_validation_error
+        if port_type==PortType.input:
+            if port_index == 0:
+                return 'A'
+            elif port_index == 1:
+                return 'B'
+        elif port_type == PortType.output:
+            return 'Result'
+
+    def compute(self):
+        if self._check_inputs():
+            with self._compute_lock():
+                self._result = DecimalData(self._number1.number * self._number2.number)
+
+        self.data_updated.emit(0)
 
 
 class NumberSourceDataModel(NodeDataModel):
@@ -692,7 +587,7 @@ class SubtractionModel(MathOperationDataModel):
             return 'Result'
 
     def compute(self):
-        if self._check_inputs:
+        if self._check_inputs():
             with self._compute_lock():
                 self.model_validation_state = NodeValidationState.valid
                 self.model_validation_error = ''
@@ -731,51 +626,65 @@ def decimal_to_integer_converter(data: DecimalData) -> IntegerData:
     return IntegerData(int(data.number))
 
 
-logging.basicConfig(level='DEBUG')
-app = QApplication([])
+def main():
+    logging.basicConfig(level='DEBUG')
+    app = QApplication([])
 
-registry = nodeeditor.DataModelRegistry()
+    registry = nodeeditor.DataModelRegistry()
 
-models = (AdditionModel, DivisionModel, ModuloModel, MultiplicationModel,
-          NumberSourceDataModel, SubtractionModel,
-          NumberDisplayModel)
-for model in models:
-    registry.register_model(model, category='Operations',
-                            style=None)
+    models = (AdditionModel, DivisionModel, ModuloModel, MultiplicationModel,
+              NumberSourceDataModel, SubtractionModel, NumberDisplayModel)
+    for model in models:
+        registry.register_model(model, category='Operations',
+                                style=None)
 
-registry.register_type_converter(DecimalData, IntegerData,
-                                 decimal_to_integer_converter)
-registry.register_type_converter(IntegerData, DecimalData,
-                                 decimal_to_integer_converter)
+    registry.register_type_converter(DecimalData, IntegerData,
+                                     decimal_to_integer_converter)
+    registry.register_type_converter(IntegerData, DecimalData,
+                                     decimal_to_integer_converter)
 
-scene = nodeeditor.FlowScene(registry=registry)
+    scene = nodeeditor.FlowScene(registry=registry)
 
-view = nodeeditor.FlowView(scene)
-view.setWindowTitle("Calculator example")
-view.resize(800, 600)
-view.show()
+    view = nodeeditor.FlowView(scene)
+    view.setWindowTitle("Calculator example")
+    view.resize(800, 600)
+    view.show()
 
-node_a = scene.create_node(NumberSourceDataModel)
-node_b = scene.create_node(NumberSourceDataModel)
-node_add = scene.create_node(AdditionModel)
-node_display = scene.create_node(NumberDisplayModel)
+    node_a = scene.create_node(NumberSourceDataModel)
+    node_a.data.embedded_widget().setText('1.0')
 
-scene.create_connection(
-    node_out=node_a, port_index_out=0,
-    node_in=node_add, port_index_in=0,
-    converter=None
-)
+    node_b = scene.create_node(NumberSourceDataModel)
+    node_b.data.embedded_widget().setText('2.0')
+    node_add = scene.create_node(AdditionModel)
+    node_sub = scene.create_node(SubtractionModel)
+    node_mul = scene.create_node(MultiplicationModel)
+    node_div = scene.create_node(DivisionModel)
+    node_mod = scene.create_node(ModuloModel)
 
-scene.create_connection(
-    node_out=node_b, port_index_out=0,
-    node_in=node_add, port_index_in=1,
-    converter=None
-)
+    for node_operation in (node_add, node_sub, node_mul, node_div, node_mod):
+        scene.create_connection(
+            node_out=node_a, port_index_out=0,
+            node_in=node_operation, port_index_in=0,
+            converter=None
+        )
 
-scene.create_connection(
-    node_out=node_add, port_index_out=0,
-    node_in=node_display, port_index_in=0,
-    converter=None
-)
+        scene.create_connection(
+            node_out=node_b, port_index_out=0,
+            node_in=node_operation, port_index_in=1,
+            converter=None
+        )
 
-app.exec_()
+        node_display = scene.create_node(NumberDisplayModel)
+
+        scene.create_connection(
+            node_out=node_operation, port_index_out=0,
+            node_in=node_display, port_index_in=0,
+            converter=None
+        )
+
+
+    app.exec_()
+
+
+if __name__ == '__main__':
+    main()

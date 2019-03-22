@@ -150,6 +150,10 @@ class Node(QObject, Serializable, NodeBase):
         """
         return self._node_state
 
+    @property
+    def data(self) -> NodeDataModel:
+        return self._node_data_model
+
     def node_data_model(self) -> NodeDataModel:
         """
         Node data model
