@@ -71,8 +71,8 @@ class Connection(QObject, Serializable, ConnectionBase):
         '''
         inst = cls(node_in, node_out, style=style, port_index_in=port_index_in,
                    port_index_out=port_index_out, converter=converter)
-        inst.set_node_to_port(node_in, PortType.In, port_index_in)
-        inst.set_node_to_port(node_out, PortType.Out, port_index_out)
+        inst.set_node_to_port(node_in, PortType.input, port_index_in)
+        inst.set_node_to_port(node_out, PortType.output, port_index_out)
         return inst
 
     def _cleanup(self):
@@ -129,8 +129,8 @@ class Connection(QObject, Serializable, ConnectionBase):
                 )
 
             connection_json["converter"] = {
-                "in": get_type_json(PortType.In),
-                "out": get_type_json(PortType.Out),
+                "in": get_type_json(PortType.input),
+                "out": get_type_json(PortType.output),
             }
 
         return connection_json
@@ -154,10 +154,10 @@ class Connection(QObject, Serializable, ConnectionBase):
         dragging : PortType
         """
         self._connection_state.set_required_port(dragging)
-        if dragging == PortType.Out:
+        if dragging == PortType.output:
             self._out_node = None
             self._out_port_index = INVALID
-        elif dragging == PortType.In:
+        elif dragging == PortType.input:
             self._in_node = None
             self._in_port_index = INVALID
 
@@ -208,7 +208,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         port_index : PortIndex
         """
         was_incomplete = not self.complete()
-        if port_type == PortType.Out:
+        if port_type == PortType.output:
             self._out_node = node
             self._out_port_index = port_index
         else:
@@ -222,11 +222,11 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def remove_from_nodes(self):
         if self._in_node:
-            self._in_node.node_state().erase_connection(PortType.In,
+            self._in_node.node_state().erase_connection(PortType.input,
                                                         self._in_port_index,
                                                         self)
         if self._out_node:
-            self._out_node.node_state().erase_connection(PortType.Out,
+            self._out_node.node_state().erase_connection(PortType.output,
                                                          self._out_port_index,
                                                          self)
 
@@ -272,9 +272,9 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : Node
         """
-        if port_type == PortType.In:
+        if port_type == PortType.input:
             return self._in_node
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return self._out_node
 
         return None
@@ -291,9 +291,9 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : PortIndex
         """
-        if port_type == PortType.In:
+        if port_type == PortType.input:
             return self._in_port_index
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return self._out_port_index
         return INVALID
 
@@ -308,7 +308,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         if self.complete():
             self.connection_made_incomplete.emit(self)
 
-        if port_type == PortType.In:
+        if port_type == PortType.input:
             self._in_port_index = INVALID
             self._in_node = None
         else:
@@ -329,11 +329,11 @@ class Connection(QObject, Serializable, ConnectionBase):
         """
         if self._in_node and self._out_node:
             model = (self._in_node.node_data_model()
-                     if port_type == PortType.In
+                     if port_type == PortType.input
                      else self._out_node.node_data_model()
                      )
             index = (self._in_port_index
-                     if port_type == PortType.In
+                     if port_type == PortType.input
                      else self._out_port_index
                      )
             return model.data_type(port_type, index)
@@ -342,11 +342,11 @@ class Connection(QObject, Serializable, ConnectionBase):
         valid_node = None
         if self._in_node:
             index = self._in_port_index
-            port_type = PortType.In
+            port_type = PortType.input
             valid_node = self._in_node
         elif self._out_node:
             index = self._out_port_index
-            port_type = PortType.Out
+            port_type = PortType.output
             valid_node = self._out_node
         else:
             assert False, "Should not reach here"

@@ -169,7 +169,7 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : ConnectionPolicy
         """
-        return ConnectionPolicy.Many
+        return ConnectionPolicy.many
 
     # @property
     def node_style(self) -> style_module.NodeStyle:
@@ -235,7 +235,7 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : NodeValidationState
         """
-        return NodeValidationState.Valid
+        return NodeValidationState.valid
 
     def validation_message(self) -> str:
         """

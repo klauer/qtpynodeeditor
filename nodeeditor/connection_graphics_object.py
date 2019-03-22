@@ -103,7 +103,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         conn = self._connection
         cgo = conn.get_connection_graphics_object()
 
-        for port_type in (PortType.In, PortType.Out):
+        for port_type in (PortType.input, PortType.output):
             node = self._connection.get_node(port_type)
             if node is None:
                 continue

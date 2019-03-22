@@ -101,10 +101,10 @@ def test_create_connection(scene, view, model):
 
     conn, = all_c1
     # conn_state = conn.connection_state()
-    in_node = conn.get_node(PortType.In)
-    in_port = conn.get_port_index(PortType.In)
-    out_node = conn.get_node(PortType.Out)
-    out_port = conn.get_port_index(PortType.Out)
+    in_node = conn.get_node(PortType.input)
+    in_port = conn.get_port_index(PortType.input)
+    out_node = conn.get_node(PortType.output)
+    out_port = conn.get_port_index(PortType.output)
     assert in_node == node1
     assert in_port == 1
     assert out_node == node2
@@ -164,9 +164,9 @@ def test_save_load(tmp_path, scene, view, model):
 
 def test_smoke_reacting(scene, view, model):
     node = scene.create_node(model)
-    dtype = node.node_data_model().data_type(PortType.In, 0)
+    dtype = node.node_data_model().data_type(PortType.input, 0)
     node.react_to_possible_connection(
-        reacting_port_type=PortType.In,
+        reacting_port_type=PortType.input,
         reacting_data_type=dtype,
         scene_point=qtpy.QtCore.QPointF(0, 0),
     )

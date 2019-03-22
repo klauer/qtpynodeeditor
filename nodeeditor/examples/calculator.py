@@ -84,7 +84,7 @@ class MathOperationDataModel(NodeDataModel):
         self._number1 = None
         self._number2 = None
         self._result = None
-        self.model_validation_state = NodeValidationState.Warning
+        self.model_validation_state = NodeValidationState.warning
         self.model_validation_error = 'Uninitialized'
 
     def caption(self) -> str:
@@ -105,9 +105,9 @@ class MathOperationDataModel(NodeDataModel):
         -------
         value : int
         '''
-        if port_type==PortType.In:
+        if port_type==PortType.input:
             return 2
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return 1
 
         raise ValueError('Unknown port type')
@@ -129,12 +129,12 @@ class MathOperationDataModel(NodeDataModel):
 
     def _check_inputs(self):
         if self._number1 is None or self._number2 is None:
-            self.model_validation_state = NodeValidationState.Warning
+            self.model_validation_state = NodeValidationState.warning
             self.model_validation_error = "Missing or incorrect inputs"
             self._result = None
             return False
 
-        self.model_validation_state = NodeValidationState.Valid
+        self.model_validation_state = NodeValidationState.valid
         self.model_validation_error = ''
         return True
 
@@ -241,12 +241,12 @@ class DivisionModel(MathOperationDataModel):
         -------
         value : str
         '''
-        if port_type==PortType.In:
+        if port_type==PortType.input:
             if port_index == 0:
                 return 'Dividend'
             elif port_index == 1:
                 return 'Divisor'
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return 'Result'
 
 
@@ -254,11 +254,11 @@ class DivisionModel(MathOperationDataModel):
         if self._check_inputs():
             with self._compute_lock():
                 if self._number2.number == 0.0:
-                    self.model_validation_state = NodeValidationState.Error
+                    self.model_validation_state = NodeValidationState.error
                     self.model_validation_error = "Division by zero error"
                     self._result = None
                 else:
-                    self.model_validation_state = NodeValidationState.Valid
+                    self.model_validation_state = NodeValidationState.valid
                     self.model_validation_error = ''
                     self._result = DecimalData(self._number1.number/self._number2.number)
 
@@ -281,12 +281,12 @@ class ModuloModel(MathOperationDataModel):
         -------
         value : str
         '''
-        if port_type==PortType.In:
+        if port_type==PortType.input:
             if port_index == 0:
                 return 'Dividend'
             elif port_index == 1:
                 return 'Divisor'
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return 'Result'
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
@@ -335,7 +335,7 @@ class ModuloModel(MathOperationDataModel):
         if self._check_inputs():
             with self._compute_lock():
                 if self._number2.number == 0.0:
-                    self.model_validation_state = NodeValidationState.Error
+                    self.model_validation_state = NodeValidationState.error
                     self.model_validation_error = "Division by zero error"
                     self._result = None
                 else:
@@ -416,11 +416,11 @@ class MultiplicationModel(MathOperationDataModel):
         int : int
         '''
         if data:
-            self.model_validation_state = NodeValidationState.Valid
+            self.model_validation_state = NodeValidationState.valid
             self.model_validation_error = ''
             self._label.setText(data.numberAsText())
         else:
-            self.model_validation_state = NodeValidationState.Warning
+            self.model_validation_state = NodeValidationState.warning
             self.model_validation_error = "Missing or incorrect inputs"
             self._label.clear()
 
@@ -516,9 +516,9 @@ class NumberSourceDataModel(NodeDataModel):
         -------
         value : int
         '''
-        if port_type == PortType.In:
+        if port_type == PortType.input:
             return 0
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return 1
         raise ValueError('Unknown port type')
 
@@ -613,9 +613,9 @@ class NumberDisplayModel(NodeDataModel):
         -------
         value : int
         '''
-        if port_type == PortType.In:
+        if port_type == PortType.input:
             return 1
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return 0
         raise ValueError('Unknown port type')
 
@@ -646,11 +646,11 @@ class NumberDisplayModel(NodeDataModel):
         self._number = data
 
         if self._number:
-            self.model_validation_state = NodeValidationState.Valid
+            self.model_validation_state = NodeValidationState.valid
             self.model_validation_error = ''
             self._label.setText(self._number.number_as_text())
         else:
-            self.model_validation_state = NodeValidationState.Warning
+            self.model_validation_state = NodeValidationState.warning
             self.model_validation_error = "Missing or incorrect inputs"
             self._label.clear()
 
@@ -683,18 +683,18 @@ class SubtractionModel(MathOperationDataModel):
         -------
         value : str
         '''
-        if port_type==PortType.In:
+        if port_type==PortType.input:
             if port_index == 0:
                 return 'Minuend'
             elif port_index == 1:
                 return 'Subtrahend'
-        elif port_type == PortType.Out:
+        elif port_type == PortType.output:
             return 'Result'
 
     def compute(self):
         if self._check_inputs:
             with self._compute_lock():
-                self.model_validation_state = NodeValidationState.Valid
+                self.model_validation_state = NodeValidationState.valid
                 self.model_validation_error = ''
                 self._result = DecimalData(self._number1.number-self._number2.number)
 

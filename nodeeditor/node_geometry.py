@@ -23,8 +23,8 @@ class NodeGeometry:
         self._height = 150
         self._hovered = False
         self._input_port_width = 70
-        self._n_sinks = data_model.n_ports(PortType.In)
-        self._n_sources = data_model.n_ports(PortType.Out)
+        self._n_sinks = data_model.n_ports(PortType.input)
+        self._n_sources = data_model.n_ports(PortType.output)
         self._output_port_width = 70
         self._spacing = 20
         self._style = data_model.style.node
@@ -162,7 +162,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        return self._data_model.n_ports(PortType.Out)
+        return self._data_model.n_ports(PortType.output)
 
     def n_sinks(self) -> int:
         """
@@ -172,7 +172,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        return self._data_model.n_ports(PortType.In)
+        return self._data_model.n_ports(PortType.input)
 
     def dragging_pos(self) -> QPointF:
         """
@@ -247,8 +247,8 @@ class NodeGeometry:
             height = max((height, w.height()))
 
         height += self.caption_height()
-        self._input_port_width = self.port_width(PortType.In)
-        self._output_port_width = self.port_width(PortType.Out)
+        self._input_port_width = self.port_width(PortType.input)
+        self._output_port_width = self.port_width(PortType.output)
         width = self._input_port_width + self._output_port_width + 2 * self._spacing
 
         w = self._data_model.embedded_widget()
@@ -257,7 +257,7 @@ class NodeGeometry:
 
         width = max((width, self.caption_width()))
 
-        if self._data_model.validation_state() != NodeValidationState.Valid:
+        if self._data_model.validation_state() != NodeValidationState.valid:
             width = max((width, self.validation_width()))
             height += self.validation_height() + self._spacing
 
@@ -287,10 +287,10 @@ class NodeGeometry:
         # TODO_UPSTREAM: why?
         total_height += step / 2.0
 
-        if port_type == PortType.Out:
+        if port_type == PortType.output:
             x = self._width + self._style.connection_point_diameter
             result = QPointF(x, total_height)
-        elif port_type == PortType.In:
+        elif port_type == PortType.input:
             x = 0.0 - self._style.connection_point_diameter
             result = QPointF(x, total_height)
         else:
@@ -349,14 +349,14 @@ class NodeGeometry:
         if not w:
             return QPointF()
 
-        if self._data_model.validation_state() != NodeValidationState.Valid:
+        if self._data_model.validation_state() != NodeValidationState.valid:
             return QPointF(
-                self._spacing + self.port_width(PortType.In),
+                self._spacing + self.port_width(PortType.input),
                 (self.caption_height() + self._height - self.validation_height() - self._spacing - w.height()) / 2.0,
             )
 
         return QPointF(
-            self._spacing + self.port_width(PortType.In), (self.caption_height() + self._height - w.height()) / 2.0
+            self._spacing + self.port_width(PortType.input), (self.caption_height() + self._height - w.height()) / 2.0
         )
 
     def validation_height(self) -> int:

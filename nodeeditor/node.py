@@ -102,11 +102,11 @@ class Node(QObject, Serializable, NodeBase):
             pos = inverted.map(scene_point)
             self._node_geometry.set_dragging_position(pos)
         self._node_graphics_object.update()
-        self._node_state.set_reaction(ReactToConnectionState.REACTING,
+        self._node_state.set_reaction(ReactToConnectionState.reacting,
                                       reacting_port_type, reacting_data_type)
 
     def reset_reaction_to_connection(self):
-        self._node_state.set_reaction(ReactToConnectionState.NOT_REACTING)
+        self._node_state.set_reaction(ReactToConnectionState.not_reacting)
         self._node_graphics_object.update()
 
     def node_graphics_object(self) -> NodeGraphicsObject:
@@ -188,7 +188,7 @@ class Node(QObject, Serializable, NodeBase):
         index : PortIndex
         """
         node_data = self._node_data_model.out_data(index)
-        connections = self._node_state.connections(PortType.Out, index)
+        connections = self._node_state.connections(PortType.output, index)
         for c in connections:
             c.propagate_data(node_data)
 

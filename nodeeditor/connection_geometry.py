@@ -27,7 +27,7 @@ class ConnectionGeometry:
         value : QPointF
         """
         assert port_type != PortType.none
-        return (self._out if port_type == PortType.Out
+        return (self._out if port_type == PortType.output
                 else self._in
                 )
 
@@ -40,9 +40,9 @@ class ConnectionGeometry:
         port_type : PortType
         point : QPointF
         """
-        if port_type == PortType.Out:
+        if port_type == PortType.output:
             self._out = point
-        elif port_type == PortType.In:
+        elif port_type == PortType.input:
             self._in = point
         else:
             raise ValueError(port_type)
@@ -56,9 +56,9 @@ class ConnectionGeometry:
         port_type : PortType
         offset : QPointF
         """
-        if port_type == PortType.Out:
+        if port_type == PortType.output:
             self._out += offset
-        elif port_type == PortType.In:
+        elif port_type == PortType.input:
             self._in += offset
         else:
             raise ValueError(port_type)

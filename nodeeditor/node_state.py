@@ -15,13 +15,13 @@ class NodeState:
         ----------
         model : NodeDataModel
         '''
-        self._max_in = model.n_ports(PortType.In)
-        self._max_out = model.n_ports(PortType.Out)
+        self._max_in = model.n_ports(PortType.input)
+        self._max_out = model.n_ports(PortType.output)
         self._connections = {
-            PortType.In: OrderedDict((i, []) for i in range(self._max_in)),
-            PortType.Out: OrderedDict((i, []) for i in range(self._max_out)),
+            PortType.input: OrderedDict((i, []) for i in range(self._max_in)),
+            PortType.output: OrderedDict((i, []) for i in range(self._max_out)),
         }
-        self._reaction = ReactToConnectionState.NOT_REACTING
+        self._reaction = ReactToConnectionState.not_reacting
         self._reacting_port_type = PortType.none
         self._resizing = False
 
@@ -43,7 +43,7 @@ class NodeState:
     @property
     def all_connections(self):
         return [connection
-                for port_type in (PortType.In, PortType.Out)
+                for port_type in (PortType.input, PortType.output)
                 for port, connections in self._connections[port_type].items()
                 for connection in connections
                 ]
@@ -147,7 +147,7 @@ class NodeState:
         -------
         value : bool
         """
-        return self._reaction == ReactToConnectionState.REACTING
+        return self._reaction == ReactToConnectionState.reacting
 
     def set_resizing(self, resizing: bool):
         """

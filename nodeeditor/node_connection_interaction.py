@@ -55,7 +55,7 @@ class NodeConnectionInteraction:
         required_port = self.connection_required_port()
         if required_port == PortType.none:
             raise ConnectionRequiresPortFailure(f'Connection requires a port')
-        elif required_port not in (PortType.In, PortType.Out):
+        elif required_port not in (PortType.input, PortType.output):
             raise ValueError(f'Invalid port specified {required_port}')
 
         # 1.5) Forbid connecting the node to itself
@@ -86,7 +86,7 @@ class NodeConnectionInteraction:
             return port_index, DefaultTypeConverter
 
         registry = self._scene.registry()
-        if required_port == PortType.In:
+        if required_port == PortType.input:
             converter = registry.get_type_converter(connection_data_type,
                                                     candidate_node_data_type)
         else:
@@ -134,9 +134,9 @@ class NodeConnectionInteraction:
         self._node.node_graphics_object().move_connections()
 
         # 5) Poke model to intiate data transfer
-        out_node = self._connection.get_node(PortType.Out)
+        out_node = self._connection.get_node(PortType.output)
         if out_node:
-            out_port_index = self._connection.get_port_index(PortType.Out)
+            out_port_index = self._connection.get_port_index(PortType.output)
             out_node.on_data_updated(out_port_index)
 
         return True
@@ -254,4 +254,4 @@ class NodeConnectionInteraction:
         if not entries[port_index]:
             return True
         out_policy = self._node.node_data_model().port_out_connection_policy(port_index)
-        return port_type == PortType.Out and out_policy == ConnectionPolicy.Many
+        return port_type == PortType.output and out_policy == ConnectionPolicy.many

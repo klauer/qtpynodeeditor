@@ -138,8 +138,8 @@ class FlowScene(QGraphicsScene):
                                            converter=converter,
                                            style=self._style)
         cgo = ConnectionGraphicsObject(self, connection)
-        node_in.node_state().set_connection(PortType.In, port_index_in, connection)
-        node_out.node_state().set_connection(PortType.Out, port_index_out, connection)
+        node_in.node_state().set_connection(PortType.input, port_index_in, connection)
+        node_out.node_state().set_connection(PortType.output, port_index_out, connection)
 
         # after self function connection points are set to node port
         connection.set_graphics_object(cgo)
@@ -399,8 +399,8 @@ class FlowScene(QGraphicsScene):
 
         # A leaf node is a node with no input ports, or all possible input ports empty
         def is_node_leaf(node, model):
-            for i in range(model.n_ports(PortType.In)):
-                connections = node.node_state().connections(PortType.In, i)
+            for i in range(model.n_ports(PortType.input)):
+                connections = node.node_state().connections(PortType.input, i)
                 if connections is None:
                     return False
 
@@ -414,10 +414,10 @@ class FlowScene(QGraphicsScene):
                 visited_nodes.append(node)
 
         def are_node_inputs_visited_before(node, model):
-            for i in range(model.n_ports(PortType.In)):
-                connections = node.node_state().connections(PortType.In, i)
+            for i in range(model.n_ports(PortType.input)):
+                connections = node.node_state().connections(PortType.input, i)
                 for conn in connections:
-                    other = conn.get_node(PortType.Out)
+                    other = conn.get_node(PortType.output)
                     if visited_nodes and other == visited_nodes[-1]:
                         return False
             return True
@@ -606,8 +606,8 @@ class FlowScene(QGraphicsScene):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.Out)
-        to = conn.get_node(PortType.In)
+        from_ = conn.get_node(PortType.output)
+        to = conn.get_node(PortType.input)
         assert from_ is not None
         assert to is not None
         from_.node_data_model().output_connection_created(conn)
@@ -621,8 +621,8 @@ class FlowScene(QGraphicsScene):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.Out)
-        to = conn.get_node(PortType.In)
+        from_ = conn.get_node(PortType.output)
+        to = conn.get_node(PortType.input)
         assert from_ is not None
         assert to is not None
         from_.node_data_model().output_connection_deleted(conn)

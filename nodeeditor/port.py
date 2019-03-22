@@ -23,5 +23,5 @@ class Port:
 
 
 def opposite_port(port: PortType):
-    return {PortType.In: PortType.Out,
-            PortType.Out: PortType.In}.get(port, PortType.none)
+    return {PortType.input: PortType.output,
+            PortType.output: PortType.input}.get(port, PortType.none)

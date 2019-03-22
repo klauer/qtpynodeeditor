@@ -160,7 +160,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
         node_geometry = self._node.node_geometry()
 
-        for port_to_check in (PortType.In, PortType.Out):
+        for port_to_check in (PortType.input, PortType.output):
             # TODO do not pass sceneTransform
             port_index = node_geometry.check_hit_scene_point(port_to_check,
                                                              event.scenePos(),
@@ -172,14 +172,14 @@ class NodeGraphicsObject(QGraphicsObject):
             connections = node_state.connections(port_to_check, port_index)
 
             # start dragging existing connection
-            if connections and port_to_check == PortType.In:
+            if connections and port_to_check == PortType.input:
                 conn, = connections
                 interaction = NodeConnectionInteraction(self._node, conn, self._scene)
                 interaction.disconnect(port_to_check)
-            elif port_to_check == PortType.Out:
+            elif port_to_check == PortType.output:
                 # initialize new Connection
                 out_policy = self._node.node_data_model().port_out_connection_policy(port_index)
-                if connections and out_policy == ConnectionPolicy.One:
+                if connections and out_policy == ConnectionPolicy.one:
                     conn, = connections
                     self._scene.delete_connection(conn)
 

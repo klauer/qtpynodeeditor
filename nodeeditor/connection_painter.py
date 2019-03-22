@@ -106,8 +106,8 @@ def draw_normal_line(painter, connection, style):
 
     gradient_color = False
     if style.use_data_defined_colors:
-        data_type_out = connection.data_type(PortType.Out)
-        data_type_in = connection.data_type(PortType.In)
+        data_type_out = connection.data_type(PortType.output)
+        data_type_in = connection.data_type(PortType.input)
 
         gradient_color = data_type_out.id != data_type_in.id
 

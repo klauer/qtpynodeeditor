@@ -150,7 +150,7 @@ class NodePainter:
         node_style : NodeStyle
         """
         metrics = painter.fontMetrics()
-        for port_type in (PortType.Out, PortType.In):
+        for port_type in (PortType.output, PortType.input):
             for i, entries in enumerate(state.get_entries(port_type)):
                 p = geom.port_scene_position(i, port_type)
                 if not entries:
@@ -165,9 +165,9 @@ class NodePainter:
 
                 rect = metrics.boundingRect(s)
                 p.setY(p.y() + rect.height() / 4.0)
-                if port_type == PortType.In:
+                if port_type == PortType.input:
                     p.setX(5.0)
-                elif port_type == PortType.Out:
+                elif port_type == PortType.output:
                     p.setX(geom.width() - 5.0 - rect.width())
 
                 painter.drawText(p, s)
@@ -192,14 +192,14 @@ class NodePainter:
         """
         diameter = node_style.connection_point_diameter
         reduced_diameter = diameter * 0.6
-        for port_type in (PortType.Out, PortType.In):
+        for port_type in (PortType.output, PortType.input):
             for i, entries in enumerate(state.get_entries(port_type)):
                 p = geom.port_scene_position(i, port_type)
                 data_type = model.data_type(port_type, i)
                 can_connect = (
                     not entries or
-                    (port_type == PortType.Out and
-                     model.port_out_connection_policy(i) == ConnectionPolicy.Many
+                    (port_type == PortType.output and
+                     model.port_out_connection_policy(i) == ConnectionPolicy.many
                      )
                 )
 
@@ -209,7 +209,7 @@ class NodePainter:
                     dist = math.sqrt(QPointF.dotProduct(diff, diff))
 
                     registry = scene.registry()
-                    if port_type == PortType.In:
+                    if port_type == PortType.input:
                         type_convertable = (
                             registry.get_type_converter(state.reacting_data_type(), data_type) is not None
                         )
@@ -256,7 +256,7 @@ class NodePainter:
         connection_style : ConnectionStyle
         """
         diameter = node_style.connection_point_diameter
-        for port_type in (PortType.Out, PortType.In):
+        for port_type in (PortType.output, PortType.input):
             for i, entries in enumerate(state.get_entries(port_type)):
                 if not entries:
                     continue
@@ -303,7 +303,7 @@ class NodePainter:
         node_style : NodeStyle
         """
         model_validation_state = model.validation_state()
-        if model_validation_state == NodeValidationState.Valid:
+        if model_validation_state == NodeValidationState.valid:
             return
 
         color = (node_style.selected_boundary_color
@@ -318,7 +318,7 @@ class NodePainter:
         painter.setPen(p)
 
         # Drawing the validation message background
-        if model_validation_state == NodeValidationState.Error:
+        if model_validation_state == NodeValidationState.error:
             painter.setBrush(node_style.error_color)
         else:
             painter.setBrush(node_style.warning_color)
