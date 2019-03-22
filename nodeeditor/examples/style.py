@@ -79,21 +79,24 @@ class MyDataModel(NodeDataModel):
         return None
 
 
-logging.basicConfig(level='DEBUG')
-app = QtWidgets.QApplication([])
+def main(app):
+    style = StyleCollection.from_json(style_json)
 
-style = StyleCollection.from_json(style_json)
-# style = StyleCollection()
+    registry = nodeeditor.DataModelRegistry()
+    registry.register_model(MyDataModel, category='My Category', style=style)
+    scene = nodeeditor.FlowScene(registry=registry)
 
-registry = nodeeditor.DataModelRegistry()
-registry.register_model(MyDataModel, category='My Category', style=style)
-scene = nodeeditor.FlowScene(registry=registry)
+    view = nodeeditor.FlowView(scene)
+    view.setWindowTitle("Style example")
+    view.resize(800, 600)
 
-view = nodeeditor.FlowView(scene)
-view.setWindowTitle("Style example")
-view.resize(800, 600)
-view.show()
+    node = scene.create_node(MyDataModel)
+    return scene, view, [node]
 
-node = scene.create_node(MyDataModel)
 
-app.exec_()
+if __name__ == '__main__':
+    logging.basicConfig(level='DEBUG')
+    app = QtWidgets.QApplication([])
+    scene, view, nodes = main(app)
+    view.show()
+    app.exec_()

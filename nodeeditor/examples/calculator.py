@@ -364,6 +364,10 @@ class NumberSourceDataModel(NodeDataModel):
         self._line_edit.textChanged.connect(self.on_text_edited)
         self._line_edit.setText("0.0")
 
+    @property
+    def number(self):
+        return self._number
+
     def caption(self) -> str:
         return "Number Source"
 
@@ -626,10 +630,7 @@ def decimal_to_integer_converter(data: DecimalData) -> IntegerData:
     return IntegerData(int(data.number))
 
 
-def main():
-    logging.basicConfig(level='DEBUG')
-    app = QApplication([])
-
+def main(app):
     registry = nodeeditor.DataModelRegistry()
 
     models = (AdditionModel, DivisionModel, ModuloModel, MultiplicationModel,
@@ -682,9 +683,12 @@ def main():
             converter=None
         )
 
-
-    app.exec_()
+    return scene, view, [node_a, node_b]
 
 
 if __name__ == '__main__':
-    main()
+    logging.basicConfig(level='DEBUG')
+    app = QApplication([])
+    scene, view, nodes = main(app)
+    view.show()
+    app.exec_()

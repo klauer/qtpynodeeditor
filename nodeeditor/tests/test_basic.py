@@ -51,7 +51,7 @@ def registry(model):
 
 
 @pytest.fixture(scope='function')
-def scene(application, registry):
+def scene(qapp, registry):
     return nodeeditor.FlowScene(registry=registry)
 
 
