@@ -1,7 +1,6 @@
 import os
 import json
-from qtpy.QtCore import (QByteArray, QDir, QFile, QFileInfo, QIODevice,
-                         QJsonDocument, QPoint, QPointF, QSizeF, QUuid, Qt)
+from qtpy.QtCore import (QDir, QPoint, QPointF, QSizeF, QUuid, Qt)
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
