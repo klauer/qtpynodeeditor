@@ -1,19 +1,39 @@
-from qtpy.QtCore import QPointF
+import pytest
 from nodeeditor import examples
 
 
-def test_smoke_style(qtbot, qapp):
-    scene, view, nodes = examples.style.main(qapp)
+@pytest.fixture(scope='function',
+                params=['style', 'calculator'])
+def example(qtbot, qapp, request):
+    example_module = getattr(examples, request.param)
+    scene, view, nodes = example_module.main(qapp)
     qtbot.addWidget(view)
+    yield scene, view, nodes
 
+
+@pytest.fixture(scope='function')
+def scene(example):
+    return example[0]
+
+
+@pytest.fixture(scope='function')
+def view(example):
+    return example[1]
+
+
+@pytest.fixture(scope='function')
+def nodes(example):
+    return example[2]
+
+
+def test_smoke_example(example):
+    ...
+
+
+def test_iterate(scene):
     for node in scene.iterate_over_nodes():
         scene.get_node_size(node)
-        scene.set_node_position(node, QPointF(0.0, 0.0))
-
-
-def test_smoke_calculator(qtbot, qapp):
-    scene, view, nodes = examples.calculator.main(qapp)
-    qtbot.addWidget(view)
+        scene.set_node_position(node, scene.get_node_position(node))
 
     print('Node data iterator')
     print('------------------')
@@ -24,3 +44,7 @@ def test_smoke_calculator(qtbot, qapp):
     print('----------------------------')
     for data in scene.iterate_over_node_data_dependent_order():
         print(data, data.number if hasattr(data, 'number') else '')
+
+
+def test_save_and_load(scene):
+    scene.load_from_memory(scene.save_to_memory())

@@ -477,7 +477,7 @@ class FlowScene(QGraphicsScene):
         scene_json["nodes"] = nodes_json_array
         for connection in self._connections:
             connection_json = connection.save()
-            if not connection_json.isEmpty():
+            if connection_json:
                 connection_json_array.append(connection_json)
 
         scene_json["connections"] = connection_json_array
