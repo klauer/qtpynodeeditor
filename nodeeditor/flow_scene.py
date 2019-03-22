@@ -171,7 +171,7 @@ class FlowScene(QGraphicsScene):
 
         def get_converter():
             converter = connection_json.get("converter", None)
-            if converter is not None:
+            if converter is None:
                 return DefaultTypeConverter
 
             in_type = NodeDataType(
