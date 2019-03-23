@@ -1,10 +1,10 @@
-
 {% set data = load_setup_py_data() %}
 
+build:
+    noarch: python
 
 package:
     name    : qtpynodeeditor
-
     version : {{ data.get('version') }}
 
 
