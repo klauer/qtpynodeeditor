@@ -5,10 +5,9 @@ import threading
 from qtpy.QtWidgets import (QWidget, QLineEdit, QApplication, QLabel)
 from qtpy.QtGui import QDoubleValidator
 
-import nodeeditor
-from nodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
-                        NodeValidationState, PortIndex
-                        )
+import qtpynodeeditor as nodeeditor
+from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
+                            NodeValidationState, PortIndex)
 
 
 class DecimalData(NodeData):

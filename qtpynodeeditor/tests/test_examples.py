@@ -1,5 +1,5 @@
 import pytest
-from nodeeditor import examples
+from qtpynodeeditor import examples
 
 
 @pytest.fixture(scope='function',

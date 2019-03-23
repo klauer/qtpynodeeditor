@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     # Show coverage
     if '--show-cov' in args:
-        args.extend(['--cov=nodeeditor', '--cov-report', 'term-missing'])
+        args.extend(['--cov=qtpynodeeditor', '--cov-report', 'term-missing'])
         args.remove('--show-cov')
 
     sys.exit(pytest.main(args))

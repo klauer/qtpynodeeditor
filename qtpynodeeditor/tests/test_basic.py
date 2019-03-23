@@ -1,8 +1,8 @@
 import pytest
 import qtpy.QtCore
 
-import nodeeditor
-from nodeeditor import PortType
+import qtpynodeeditor as nodeeditor
+from qtpynodeeditor import PortType
 
 
 class MyNodeData(nodeeditor.NodeData):
