@@ -60,9 +60,6 @@ class MyDataModel(NodeDataModel):
     def caption(self):
         return 'Caption'
 
-    def save(self):
-        return {'name': self.name}
-
     def n_ports(self, port_type):
         return 3
 

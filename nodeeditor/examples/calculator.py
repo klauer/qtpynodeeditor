@@ -25,23 +25,11 @@ class DecimalData(NodeData):
 
     @property
     def number(self) -> float:
-        '''
-        The number
-
-        Returns
-        -------
-        value : float
-        '''
+        'The number data'
         return self._number
 
     def number_as_text(self) -> str:
-        '''
-        number_as_text
-
-        Returns
-        -------
-        value : str
-        '''
+        'Number as a string'
         return '%g' % self._number
 
 
@@ -58,23 +46,11 @@ class IntegerData(NodeData):
         return self._lock
 
     def number(self) -> int:
-        '''
-        The number
-
-        Returns
-        -------
-        value : int
-        '''
+        'The number data'
         return self._number
 
     def number_as_text(self) -> str:
-        '''
-        number_as_text
-
-        Returns
-        -------
-        value : str
-        '''
+        'Number as a string'
         return str(self._number)
 
 
@@ -84,8 +60,8 @@ class MathOperationDataModel(NodeDataModel):
         self._number1 = None
         self._number2 = None
         self._result = None
-        self.model_validation_state = NodeValidationState.warning
-        self.model_validation_error = 'Uninitialized'
+        self._validation_state = NodeValidationState.warning
+        self._validation_message = 'Uninitialized'
 
     def caption(self) -> str:
         return self.name
@@ -94,18 +70,7 @@ class MathOperationDataModel(NodeDataModel):
         return True
 
     def n_ports(self, port_type: PortType) -> int:
-        '''
-        n_ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        '''
-        if port_type==PortType.input:
+        if port_type == PortType.input:
             return 2
         elif port_type == PortType.output:
             return 1
@@ -113,29 +78,23 @@ class MathOperationDataModel(NodeDataModel):
         raise ValueError('Unknown port type')
 
     def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
-        '''
-        port_caption_visible
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : bool
-        '''
         return True
 
     def _check_inputs(self):
-        if self._number1 is None or self._number2 is None:
-            self.model_validation_state = NodeValidationState.warning
-            self.model_validation_error = "Missing or incorrect inputs"
+        number1_ok = (self._number1 is not None and
+                      self._number1.data_type.id in ('Decimal', 'integer'))
+        number2_ok = (self._number2 is not None and
+                      self._number2.data_type.id in ('Decimal', 'integer'))
+
+        if not number1_ok or not number2_ok:
+            self._validation_state = NodeValidationState.warning
+            self._validation_message = "Missing or incorrect inputs"
             self._result = None
+            self.data_updated.emit(0)
             return False
 
-        self.model_validation_state = NodeValidationState.valid
-        self.model_validation_error = ''
+        self._validation_state = NodeValidationState.valid
+        self._validation_message = ''
         return True
 
     @contextlib.contextmanager
@@ -147,24 +106,14 @@ class MathOperationDataModel(NodeDataModel):
             with self._number2.lock:
                 yield
 
+        self.data_updated.emit(0)
+
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        '''
-        data_type
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : NodeDataType
-        '''
         return DecimalData.data_type
 
     def out_data(self, port: PortIndex) -> NodeData:
         '''
-        out_data
+        The output data as a result of this calculation
 
         Parameters
         ----------
@@ -178,7 +127,7 @@ class MathOperationDataModel(NodeDataModel):
 
     def set_in_data(self, data: NodeData, port_index: PortIndex):
         '''
-        set_in_data
+        New data at the input of the node
 
         Parameters
         ----------
@@ -190,27 +139,15 @@ class MathOperationDataModel(NodeDataModel):
         elif port_index == 1:
             self._number2 = data
 
-        self.compute()
+        if self._check_inputs():
+            with self._compute_lock():
+                self.compute()
 
     def validation_state(self) -> NodeValidationState:
-        '''
-        validation_state
-
-        Returns
-        -------
-        value : NodeValidationState
-        '''
-        return self.model_validation_state
+        return self._validation_state
 
     def validation_message(self) -> str:
-        '''
-        validation_message
-
-        Returns
-        -------
-        value : str
-        '''
-        return self.model_validation_error
+        return self._validation_message
 
     def compute(self):
         ...
@@ -220,31 +157,14 @@ class AdditionModel(MathOperationDataModel):
     name = "Addition"
 
     def compute(self):
-        if self._check_inputs():
-            with self._compute_lock():
-                self._result = DecimalData(self._number1.number +
-                                           self._number2.number)
-
-        self.data_updated.emit(0)
+        self._result = DecimalData(self._number1.number + self._number2.number)
 
 
 class DivisionModel(MathOperationDataModel):
     name = "Division"
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        '''
-        port_caption
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : str
-        '''
-        if port_type==PortType.input:
+        if port_type == PortType.input:
             if port_index == 0:
                 return 'Dividend'
             elif port_index == 1:
@@ -254,36 +174,20 @@ class DivisionModel(MathOperationDataModel):
 
 
     def compute(self):
-        if self._check_inputs():
-            with self._compute_lock():
-                if self._number2.number == 0.0:
-                    self.model_validation_state = NodeValidationState.error
-                    self.model_validation_error = "Division by zero error"
-                    self._result = None
-                else:
-                    self.model_validation_state = NodeValidationState.valid
-                    self.model_validation_error = ''
-                    self._result = DecimalData(self._number1.number/self._number2.number)
-
-        self.data_updated.emit(0)
+        if self._number2.number == 0.0:
+            self._validation_state = NodeValidationState.error
+            self._validation_message = "Division by zero error"
+            self._result = None
+        else:
+            self._validation_state = NodeValidationState.valid
+            self._validation_message = ''
+            self._result = DecimalData(self._number1.number / self._number2.number)
 
 
 class ModuloModel(MathOperationDataModel):
     name = 'Modulo'
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        '''
-        port_caption
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : str
-        '''
         if port_type==PortType.input:
             if port_index == 0:
                 return 'Dividend'
@@ -293,49 +197,21 @@ class ModuloModel(MathOperationDataModel):
             return 'Result'
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        '''
-        data_type
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : NodeDataType
-        '''
         return IntegerData.data_type
 
     def compute(self):
-        if self._check_inputs():
-            with self._compute_lock():
-                if self._number2.number == 0.0:
-                    self.model_validation_state = NodeValidationState.error
-                    self.model_validation_error = "Division by zero error"
-                    self._result = None
-                else:
-                    self._result = IntegerData(self._number1.number % self._number2.number)
-
-        self.data_updated.emit(0)
+        if self._number2.number == 0.0:
+            self._validation_state = NodeValidationState.error
+            self._validation_message = "Division by zero error"
+            self._result = None
+        else:
+            self._result = IntegerData(self._number1.number % self._number2.number)
 
 
 class MultiplicationModel(MathOperationDataModel):
     name = 'Multiplication'
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        '''
-        port_caption
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : str
-        '''
         if port_type==PortType.input:
             if port_index == 0:
                 return 'A'
@@ -345,11 +221,7 @@ class MultiplicationModel(MathOperationDataModel):
             return 'Result'
 
     def compute(self):
-        if self._check_inputs():
-            with self._compute_lock():
-                self._result = DecimalData(self._number1.number * self._number2.number)
-
-        self.data_updated.emit(0)
+            self._result = DecimalData(self._number1.number * self._number2.number)
 
 
 class NumberSourceDataModel(NodeDataModel):
@@ -375,28 +247,16 @@ class NumberSourceDataModel(NodeDataModel):
         return False
 
     def save(self) -> dict:
-        '''
-        save
-
-        Returns
-        -------
-        value : dict
-        '''
+        'Add to the JSON dictionary to save the state of the NumberSource'
         doc = super().save()
         if self._number:
             doc['number'] = self._number.number
         return doc
 
-    def restore(self, p: dict):
-        '''
-        restore
-
-        Parameters
-        ----------
-        p : dict
-        '''
+    def restore(self, state: dict):
+        'Restore the number from the JSON dictionary'
         try:
-            value = float(p["number"])
+            value = float(state["number"])
         except Exception:
             ...
         else:
@@ -404,17 +264,6 @@ class NumberSourceDataModel(NodeDataModel):
             self._line_edit.setText(self._number.number_as_text())
 
     def n_ports(self, port_type: PortType) -> int:
-        '''
-        n_ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        '''
         if port_type == PortType.input:
             return 0
         elif port_type == PortType.output:
@@ -422,23 +271,11 @@ class NumberSourceDataModel(NodeDataModel):
         raise ValueError('Unknown port type')
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        '''
-        data_type
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : NodeDataType
-        '''
         return DecimalData.data_type
 
     def out_data(self, port: PortIndex) -> NodeData:
         '''
-        out_data
+        The data output from this node
 
         Parameters
         ----------
@@ -450,30 +287,13 @@ class NumberSourceDataModel(NodeDataModel):
         '''
         return self._number
 
-    def set_in_data(self, data: NodeData, int: int):
-        '''
-        set_in_data
-
-        Parameters
-        ----------
-        data : NodeData
-        int : int
-        '''
-        ...
-
     def embedded_widget(self) -> QWidget:
-        '''
-        embedded_widget
-
-        Returns
-        -------
-        value : QWidget
-        '''
+        'The number source has a line edit widget for the user to type in'
         return self._line_edit
 
     def on_text_edited(self, string: str):
         '''
-        on_text_edited
+        Line edit text has changed
 
         Parameters
         ----------
@@ -496,24 +316,13 @@ class NumberDisplayModel(NodeDataModel):
         self._number = None
         self._label = QLabel()
         self._label.setMargin(3)
-        self.model_validation_state = NodeValidationState.warning
-        self.model_validation_error = 'Uninitialized'
+        self._validation_state = NodeValidationState.warning
+        self._validation_message = 'Uninitialized'
 
     def caption_visible(self) -> bool:
         return False
 
     def n_ports(self, port_type: PortType) -> int:
-        '''
-        n_ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        '''
         if port_type == PortType.input:
             return 1
         elif port_type == PortType.output:
@@ -521,23 +330,11 @@ class NumberDisplayModel(NodeDataModel):
         raise ValueError('Unknown port type')
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        '''
-        data_type
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : NodeDataType
-        '''
         return DecimalData.data_type
 
     def set_in_data(self, data: NodeData, int: int):
         '''
-        set_in_data
+        New data propagated to the input
 
         Parameters
         ----------
@@ -545,26 +342,22 @@ class NumberDisplayModel(NodeDataModel):
         int : int
         '''
         self._number = data
+        number_ok = (self._number is not None and
+                     self._number.data_type.id in ('Decimal', 'integer'))
 
-        if self._number:
-            self.model_validation_state = NodeValidationState.valid
-            self.model_validation_error = ''
+        if number_ok:
+            self._validation_state = NodeValidationState.valid
+            self._validation_message = ''
             self._label.setText(self._number.number_as_text())
         else:
-            self.model_validation_state = NodeValidationState.warning
-            self.model_validation_error = "Missing or incorrect inputs"
+            self._validation_state = NodeValidationState.warning
+            self._validation_message = "Missing or incorrect inputs"
             self._label.clear()
 
         self._label.adjustSize()
 
     def embedded_widget(self) -> QWidget:
-        '''
-        embedded_widget
-
-        Returns
-        -------
-        value : QWidget
-        '''
+        'The number display has a label'
         return self._label
 
 
@@ -572,18 +365,6 @@ class SubtractionModel(MathOperationDataModel):
     name = "Subtraction"
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        '''
-        port_caption
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : str
-        '''
         if port_type==PortType.input:
             if port_index == 0:
                 return 'Minuend'
@@ -593,13 +374,9 @@ class SubtractionModel(MathOperationDataModel):
             return 'Result'
 
     def compute(self):
-        if self._check_inputs():
-            with self._compute_lock():
-                self.model_validation_state = NodeValidationState.valid
-                self.model_validation_error = ''
-                self._result = DecimalData(self._number1.number-self._number2.number)
-
-        self.data_updated.emit(0)
+        self._validation_state = NodeValidationState.valid
+        self._validation_message = ''
+        self._result = DecimalData(self._number1.number - self._number2.number)
 
 
 def integer_to_decimal_converter(data: IntegerData) -> DecimalData:

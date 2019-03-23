@@ -1,3 +1,5 @@
+import threading
+
 from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
 from qtpy.QtCore import Signal
@@ -21,7 +23,7 @@ class NodeData:
     The actual data is stored in subtypes
     """
 
-    data_type = None
+    data_type = NodeDataType(None, None)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -56,6 +58,7 @@ class NodeDataModel(QObject, Serializable):
         if style is None:
             style = style_module.default_style
         self._style = style
+        self._lock = threading.Lock()
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -120,13 +123,48 @@ class NodeDataModel(QObject, Serializable):
 
     def save(self) -> dict:
         """
-        Save
+        Subclasses may implement this to save additional state for
+        pickling/saving to JSON.
+
+        Returns
+        -------
+        value : dict
+        """
+        return {}
+
+    def restore(self, doc: dict):
+        """
+        Subclasses may implement this to load additional state from
+        pickled or saved-to-JSON data.
+
+        Parameters
+        ----------
+        value : dict
+        """
+        return {}
+
+    def __setstate__(self, doc: dict):
+        """
+        Set the state of the NodeDataModel
+
+        Parameters
+        ----------
+        doc : dict
+        """
+        self.restore(doc)
+        return doc
+
+    def __getstate__(self) -> dict:
+        """
+        Get the state of the NodeDataModel for saving/pickling
 
         Returns
         -------
         value : QJsonObject
         """
-        return {'name': self.name}
+        doc = {'name': self.name}
+        doc.update(**self.save())
+        return doc
 
     def n_ports(self, port_type: PortType) -> int:
         """
@@ -171,7 +209,7 @@ class NodeDataModel(QObject, Serializable):
         """
         return ConnectionPolicy.many
 
-    # @property
+    @property
     def node_style(self) -> style_module.NodeStyle:
         """
         Node style
@@ -184,7 +222,7 @@ class NodeDataModel(QObject, Serializable):
 
     def set_in_data(self, node_data: NodeData, port: PortIndex):
         """
-        Triggers the algorithm
+        Triggers the algorithm; to be overridden by subclasses
 
         Parameters
         ----------

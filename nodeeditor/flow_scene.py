@@ -1,6 +1,6 @@
 import os
 import json
-from qtpy.QtCore import (QDir, QPoint, QPointF, QSizeF, QUuid, Qt)
+from qtpy.QtCore import (QDir, QPoint, QPointF, QSizeF, Qt)
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
@@ -161,8 +161,8 @@ class FlowScene(QGraphicsScene):
         -------
         value : Connection
         """
-        node_in_id = QUuid(connection_json["in_id"])
-        node_out_id = QUuid(connection_json["out_id"])
+        node_in_id = connection_json["in_id"]
+        node_out_id = connection_json["out_id"]
 
         port_index_in = connection_json["in_index"]
         port_index_out = connection_json["out_index"]
@@ -247,9 +247,10 @@ class FlowScene(QGraphicsScene):
         data_model = self._registry.create(model_name)
         if not data_model:
             raise ValueError("No registered model with name {}".format(model_name))
+
         node = Node(data_model)
         node.graphics_object = NodeGraphicsObject(self, node)
-        node.restore(node_json)
+        node.__setstate__(node_json)
 
         self._nodes[node.id] = node
         self.node_created.emit(node)
@@ -390,7 +391,7 @@ class FlowScene(QGraphicsScene):
         Returns
         -------
         value : dict
-            Key: QUuid
+            Key: uuid
             Value: Node
         """
         return dict(self._nodes)
@@ -439,11 +440,9 @@ class FlowScene(QGraphicsScene):
                 file_name += ".flow"
 
             with open(file_name, 'wt') as f:
-                json.dump(self.save_to_memory(), f)
+                json.dump(self.__getstate__(), f)
 
     def load(self, file_name=None):
-        self.clear_scene()
-
         if file_name is None:
             file_name, _ = QFileDialog.getOpenFileName(
                 None, "Open Flow Scene", QDir.homePath(),
@@ -453,11 +452,13 @@ class FlowScene(QGraphicsScene):
             return
 
         with open(file_name, 'rt') as f:
-            self.load_from_memory(f.read())
+            doc = json.load(f)
 
-    def save_to_memory(self) -> dict:
+        self.__setstate__(doc)
+
+    def __getstate__(self) -> dict:
         """
-        Save to memory
+        Save scene state to a dictionary
 
         Returns
         -------
@@ -467,28 +468,27 @@ class FlowScene(QGraphicsScene):
         nodes_json_array = []
         connection_json_array = []
         for node in self._nodes.values():
-            nodes_json_array.append(node.save())
+            nodes_json_array.append(node.__getstate__())
 
         scene_json["nodes"] = nodes_json_array
         for connection in self._connections:
-            connection_json = connection.save()
+            connection_json = connection.__getstate__()
             if connection_json:
                 connection_json_array.append(connection_json)
 
         scene_json["connections"] = connection_json_array
         return scene_json
 
-    def load_from_memory(self, doc: str):
+    def __setstate__(self, doc: dict):
         """
-        Load from memory
+        Load scene state from a dictionary
 
         Parameters
         ----------
-        doc : str or dict
-            JSON-formatted string or dictionary of settings
+        doc : dict
+            Dictionary of settings
         """
-        if not isinstance(doc, dict):
-            doc = json.loads(doc)
+        self.clear_scene()
 
         for node in doc["nodes"]:
             self.restore_node(node)

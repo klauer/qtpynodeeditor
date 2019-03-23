@@ -1,4 +1,6 @@
-from qtpy.QtCore import QObject, QPointF, QUuid, Property
+import uuid
+
+from qtpy.QtCore import QObject, QPointF, Property
 
 from .enums import ReactToConnectionState
 from .base import NodeBase
@@ -21,8 +23,8 @@ class Node(QObject, Serializable, NodeBase):
         '''
         super().__init__()
         self._node_data_model = data_model
-        self._uid = QUuid.createUuid()
-        self._style = data_model.node_style()
+        self._uid = str(uuid.uuid4())
+        self._style = data_model.node_style
         self._state = NodeState(self._node_data_model)
         self._geometry = NodeGeometry(self._node_data_model)
         self._graphics_obj = None
@@ -44,7 +46,7 @@ class Node(QObject, Serializable, NodeBase):
         except Exception:
             ...
 
-    def save(self) -> dict:
+    def __getstate__(self) -> dict:
         """
         Save
 
@@ -53,34 +55,34 @@ class Node(QObject, Serializable, NodeBase):
         value : dict
         """
         return {
-            "id": self._uid.toString(),
-            "model": self._node_data_model.save(),
+            "id": self._uid,
+            "model": self._node_data_model.__getstate__(),
             "position": {"x": self._graphics_obj.pos().x(),
                          "y": self._graphics_obj.pos().y()}
         }
 
-    def restore(self, json: dict):
+    def __setstate__(self, state: dict):
         """
         Restore
 
         Parameters
         ----------
-        json : dict
+        state : dict
         """
-        self._uid = QUuid(json["id"])
-        position_json = json["position"]
-        point = QPointF(position_json["x"], position_json["y"])
+        self._uid = state["id"]
+        pos = state["position"]
+        point = QPointF(pos["x"], pos["y"])
         self._graphics_obj.setPos(point)
-        self._node_data_model.restore(json["model"])
+        self._node_data_model.__setstate__(state["model"])
 
     @property
-    def id(self) -> QUuid:
+    def id(self) -> str:
         """
-        Id
+        Node unique identifier (uuid)
 
         Returns
         -------
-        value : QUuid
+        value : str
         """
         return self._uid
 

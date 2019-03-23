@@ -47,4 +47,4 @@ def test_iterate(scene):
 
 
 def test_save_and_load(scene):
-    scene.load_from_memory(scene.save_to_memory())
+    scene.__setstate__(scene.__getstate__())

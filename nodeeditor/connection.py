@@ -1,4 +1,6 @@
-from qtpy.QtCore import QObject, QUuid
+import uuid
+
+from qtpy.QtCore import QObject
 from qtpy.QtCore import Signal
 
 
@@ -23,7 +25,7 @@ class Connection(QObject, Serializable, ConnectionBase):
                  style, port_index_in=INVALID, port_index_out=INVALID,
                  converter=None):
         super().__init__()
-        self._uid = QUuid.createUuid()
+        self._uid = str(uuid.uuid4())
         self._in_node = in_node
         self._in_port_index = port_index_in
         self._out_node = out_node
@@ -102,7 +104,7 @@ class Connection(QObject, Serializable, ConnectionBase):
     def style(self):
         return self._style
 
-    def save(self) -> dict:
+    def __getstate__(self) -> dict:
         """
         save
 
@@ -114,9 +116,9 @@ class Connection(QObject, Serializable, ConnectionBase):
             return {}
 
         connection_json = dict(
-            in_id=self._in_node.id.toString(),
+            in_id=self._in_node.id,
             in_index=self._in_port_index,
-            out_id=self._out_node.id.toString(),
+            out_id=self._out_node.id,
             out_index=self._out_port_index,
         )
 
@@ -135,13 +137,13 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         return connection_json
 
-    def id(self) -> QUuid:
+    def id(self) -> str:
         """
-        Id
+        Unique identifier (uuid)
 
         Returns
         -------
-        value : QUuid
+        uuid : str
         """
         return self._uid
 

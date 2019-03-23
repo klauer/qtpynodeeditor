@@ -33,9 +33,6 @@ class BasicDataModel(nodeeditor.NodeDataModel):
     def embedded_widget(self):
         return None
 
-    # def node_style(self):
-    #     return StyleCollection.instance().node_style()
-
 
 # @pytest.mark.parametrize("model_class", [...])
 @pytest.fixture(scope='function')
