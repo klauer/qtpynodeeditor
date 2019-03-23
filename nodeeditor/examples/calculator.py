@@ -430,11 +430,7 @@ def main(app):
     view.resize(800, 600)
     view.show()
 
-    node_a = scene.create_node(NumberSourceDataModel)
-    node_a.data.embedded_widget().setText('1.0')
-
-    node_b = scene.create_node(NumberSourceDataModel)
-    node_b.data.embedded_widget().setText('2.0')
+    inputs = []
     node_add = scene.create_node(AdditionModel)
     node_sub = scene.create_node(SubtractionModel)
     node_mul = scene.create_node(MultiplicationModel)
@@ -442,6 +438,14 @@ def main(app):
     node_mod = scene.create_node(ModuloModel)
 
     for node_operation in (node_add, node_sub, node_mul, node_div, node_mod):
+        node_a = scene.create_node(NumberSourceDataModel)
+        node_a.data.embedded_widget().setText('1.0')
+        inputs.append(node_a)
+
+        node_b = scene.create_node(NumberSourceDataModel)
+        node_b.data.embedded_widget().setText('2.0')
+        inputs.append(node_b)
+
         scene.create_connection(
             node_out=node_a, port_index_out=0,
             node_in=node_operation, port_index_in=0,
@@ -461,6 +465,11 @@ def main(app):
             node_in=node_display, port_index_in=0,
             converter=None
         )
+
+    try:
+        scene.auto_arrange(nodes=inputs, layout='bipartite')
+    except ImportError:
+        ...
 
     return scene, view, [node_a, node_b]
 

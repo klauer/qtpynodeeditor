@@ -287,6 +287,60 @@ class FlowScene(QGraphicsScene):
     def registry(self, registry: DataModelRegistry):
         self._registry = registry
 
+    def to_digraph(self):
+        '''
+        Create a networkx digraph
+
+        Returns
+        -------
+        digraph : networkx.DiGraph
+            The generated DiGraph
+
+        Raises
+        ------
+        ImportError
+            If networkx is unavailable
+        '''
+        import networkx
+        graph = networkx.DiGraph()
+        for node in self._nodes.values():
+            graph.add_node(node)
+
+        for node in self._nodes.values():
+            graph.add_edges_from(conn.nodes
+                                 for conn in node.state.all_connections)
+
+        return graph
+
+    def auto_arrange(self, layout='bipartite', scale=700, align='horizontal',
+                     **kwargs):
+        '''
+        Automatically arrange nodes with networkx, if available
+
+        Raises
+        ------
+        ImportError
+            If networkx is unavailable
+        '''
+        import networkx
+        dig = self.to_digraph()
+
+        layouts = {
+            name: getattr(networkx.layout, '{}_layout'.format(name))
+            for name in ('bipartite', 'circular', 'kamada_kawai', 'random',
+                         'shell', 'spring', 'spectral')
+        }
+
+        try:
+            layout_func = layouts[layout]
+        except KeyError:
+            raise ValueError('Unknown layout type {}'.format(layout)) from None
+
+        layout = layout_func(dig, **kwargs)
+        for node, pos in layout.items():
+            pos_x, pos_y = pos
+            self.set_node_position(node, (pos_x * scale, pos_y * scale))
+
     def iterate_over_nodes(self):
         """
         Generator: Iterate over nodes
@@ -366,6 +420,10 @@ class FlowScene(QGraphicsScene):
         node : Node
         pos : QPointF
         """
+        if not isinstance(pos, QPointF):
+            px, py = pos
+            pos = QPointF(px, py)
+
         ngo = node.graphics_object
         ngo.setPos(pos)
         ngo.move_connections()

@@ -58,7 +58,6 @@ class NodeDataModel(QObject, Serializable):
         if style is None:
             style = style_module.default_style
         self._style = style
-        self._lock = threading.Lock()
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)

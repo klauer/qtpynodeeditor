@@ -276,6 +276,11 @@ class Connection(QObject, Serializable, ConnectionBase):
         elif port_type == PortType.output:
             return self._out_node
 
+    @property
+    def nodes(self):
+        # TODO namedtuple
+        return (self._in_node, self._out_node)
+
     def get_port_index(self, port_type: PortType) -> PortIndex:
         """
         Get port index
