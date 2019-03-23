@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class DataModelRegistry:
     def __init__(self):
-        self._type_converters = {}
+        self.type_converters = {}
         self._models_category = {}
         self._item_creators = {}
         self._categories = set()
@@ -36,7 +36,7 @@ class DataModelRegistry:
         if hasattr(type_out, 'type'):
             type_out = type_out.type
 
-        self._type_converters[(type_in, type_out)] = type_converter
+        self.type_converters[(type_in, type_out)] = type_converter
 
     def create(self, model_name: str) -> NodeDataModel:
         """
@@ -96,10 +96,4 @@ class DataModelRegistry:
         -------
         value : TypeConverter
         """
-        try:
-            return self._type_converters[(d1, d2)]
-        except KeyError:
-            if d1 != d2:
-                logger.debug('No type converter available for %s -> %s',
-                             d1, d2)
-            return DefaultTypeConverter
+        return self.type_converters.get((d1, d2), None)

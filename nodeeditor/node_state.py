@@ -92,6 +92,7 @@ class NodeState:
             # TODO: should not be reaching this
             ...
 
+    @property
     def reaction(self) -> ReactToConnectionState:
         """
         Reaction
@@ -136,7 +137,7 @@ class NodeState:
         reacting_port_type : PortType, optional
         reacting_data_type : NodeDataType
         """
-        self._reaction = reaction
+        self._reaction = ReactToConnectionState(reaction)
         self._reacting_port_type = reacting_port_type
         self._reacting_data_type = reacting_data_type
 

@@ -115,7 +115,6 @@ def test_create_connection(scene, view, model):
     assert len(all_c2) == 0
 
 
-
 def test_clear_scene(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
@@ -133,7 +132,6 @@ def test_clear_scene(scene, view, model):
     assert len(all_c1) == 0
     all_c2 = node1.state.all_connections
     assert len(all_c2) == 0
-
 
 
 def test_save_load(tmp_path, scene, view, model):
@@ -159,16 +157,20 @@ def test_save_load(tmp_path, scene, view, model):
         assert node.id in scene.nodes()
 
 
-def test_smoke_reacting(scene, view, model):
+@pytest.mark.parametrize('reset, port_type',
+                         [(True, 'input'),
+                          (False, 'output')])
+def test_smoke_reacting(scene, view, model, reset, port_type):
     node = scene.create_node(model)
-    dtype = node.data.data_type(PortType.input, 0)
+    dtype = node.data.data_type(port_type, 0)
     node.react_to_possible_connection(
-        reacting_port_type=PortType.input,
+        reacting_port_type=port_type,
         reacting_data_type=dtype,
         scene_point=qtpy.QtCore.QPointF(0, 0),
     )
     view.update()
-    node.reset_reaction_to_connection()
+    if reset:
+        node.reset_reaction_to_connection()
 
 
 def test_smoke_node_size_updated(scene, view, model):

@@ -209,16 +209,12 @@ class NodePainter:
                     dist = math.sqrt(QPointF.dotProduct(diff, diff))
 
                     registry = scene.registry
-                    if port_type == PortType.input:
-                        type_convertable = (
-                            registry.get_type_converter(state.reacting_data_type, data_type) is not None
-                        )
-                    else:
-                        type_convertable = (
-                            registry.get_type_converter(data_type, state.reacting_data_type) is not None
-                        )
+                    dtype1, dtype2 = state.reacting_data_type, data_type
+                    if port_type != PortType.input:
+                        dtype2, dtype1 = dtype1, dtype2
 
-                    if state.reacting_data_type.id == data_type.id or type_convertable:
+                    type_convertable = registry.get_type_converter(dtype1, dtype2) is not None
+                    if dtype1.id == dtype2.id or type_convertable:
                         thres = 40.0
                         r = ((2.0 - dist / thres)
                              if dist < thres
@@ -230,10 +226,11 @@ class NodePainter:
                              else 1.0)
 
                 if connection_style.use_data_defined_colors:
-                    painter.setBrush(connection_style.get_normal_color(data_type.id))
+                    brush = connection_style.get_normal_color(data_type.id)
                 else:
-                    painter.setBrush(node_style.connection_point_color)
+                    brush = node_style.connection_point_color
 
+                painter.setBrush(brush)
                 painter.drawEllipse(p, reduced_diameter * r, reduced_diameter * r)
 
     @staticmethod
