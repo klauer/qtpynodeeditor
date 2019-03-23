@@ -13,12 +13,12 @@ source:
 
 requirements:
     build:
-      - python >= 3.6
+      - python >=3.6
       - setuptools
 
     run:
-      - python >= 3.6
-      - pyqt >= 5
+      - python >=3.6
+      - pyqt >=5
       - qtpy
 
 test:
