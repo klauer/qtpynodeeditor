@@ -67,6 +67,10 @@ class MathOperationDataModel(NodeDataModel):
         self._validation_state = NodeValidationState.warning
         self._validation_message = 'Uninitialized'
 
+    @property
+    def caption(self):
+        return self.name
+
     def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
         return True
 
