@@ -6,7 +6,8 @@ env:
    global:
       - OFFICIAL_REPO="klauer/qtpynodeeditor"
       - BUILD_DOCS=1
-      - secure: ""
+      # Doctr deploy key for klauer/qtpynodeeditor
+      - secure: "gXB0qZy/xd9U7RYKWexhqzmWR6SJzQ+YI3QjNuBBRc2ZprottF+V2+nX0kTtacYvSBilIdsKaF9qm2Xr0yvRynMLiSyU9IDRCFEiBVJQcMZUD+2EO69hDUmxLDf5w29aCEZfpNdzEx0InWBU4YctaWbLandwvPH7uI/wsWYPHPUewabpp5m2b5UBGvUswYvbBCZF5Mu+/DoAHVeJfJ2nA07BqsdpK5JHX1i+Q9JgZqC4u9o4wDtdGevhhSaMiywZWc/MjJFb50QPCOV9Ad7z2HusF9cuuJG4H2d+7wIqfOb89OxUoyrFS2TqdEltbkc+j7vqkqrEGKJIIPIMj6STHUc/RSRg+MFgpX19r1/sbP3RfWXYqBEIlokAFPw/LUo5lyyrphy4zg7PWRvLZbtx9dY/30W6PG2ZPHZiX247r9VeRlLHOWSXfw+uUNE6QzkqvsChCOOpA3WUcG+5QgZGYTaK+5PkeFI+6/+Dh9TZjwlsFa8YuOBHeeDQGXBvz9bsFPkhT8MZkJNXiB4FWVYucbERUsqmsNhk/XvGBKRjkbZoDyqONWWaOHvAIdBTNrko+M7yMpDhKol0azTAwJhT4lwtjsAsn37bq7F7zoOOmJj9NVMSt97IP+yBPfIr70JYtVxvuVTrTyfb55LCg3KMaMujk2p2KCR7AGoerj/Sx/s="
 
 cache:
   directories:
