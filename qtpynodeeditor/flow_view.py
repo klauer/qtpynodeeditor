@@ -287,11 +287,14 @@ class FlowView(QGraphicsView):
             bottom = math.floor(tl.y() / grid_step - 0.5)
             top = math.floor(br.y() / grid_step + 1.0)
 
-            lines = (
-                # vertical lines
-                [QLineF(xi * grid_step, bottom * grid_step, xi * grid_step, top * grid_step)
-                 for xi in range(int(left), int(right) + 1) ] +
-                # horizontal lines
+            # vertical lines
+            lines = [
+                QLineF(xi * grid_step, bottom * grid_step, xi * grid_step, top * grid_step)
+                for xi in range(int(left), int(right) + 1)
+            ]
+
+            # horizontal lines
+            lines.extend(
                 [QLineF(left * grid_step, yi * grid_step, right * grid_step, yi * grid_step)
                  for yi in range(int(bottom), int(top) + 1)
                  ]

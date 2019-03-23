@@ -5,10 +5,9 @@ import threading
 from qtpy.QtWidgets import (QWidget, QLineEdit, QApplication, QLabel)
 from qtpy.QtGui import QDoubleValidator
 
-import nodeeditor
-from nodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
-                        NodeValidationState, PortIndex
-                        )
+import qtpynodeeditor as nodeeditor
+from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
+                            NodeValidationState, PortIndex)
 
 
 class DecimalData(NodeData):
@@ -199,7 +198,7 @@ class MultiplicationModel(MathOperationDataModel):
                     }
 
     def compute(self):
-            self._result = DecimalData(self._number1.number * self._number2.number)
+        self._result = DecimalData(self._number1.number * self._number2.number)
 
 
 class NumberSourceDataModel(NodeDataModel):
@@ -335,8 +334,6 @@ class SubtractionModel(MathOperationDataModel):
                     }
 
     def compute(self):
-        self._validation_state = NodeValidationState.valid
-        self._validation_message = ''
         self._result = DecimalData(self._number1.number - self._number2.number)
 
 

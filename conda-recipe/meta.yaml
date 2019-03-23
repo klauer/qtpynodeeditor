@@ -1,0 +1,35 @@
+{% set data = load_setup_py_data() %}
+
+build:
+    noarch: python
+
+package:
+    name    : qtpynodeeditor
+    version : {{ data.get('version') }}
+
+
+source:
+    path: ..
+
+requirements:
+    build:
+      - python >=3.6
+      - setuptools
+
+    run:
+      - python >=3.6
+      - pyqt >=5
+      - qtpy
+
+test:
+    imports:
+      - qtpynodeeditor
+
+    requires: 
+      - pytest
+
+
+about:
+  home: https://github.com/klauer/qtpynodeeditor
+  license: BSD 3-clause
+  summary: Python Qt node editor

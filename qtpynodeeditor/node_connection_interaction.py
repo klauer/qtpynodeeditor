@@ -76,7 +76,8 @@ class NodeConnectionInteraction:
                 f'Port {required_port} {port_index} not empty'
             )
 
-        # 4) Connection type equals node port type, or there is a registered type conversion that can translate between the two
+        # 4) Connection type equals node port type, or there is a registered
+        #    type conversion that can translate between the two
         connection_data_type = self._connection.data_type(opposite_port(required_port))
         model_target = self._node.data
 
@@ -95,13 +96,15 @@ class NodeConnectionInteraction:
 
     def try_connect(self) -> bool:
         """
-        1) Check conditions from 'can_connect'
-        1.5) If the connection is possible but a type conversion is needed, add
-             a converter node to the scene, and connect it properly
-        2) Assign node to required port in Connection
-        3) Assign Connection to empty port in NodeState
-        4) Adjust Connection geometry
-        5) Poke model to initiate data transfer
+        Try to connect the nodes. Steps::
+
+            1) Check conditions from 'can_connect'
+            1.5) If the connection is possible but a type conversion is needed, add
+                 a converter node to the scene, and connect it properly
+            2) Assign node to required port in Connection
+            3) Assign Connection to empty port in NodeState
+            4) Adjust Connection geometry
+            5) Poke model to initiate data transfer
 
         Returns
         -------

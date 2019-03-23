@@ -1,0 +1,11 @@
+[run]
+source =
+    qtpynodeeditor
+[report]
+omit =
+    #versioning
+    .*version.*
+    *_version.py
+    #tests
+    *test*
+    qtpynodeeditor/tests/*

@@ -2,8 +2,9 @@ import logging
 
 from qtpy import QtWidgets
 
-import nodeeditor
-from nodeeditor import NodeData, NodeDataType, NodeDataModel, StyleCollection, PortType
+import qtpynodeeditor
+from qtpynodeeditor import (NodeData, NodeDataType, NodeDataModel,
+                            StyleCollection, PortType)
 
 
 style_json = '''
@@ -46,7 +47,6 @@ style_json = '''
 '''
 
 
-
 class MyNodeData(NodeData):
     data_type = NodeDataType(id='MyNodeData', name='My Node Data')
 
@@ -78,11 +78,11 @@ class MyDataModel(NodeDataModel):
 def main(app):
     style = StyleCollection.from_json(style_json)
 
-    registry = nodeeditor.DataModelRegistry()
+    registry = qtpynodeeditor.DataModelRegistry()
     registry.register_model(MyDataModel, category='My Category', style=style)
-    scene = nodeeditor.FlowScene(registry=registry)
+    scene = qtpynodeeditor.FlowScene(registry=registry)
 
-    view = nodeeditor.FlowView(scene)
+    view = qtpynodeeditor.FlowView(scene)
     view.setWindowTitle("Style example")
     view.resize(800, 600)
 

@@ -1,7 +1,12 @@
 [flake8]
-ignore = W503
+ignore = W503,W504
 exclude = 
     .git
     __pycache__
-    nodeeditor/_version.py
+    qtpynodeeditor/_version.py
+    build
+    dist
+    versioneer.py
+    qtpynodeeditor/_version.py
+    docs/source/conf.py
 max-line-length = 115
