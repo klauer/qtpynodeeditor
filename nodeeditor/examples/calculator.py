@@ -496,6 +496,8 @@ class NumberDisplayModel(NodeDataModel):
         self._number = None
         self._label = QLabel()
         self._label.setMargin(3)
+        self.model_validation_state = NodeValidationState.warning
+        self.model_validation_error = 'Uninitialized'
 
     def caption_visible(self) -> bool:
         return False

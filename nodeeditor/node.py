@@ -1,4 +1,4 @@
-from qtpy.QtCore import QObject, QPointF, QUuid
+from qtpy.QtCore import QObject, QPointF, QUuid, Property
 
 from .enums import ReactToConnectionState
 from .base import NodeBase
@@ -23,20 +23,20 @@ class Node(QObject, Serializable, NodeBase):
         self._node_data_model = data_model
         self._uid = QUuid.createUuid()
         self._style = data_model.node_style()
-        self._node_state = NodeState(self._node_data_model)
-        self._node_geometry = NodeGeometry(self._node_data_model)
-        self._node_graphics_object = None
-        self._node_geometry.recalculate_size()
+        self._state = NodeState(self._node_data_model)
+        self._geometry = NodeGeometry(self._node_data_model)
+        self._graphics_obj = None
+        self._geometry.recalculate_size()
 
         # propagate data: model => node
         self._node_data_model.data_updated.connect(self.on_data_updated)
         self._node_data_model.embedded_widget_size_updated.connect(self.on_node_size_updated)
 
     def _cleanup(self):
-        if self._node_graphics_object is not None:
-            self._node_graphics_object._cleanup()
-            self._node_graphics_object = None
-            self._node_geometry = None
+        if self._graphics_obj is not None:
+            self._graphics_obj._cleanup()
+            self._graphics_obj = None
+            self._geometry = None
 
     def __del__(self):
         try:
@@ -55,8 +55,8 @@ class Node(QObject, Serializable, NodeBase):
         return {
             "id": self._uid.toString(),
             "model": self._node_data_model.save(),
-            "position": {"x": self._node_graphics_object.pos().x(),
-                         "y": self._node_graphics_object.pos().y()}
+            "position": {"x": self._graphics_obj.pos().x(),
+                         "y": self._graphics_obj.pos().y()}
         }
 
     def restore(self, json: dict):
@@ -70,9 +70,10 @@ class Node(QObject, Serializable, NodeBase):
         self._uid = QUuid(json["id"])
         position_json = json["position"]
         point = QPointF(position_json["x"], position_json["y"])
-        self._node_graphics_object.setPos(point)
+        self._graphics_obj.setPos(point)
         self._node_data_model.restore(json["model"])
 
+    @property
     def id(self) -> QUuid:
         """
         Id
@@ -96,20 +97,21 @@ class Node(QObject, Serializable, NodeBase):
         node_data_type : NodeDataType
         scene_point : QPointF
         """
-        transform = self._node_graphics_object.sceneTransform()
+        transform = self._graphics_obj.sceneTransform()
         inverted, invertible = transform.inverted()
         if invertible:
             pos = inverted.map(scene_point)
-            self._node_geometry.set_dragging_position(pos)
-        self._node_graphics_object.update()
-        self._node_state.set_reaction(ReactToConnectionState.reacting,
-                                      reacting_port_type, reacting_data_type)
+            self._geometry.dragging_position = pos
+        self._graphics_obj.update()
+        self._state.set_reaction(ReactToConnectionState.reacting,
+                                 reacting_port_type, reacting_data_type)
 
     def reset_reaction_to_connection(self):
-        self._node_state.set_reaction(ReactToConnectionState.not_reacting)
-        self._node_graphics_object.update()
+        self._state.set_reaction(ReactToConnectionState.not_reacting)
+        self._graphics_obj.update()
 
-    def node_graphics_object(self) -> NodeGraphicsObject:
+    @Property(NodeGraphicsObject)
+    def graphics_object(self) -> NodeGraphicsObject:
         """
         Node graphics object
 
@@ -117,9 +119,10 @@ class Node(QObject, Serializable, NodeBase):
         -------
         value : NodeGraphicsObject
         """
-        return self._node_graphics_object
+        return self._graphics_obj
 
-    def set_graphics_object(self, graphics: NodeGraphicsObject):
+    @graphics_object.setter
+    def graphics_object(self, graphics: NodeGraphicsObject):
         """
         Set graphics object
 
@@ -127,10 +130,11 @@ class Node(QObject, Serializable, NodeBase):
         ----------
         graphics : NodeGraphicsObject
         """
-        self._node_graphics_object = graphics
-        self._node_geometry.recalculate_size()
+        self._graphics_obj = graphics
+        self._geometry.recalculate_size()
 
-    def node_geometry(self) -> NodeGeometry:
+    @property
+    def geometry(self) -> NodeGeometry:
         """
         Node geometry
 
@@ -138,9 +142,10 @@ class Node(QObject, Serializable, NodeBase):
         -------
         value : NodeGeometry
         """
-        return self._node_geometry
+        return self._geometry
 
-    def node_state(self) -> NodeState:
+    @property
+    def state(self) -> NodeState:
         """
         Node state
 
@@ -148,13 +153,10 @@ class Node(QObject, Serializable, NodeBase):
         -------
         value : NodeState
         """
-        return self._node_state
+        return self._state
 
     @property
     def data(self) -> NodeDataModel:
-        return self._node_data_model
-
-    def node_data_model(self) -> NodeDataModel:
         """
         Node data model
 
@@ -178,10 +180,10 @@ class Node(QObject, Serializable, NodeBase):
         # Recalculate the nodes visuals. A data change can result in the node
         # taking more space than before, so self forces a recalculate+repaint
         # on the affected node
-        self._node_graphics_object.set_geometry_changed()
-        self._node_geometry.recalculate_size()
-        self._node_graphics_object.update()
-        self._node_graphics_object.move_connections()
+        self._graphics_obj.set_geometry_changed()
+        self._geometry.recalculate_size()
+        self._graphics_obj.update()
+        self._graphics_obj.move_connections()
 
     def on_data_updated(self, index: PortIndex):
         """
@@ -192,7 +194,7 @@ class Node(QObject, Serializable, NodeBase):
         index : PortIndex
         """
         node_data = self._node_data_model.out_data(index)
-        connections = self._node_state.connections(PortType.output, index)
+        connections = self._state.connections(PortType.output, index)
         for c in connections:
             c.propagate_data(node_data)
 
@@ -200,10 +202,10 @@ class Node(QObject, Serializable, NodeBase):
         """
         update the graphic part if the size of the embeddedwidget changes
         """
-        widget = self.node_data_model().embedded_widget()
+        widget = self.data.embedded_widget()
         if widget:
             widget.adjustSize()
 
-        self.node_geometry().recalculate_size()
-        for conn in self.node_state().all_connections:
-            conn.get_connection_graphics_object().move()
+        self.geometry.recalculate_size()
+        for conn in self.state.all_connections:
+            conn.graphics_object.move()

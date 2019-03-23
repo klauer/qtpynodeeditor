@@ -72,12 +72,12 @@ def test_instantiation(view):
 def test_create_node(scene, model):
     node = scene.create_node(model)
     assert node in scene.nodes().values()
-    assert node.id() in scene.nodes()
+    assert node.id in scene.nodes()
 
 
 def test_selected_nodes(scene, model):
     node = scene.create_node(model)
-    node.node_graphics_object().setSelected(True)
+    node.graphics_object.setSelected(True)
     assert scene.selected_nodes() == [node]
 
 
@@ -93,14 +93,14 @@ def test_create_connection(scene, view, model):
     view.update()
 
     assert len(scene.connections()) == 1
-    all_c1 = node1.node_state().all_connections
+    all_c1 = node1.state.all_connections
     assert len(all_c1) == 1
-    all_c2 = node1.node_state().all_connections
+    all_c2 = node1.state.all_connections
     assert len(all_c2) == 1
     assert all_c1 == all_c2
 
     conn, = all_c1
-    # conn_state = conn.connection_state()
+    # conn_state = conn.state
     in_node = conn.get_node(PortType.input)
     in_port = conn.get_port_index(PortType.input)
     out_node = conn.get_node(PortType.output)
@@ -112,9 +112,9 @@ def test_create_connection(scene, view, model):
 
     scene.delete_connection(conn)
     assert len(scene.connections()) == 0
-    all_c1 = node1.node_state().all_connections
+    all_c1 = node1.state.all_connections
     assert len(all_c1) == 0
-    all_c2 = node1.node_state().all_connections
+    all_c2 = node1.state.all_connections
     assert len(all_c2) == 0
 
 
@@ -132,9 +132,9 @@ def test_clear_scene(scene, view, model):
 
     assert len(scene.nodes()) == 0
     assert len(scene.connections()) == 0
-    all_c1 = node1.node_state().all_connections
+    all_c1 = node1.state.all_connections
     assert len(all_c1) == 0
-    all_c2 = node1.node_state().all_connections
+    all_c2 = node1.state.all_connections
     assert len(all_c2) == 0
 
 
@@ -149,7 +149,7 @@ def test_save_load(tmp_path, scene, view, model):
 
     for node in created_nodes:
         assert node in scene.nodes().values()
-        assert node.id() in scene.nodes()
+        assert node.id in scene.nodes()
 
     fname = tmp_path / 'temp.flow'
     scene.save(fname)
@@ -159,12 +159,12 @@ def test_save_load(tmp_path, scene, view, model):
 
     for node in created_nodes:
         assert node not in scene.nodes().values()
-        assert node.id() in scene.nodes()
+        assert node.id in scene.nodes()
 
 
 def test_smoke_reacting(scene, view, model):
     node = scene.create_node(model)
-    dtype = node.node_data_model().data_type(PortType.input, 0)
+    dtype = node.data.data_type(PortType.input, 0)
     node.react_to_possible_connection(
         reacting_port_type=PortType.input,
         reacting_data_type=dtype,

@@ -31,7 +31,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
         self.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
 
-        self._style = node.node_data_model().style
+        self._style = node.data.style
         node_style = self._style.node
 
         effect = QGraphicsDropShadowEffect()
@@ -82,7 +82,7 @@ class NodeGraphicsObject(QGraphicsObject):
         -------
         value : QRectF
         """
-        return self._node.node_geometry().bounding_rect()
+        return self._node.geometry.bounding_rect
 
     def set_geometry_changed(self):
         self.prepareGeometryChange()
@@ -91,8 +91,8 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         Visits all attached connections and corrects their corresponding end points.
         """
-        for conn in self._node.node_state().all_connections:
-            conn.get_connection_graphics_object().move()
+        for conn in self._node.state.all_connections:
+            conn.graphics_object.move()
 
     def lock(self, locked: bool):
         """
@@ -158,7 +158,7 @@ class NodeGraphicsObject(QGraphicsObject):
         if not self.isSelected() and not (event.modifiers() & Qt.ControlModifier):
             self._scene.clearSelection()
 
-        node_geometry = self._node.node_geometry()
+        node_geometry = self._node.geometry
 
         for port_to_check in (PortType.input, PortType.output):
             # TODO do not pass sceneTransform
@@ -168,7 +168,7 @@ class NodeGraphicsObject(QGraphicsObject):
             if port_index == INVALID:
                 continue
 
-            node_state = self._node.node_state()
+            node_state = self._node.state
             connections = node_state.connections(port_to_check, port_index)
 
             # start dragging existing connection
@@ -178,21 +178,21 @@ class NodeGraphicsObject(QGraphicsObject):
                 interaction.disconnect(port_to_check)
             elif port_to_check == PortType.output:
                 # initialize new Connection
-                out_policy = self._node.node_data_model().port_out_connection_policy(port_index)
+                out_policy = self._node.data.port_out_connection_policy(port_index)
                 if connections and out_policy == ConnectionPolicy.one:
                     conn, = connections
                     self._scene.delete_connection(conn)
 
                 # TODO_UPSTREAM: add to FlowScene
                 connection = self._scene.create_connection_node(port_to_check, self._node, port_index)
-                self._node.node_state().set_connection(port_to_check, port_index, connection)
-                connection.get_connection_graphics_object().grabMouse()
+                self._node.state.set_connection(port_to_check, port_index, connection)
+                connection.graphics_object.grabMouse()
 
         pos = QPoint(event.pos().x(), event.pos().y())
-        geom = self._node.node_geometry()
-        state = self._node.node_state()
-        if self._node.node_data_model().resizable() and geom.resize_rect().contains(pos):
-            state.set_resizing(True)
+        geom = self._node.geometry
+        state = self._node.state
+        if self._node.data.resizable() and geom.resize_rect.contains(pos):
+            state.resizing = True
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent):
         """
@@ -202,18 +202,18 @@ class NodeGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneMouseEvent
         """
-        geom = self._node.node_geometry()
-        state = self._node.node_state()
-        if state.resizing():
+        geom = self._node.geometry
+        state = self._node.state
+        if state.resizing:
             diff = event.pos() - event.lastPos()
-            w = self._node.node_data_model().embedded_widget()
+            w = self._node.data.embedded_widget()
             if w:
                 self.prepareGeometryChange()
                 old_size = w.size() + QSize(diff.x(), diff.y())
                 w.setFixedSize(old_size)
                 self._proxy_widget.setMinimumSize(old_size)
                 self._proxy_widget.setMaximumSize(old_size)
-                self._proxy_widget.setPos(geom.widget_position())
+                self._proxy_widget.setPos(geom.widget_position)
                 geom.recalculate_size()
                 self.update()
                 self.move_connections()
@@ -236,8 +236,8 @@ class NodeGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneMouseEvent
         """
-        state = self._node.node_state()
-        state.set_resizing(False)
+        state = self._node.state
+        state.resizing = False
         super().mouseReleaseEvent(event)
 
         # position connections precisely after fast node move
@@ -260,9 +260,9 @@ class NodeGraphicsObject(QGraphicsObject):
 
         # bring self node forward
         self.setZValue(1.0)
-        self._node.node_geometry().set_hovered(True)
+        self._node.geometry.hovered = True
         self.update()
-        self._scene.node_hovered.emit(self.node(), event.screenPos())
+        self._scene.node_hovered.emit(self._node, event.screenPos())
         event.accept()
 
     def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent):
@@ -273,9 +273,9 @@ class NodeGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneHoverEvent
         """
-        self._node.node_geometry().set_hovered(False)
+        self._node.geometry.hovered = False
         self.update()
-        self._scene.node_hover_left.emit(self.node())
+        self._scene.node_hover_left.emit(self._node)
         event.accept()
 
     def hoverMoveEvent(self, event: QGraphicsSceneHoverEvent):
@@ -287,8 +287,8 @@ class NodeGraphicsObject(QGraphicsObject):
         q_graphics_scene_hover_event : QGraphicsSceneHoverEvent
         """
         pos = event.pos()
-        geom = self._node.node_geometry()
-        if self._node.node_data_model().resizable() and geom.resize_rect().contains(
+        geom = self._node.geometry
+        if self._node.data.resizable() and geom.resize_rect.contains(
             QPoint(pos.x(), pos.y())
         ):
             self.setCursor(QCursor(Qt.SizeFDiagCursor))
@@ -306,7 +306,7 @@ class NodeGraphicsObject(QGraphicsObject):
         event : QGraphicsSceneMouseEvent
         """
         super().mouseDoubleClickEvent(event)
-        self._scene.node_double_clicked.emit(self.node())
+        self._scene.node_double_clicked.emit(self._node)
 
     def contextMenuEvent(self, event: QGraphicsSceneContextMenuEvent):
         """
@@ -316,18 +316,18 @@ class NodeGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneContextMenuEvent
         """
-        self._scene.node_context_menu.emit(self.node(),
+        self._scene.node_context_menu.emit(self._node,
                                            self.mapToScene(event.pos()))
 
     def embed_q_widget(self):
-        geom = self._node.node_geometry()
-        w = self._node.node_data_model().embedded_widget()
+        geom = self._node.geometry
+        w = self._node.data.embedded_widget()
         if w is not None:
             self._proxy_widget = QGraphicsProxyWidget(self)
             self._proxy_widget.setWidget(w)
             self._proxy_widget.setPreferredWidth(5)
             geom.recalculate_size()
-            self._proxy_widget.setPos(geom.widget_position())
+            self._proxy_widget.setPos(geom.widget_position)
             self.update()
             self._proxy_widget.setOpacity(1.0)
             self._proxy_widget.setFlag(QGraphicsItem.ItemIgnoresParentOpacity)

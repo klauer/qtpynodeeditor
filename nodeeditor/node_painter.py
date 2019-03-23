@@ -41,12 +41,12 @@ class NodePainter:
         node_style : NodeStyle
         connection_style : ConnectionStyle
         """
-        geom = node.node_geometry()
-        state = node.node_state()
-        graphics_object = node.node_graphics_object()
+        geom = node.geometry
+        state = node.state
+        graphics_object = node.graphics_object
         geom.recalculate_size(painter.font())
 
-        model = node.node_data_model()
+        model = node.data
         NodePainter.draw_node_rect(painter, geom, model, graphics_object,
                                    node_style)
         NodePainter.draw_connection_points(painter, geom, state, model, scene,
@@ -86,12 +86,12 @@ class NodePainter:
                  else node_style.normal_boundary_color
                  )
         p = QPen(color, (node_style.hovered_pen_width
-                         if geom.hovered()
+                         if geom.hovered
                          else node_style.pen_width))
         painter.setPen(p)
 
         gradient = QLinearGradient(QPointF(0.0, 0.0),
-                                   QPointF(2.0, geom.height()))
+                                   QPointF(2.0, geom.height))
         for at_, color in node_style.gradient_colors:
             gradient.setColorAt(at_, color)
         painter.setBrush(gradient)
@@ -99,8 +99,8 @@ class NodePainter:
         diam = node_style.connection_point_diameter
         boundary = QRectF(-diam,
                           -diam,
-                          2.0 * diam + geom.width(),
-                          2.0 * diam + geom.height())
+                          2.0 * diam + geom.width,
+                          2.0 * diam + geom.height)
         radius = 3.0
         painter.drawRoundedRect(boundary, radius, radius)
 
@@ -126,8 +126,8 @@ class NodePainter:
         f.setBold(True)
         metrics = QFontMetrics(f)
         rect = metrics.boundingRect(name)
-        position = QPointF((geom.width() - rect.width()) / 2.0,
-                           (geom.spacing() + geom.entry_height()) / 3.0)
+        position = QPointF((geom.width - rect.width()) / 2.0,
+                           (geom.spacing + geom.entry_height) / 3.0)
         painter.setFont(f)
         painter.setPen(node_style.font_color)
         painter.drawText(position, name)
@@ -168,7 +168,7 @@ class NodePainter:
                 if port_type == PortType.input:
                     p.setX(5.0)
                 elif port_type == PortType.output:
-                    p.setX(geom.width() - 5.0 - rect.width())
+                    p.setX(geom.width - 5.0 - rect.width())
 
                 painter.drawText(p, s)
 
@@ -204,21 +204,21 @@ class NodePainter:
                 )
 
                 r = 1.0
-                if state.is_reacting() and can_connect and port_type == state.reacting_port_type():
-                    diff = geom.dragging_pos() - p
+                if state.is_reacting and can_connect and port_type == state.reacting_port_type:
+                    diff = geom.dragging_pos - p
                     dist = math.sqrt(QPointF.dotProduct(diff, diff))
 
-                    registry = scene.registry()
+                    registry = scene.registry
                     if port_type == PortType.input:
                         type_convertable = (
-                            registry.get_type_converter(state.reacting_data_type(), data_type) is not None
+                            registry.get_type_converter(state.reacting_data_type, data_type) is not None
                         )
                     else:
                         type_convertable = (
-                            registry.get_type_converter(data_type, state.reacting_data_type()) is not None
+                            registry.get_type_converter(data_type, state.reacting_data_type) is not None
                         )
 
-                    if state.reacting_data_type().id == data_type.id or type_convertable:
+                    if state.reacting_data_type.id == data_type.id or type_convertable:
                         thres = 40.0
                         r = ((2.0 - dist / thres)
                              if dist < thres
@@ -284,7 +284,7 @@ class NodePainter:
         """
         if model.resizable():
             painter.setBrush(Qt.gray)
-            painter.drawEllipse(geom.resize_rect())
+            painter.drawEllipse(geom.resize_rect)
 
     @staticmethod
     def draw_validation_rect(painter: QPainter, geom: NodeGeometry,
@@ -310,7 +310,7 @@ class NodePainter:
                  if graphics_object.isSelected()
                  else node_style.normal_boundary_color)
 
-        if geom.hovered():
+        if geom.hovered:
             p = QPen(color, node_style.hovered_pen_width)
         else:
             p = QPen(color, node_style.pen_width)
@@ -327,9 +327,9 @@ class NodePainter:
         diam = node_style.connection_point_diameter
         boundary = QRectF(
             -diam,
-            -diam + geom.height() - geom.validation_height(),
-            2.0 * diam + geom.width(),
-            2.0 * diam + geom.validation_height(),
+            -diam + geom.height - geom.validation_height,
+            2.0 * diam + geom.width,
+            2.0 * diam + geom.validation_height,
         )
         painter.drawRoundedRect(boundary, radius, radius)
         painter.setBrush(Qt.gray)
@@ -340,8 +340,8 @@ class NodePainter:
         metrics = QFontMetrics(f)
         rect = metrics.boundingRect(error_msg)
         position = QPointF(
-            (geom.width() - rect.width()) / 2.0,
-            geom.height() - (geom.validation_height() - diam) / 2.0
+            (geom.width - rect.width()) / 2.0,
+            geom.height - (geom.validation_height - diam) / 2.0
         )
         painter.setFont(f)
         painter.setPen(node_style.font_color)

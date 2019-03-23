@@ -23,6 +23,7 @@ class NodeState:
         }
         self._reaction = ReactToConnectionState.not_reacting
         self._reacting_port_type = PortType.none
+        self._reacting_data_type = None
         self._resizing = False
 
     def get_entries(self, port_type: PortType) -> list:
@@ -101,6 +102,7 @@ class NodeState:
         """
         return self._reaction
 
+    @property
     def reacting_port_type(self) -> PortType:
         """
         Reacting port type
@@ -111,6 +113,7 @@ class NodeState:
         """
         return self._reacting_port_type
 
+    @property
     def reacting_data_type(self) -> NodeDataType:
         """
         Reacting data type
@@ -121,11 +124,9 @@ class NodeState:
         """
         return self._reacting_data_type
 
-    def set_reaction(
-        self, reaction: ReactToConnectionState, reacting_port_type:
-            PortType = PortType.none,
-            reacting_data_type: NodeDataType = None
-    ):
+    def set_reaction(self, reaction: ReactToConnectionState,
+                     reacting_port_type: PortType = PortType.none,
+                     reacting_data_type: NodeDataType = None):
         """
         Set reaction
 
@@ -139,9 +140,10 @@ class NodeState:
         self._reacting_port_type = reacting_port_type
         self._reacting_data_type = reacting_data_type
 
+    @property
     def is_reacting(self) -> bool:
         """
-        Is reacting
+        Is the node reacting to a mouse event?
 
         Returns
         -------
@@ -149,16 +151,7 @@ class NodeState:
         """
         return self._reaction == ReactToConnectionState.reacting
 
-    def set_resizing(self, resizing: bool):
-        """
-        Set resizing
-
-        Parameters
-        ----------
-        resizing : bool
-        """
-        self._resizing = resizing
-
+    @property
     def resizing(self) -> bool:
         """
         Resizing
@@ -168,3 +161,7 @@ class NodeState:
         value : bool
         """
         return self._resizing
+
+    @resizing.setter
+    def resizing(self, resizing: bool):
+        self._resizing = resizing

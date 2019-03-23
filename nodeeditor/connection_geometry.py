@@ -63,6 +63,7 @@ class ConnectionGeometry:
         else:
             raise ValueError(port_type)
 
+    @property
     def bounding_rect(self) -> QRectF:
         """
         Bounding rect
@@ -110,6 +111,7 @@ class ConnectionGeometry:
         c2 = QPointF(self._in.x() - minimum * ratio1, self._in.y() + vertical_offset)
         return c1, c2
 
+    @property
     def source(self) -> QPointF:
         """
         Source
@@ -120,6 +122,7 @@ class ConnectionGeometry:
         """
         return self._out
 
+    @property
     def sink(self) -> QPointF:
         """
         Sink
@@ -140,6 +143,7 @@ class ConnectionGeometry:
         """
         return self._line_width
 
+    @property
     def hovered(self) -> bool:
         """
         Hovered
@@ -150,12 +154,6 @@ class ConnectionGeometry:
         """
         return self._hovered
 
-    def set_hovered(self, hovered: bool):
-        """
-        Set hovered
-
-        Parameters
-        ----------
-        hovered : bool
-        """
+    @hovered.setter
+    def hovered(self, hovered: bool):
         self._hovered = hovered

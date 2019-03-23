@@ -3,12 +3,10 @@ import math
 from qtpy.QtCore import QPointF, QRect, QRectF
 from qtpy.QtGui import QFont, QFontMetrics, QTransform
 
-
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
 from .node_data import NodeDataModel
 from .port import PortIndex, INVALID
-from .style import StyleCollection
 
 
 class NodeGeometry:
@@ -18,6 +16,7 @@ class NodeGeometry:
 
         self._data_model = data_model
         self._dragging_pos = QPointF(-1000, -1000)
+        self._entry_width = 0
         self._entry_height = 20
         self._font_metrics = QFontMetrics(QFont())
         self._height = 150
@@ -34,6 +33,7 @@ class NodeGeometry:
         f.setBold(True)
         self._bold_font_metrics = QFontMetrics(f)
 
+    @property
     def height(self) -> int:
         """
         Height
@@ -44,16 +44,11 @@ class NodeGeometry:
         """
         return self._height
 
-    def set_height(self, h: int):
-        """
-        Set height
-
-        Parameters
-        ----------
-        h : int
-        """
+    @height.setter
+    def height(self, h: int):
         self._height = int(h)
 
+    @property
     def width(self) -> int:
         """
         Width
@@ -64,7 +59,8 @@ class NodeGeometry:
         """
         return self._width
 
-    def set_width(self, w: int):
+    @width.setter
+    def width(self, w: int):
         """
         Set width
 
@@ -74,6 +70,7 @@ class NodeGeometry:
         """
         self._width = int(w)
 
+    @property
     def entry_height(self) -> int:
         """
         Entry height
@@ -84,7 +81,8 @@ class NodeGeometry:
         """
         return self._entry_height
 
-    def set_entry_height(self, h: int):
+    @entry_height.setter
+    def entry_height(self, h: int):
         """
         Set entry height
 
@@ -94,6 +92,7 @@ class NodeGeometry:
         """
         self._entry_height = int(h)
 
+    @property
     def entry_width(self) -> int:
         """
         Entry width
@@ -104,7 +103,8 @@ class NodeGeometry:
         """
         return self._entry_width
 
-    def set_entry_width(self, w: int):
+    @entry_width.setter
+    def entry_width(self, w: int):
         """
         Set entry width
 
@@ -114,6 +114,7 @@ class NodeGeometry:
         """
         self._entry_width = int(w)
 
+    @property
     def spacing(self) -> int:
         """
         Spacing
@@ -124,7 +125,8 @@ class NodeGeometry:
         """
         return self._spacing
 
-    def set_spacing(self, s: int):
+    @spacing.setter
+    def spacing(self, s: int):
         """
         Set spacing
 
@@ -134,6 +136,7 @@ class NodeGeometry:
         """
         self._spacing = int(s)
 
+    @property
     def hovered(self) -> bool:
         """
         Hovered
@@ -144,7 +147,8 @@ class NodeGeometry:
         """
         return self._hovered
 
-    def set_hovered(self, h: int):
+    @hovered.setter
+    def hovered(self, h: int):
         """
         Set hovered
 
@@ -174,6 +178,7 @@ class NodeGeometry:
         """
         return self._data_model.n_ports(PortType.input)
 
+    @property
     def dragging_pos(self) -> QPointF:
         """
         Dragging pos
@@ -184,15 +189,9 @@ class NodeGeometry:
         """
         return self._dragging_pos
 
-    def set_dragging_position(self, pos: QPointF):
-        """
-        Set dragging position
-
-        Parameters
-        ----------
-        pos : QPointF
-        """
-        self._dragging_pos = pos
+    @dragging_pos.setter
+    def dragging_position(self, pos: QPointF):
+        self._dragging_pos = QPointF(pos)
 
     def entry_bounding_rect(self, *, addon=0.0) -> QRectF:
         """
@@ -206,6 +205,7 @@ class NodeGeometry:
                       self._entry_width + 2 * addon,
                       self._entry_height + 2 * addon)
 
+    @property
     def bounding_rect(self) -> QRectF:
         """
         Bounding rect
@@ -246,7 +246,7 @@ class NodeGeometry:
         if w:
             height = max((height, w.height()))
 
-        height += self.caption_height()
+        height += self.caption_height
         self._input_port_width = self.port_width(PortType.input)
         self._output_port_width = self.port_width(PortType.output)
         width = self._input_port_width + self._output_port_width + 2 * self._spacing
@@ -255,11 +255,11 @@ class NodeGeometry:
         if w:
             width += w.width()
 
-        width = max((width, self.caption_width()))
+        width = max((width, self.caption_width))
 
         if self._data_model.validation_state() != NodeValidationState.valid:
-            width = max((width, self.validation_width()))
-            height += self.validation_height() + self._spacing
+            width = max((width, self.validation_width))
+            height += self.validation_height + self._spacing
 
         self._width = width
         self._height = height
@@ -283,7 +283,7 @@ class NodeGeometry:
 
         step = self._entry_height + self._spacing
 
-        total_height = float(self.caption_height()) + step * index
+        total_height = float(self.caption_height) + step * index
         # TODO_UPSTREAM: why?
         total_height += step / 2.0
 
@@ -326,6 +326,7 @@ class NodeGeometry:
 
         return INVALID
 
+    @property
     def resize_rect(self) -> QRect:
         """
         Resize rect
@@ -335,8 +336,12 @@ class NodeGeometry:
         value : QRect
         """
         rect_size = 7
-        return QRect(self._width - rect_size, self._height - rect_size, rect_size, rect_size)
+        return QRect(self._width - rect_size,
+                     self._height - rect_size,
+                     rect_size,
+                     rect_size)
 
+    @property
     def widget_position(self) -> QPointF:
         """
         Returns the position of a widget on the Node surface
@@ -352,13 +357,16 @@ class NodeGeometry:
         if self._data_model.validation_state() != NodeValidationState.valid:
             return QPointF(
                 self._spacing + self.port_width(PortType.input),
-                (self.caption_height() + self._height - self.validation_height() - self._spacing - w.height()) / 2.0,
+                (self.caption_height + self._height - self.validation_height -
+                 self._spacing - w.height()) / 2.0,
             )
 
         return QPointF(
-            self._spacing + self.port_width(PortType.input), (self.caption_height() + self._height - w.height()) / 2.0
+            self._spacing + self.port_width(PortType.input),
+            (self.caption_height + self._height - w.height()) / 2.0
         )
 
+    @property
     def validation_height(self) -> int:
         """
         Validation height
@@ -370,6 +378,7 @@ class NodeGeometry:
         msg = self._data_model.validation_message()
         return self._bold_font_metrics.boundingRect(msg).height()
 
+    @property
     def validation_width(self) -> int:
         """
         Validation width
@@ -412,15 +421,16 @@ class NodeGeometry:
         value : QPointF
         """
         converter_node_pos = (
-            source_node.node_graphics_object().pos()
-            + source_node.node_geometry().port_scene_position(source_port_index, source_port)
-            + target_node.node_graphics_object().pos()
-            + target_node.node_geometry().port_scene_position(target_port_index, target_port)
+            source_node.graphics_object.pos()
+            + source_node.geometry.port_scene_position(source_port_index, source_port)
+            + target_node.graphics_object.pos()
+            + target_node.geometry.port_scene_position(target_port_index, target_port)
         ) / 2.0
-        converter_node_pos.setX(converter_node_pos.x() - new_node.node_geometry().width() / 2.0)
-        converter_node_pos.setY(converter_node_pos.y() - new_node.node_geometry().height() / 2.0)
+        converter_node_pos.setX(converter_node_pos.x() - new_node.geometry.width / 2.0)
+        converter_node_pos.setY(converter_node_pos.y() - new_node.geometry.height / 2.0)
         return converter_node_pos
 
+    @property
     def caption_height(self) -> int:
         """
         Caption height
@@ -434,6 +444,7 @@ class NodeGeometry:
         name = self._data_model.caption()
         return self._bold_font_metrics.boundingRect(name).height()
 
+    @property
     def caption_width(self) -> int:
         """
         Caption width
@@ -462,8 +473,7 @@ class NodeGeometry:
         def get_name(i):
             if self._data_model.port_caption_visible(port_type, i):
                 return self._data_model.port_caption(port_type, i)
-            else:
-                return self._data_model.data_type(port_type, i).name
+            return self._data_model.data_type(port_type, i).name
 
         names = [get_name(i) for i in range(self._data_model.n_ports(port_type))]
         if not names:

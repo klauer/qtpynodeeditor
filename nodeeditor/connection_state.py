@@ -16,16 +16,7 @@ class ConnectionState:
         except Exception:
             ...
 
-    def set_required_port(self, end: PortType):
-        """
-        Set required port
-
-        Parameters
-        ----------
-        end : PortType
-        """
-        self._required_port = end
-
+    @property
     def required_port(self) -> PortType:
         """
         Required port
@@ -36,6 +27,11 @@ class ConnectionState:
         """
         return self._required_port
 
+    @required_port.setter
+    def required_port(self, end: PortType):
+        self._required_port = PortType(end)
+
+    @property
     def requires_port(self) -> bool:
         """
         Requires port
@@ -45,9 +41,6 @@ class ConnectionState:
         value : bool
         """
         return self._required_port != PortType.none
-
-    def set_no_required_port(self):
-        self._required_port = PortType.none
 
     def interact_with_node(self, node: Node):
         """
