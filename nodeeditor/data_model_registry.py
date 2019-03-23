@@ -1,7 +1,7 @@
 import logging
 
 from .node_data import NodeDataModel, NodeDataType
-from .type_converter import TypeConverter, DefaultTypeConverter
+from .type_converter import TypeConverter
 
 
 logger = logging.getLogger(__name__)

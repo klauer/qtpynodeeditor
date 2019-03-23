@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
@@ -10,10 +10,7 @@ from .serializable import Serializable
 from .port import PortIndex
 
 
-class NodeDataType:
-    def __init__(self, id: str, name: str):
-        self.id = id
-        self.name = name
+NodeDataType = namedtuple('NodeDataType', ('id', 'name'))
 
 
 class NodeData:
