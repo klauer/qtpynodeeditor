@@ -47,7 +47,6 @@ style_json = '''
 '''
 
 
-
 class MyNodeData(NodeData):
     data_type = NodeDataType(id='MyNodeData', name='My Node Data')
 

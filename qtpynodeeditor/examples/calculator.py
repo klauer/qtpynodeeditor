@@ -198,7 +198,7 @@ class MultiplicationModel(MathOperationDataModel):
                     }
 
     def compute(self):
-            self._result = DecimalData(self._number1.number * self._number2.number)
+        self._result = DecimalData(self._number1.number * self._number2.number)
 
 
 class NumberSourceDataModel(NodeDataModel):
@@ -334,8 +334,6 @@ class SubtractionModel(MathOperationDataModel):
                     }
 
     def compute(self):
-        self._validation_state = NodeValidationState.valid
-        self._validation_message = ''
         self._result = DecimalData(self._number1.number - self._number2.number)
 
 

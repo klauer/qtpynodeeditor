@@ -76,7 +76,8 @@ class NodeConnectionInteraction:
                 f'Port {required_port} {port_index} not empty'
             )
 
-        # 4) Connection type equals node port type, or there is a registered type conversion that can translate between the two
+        # 4) Connection type equals node port type, or there is a registered
+        #    type conversion that can translate between the two
         connection_data_type = self._connection.data_type(opposite_port(required_port))
         model_target = self._node.data
 
