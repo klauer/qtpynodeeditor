@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>qtpynodeeditor.connection_painter &mdash; qtpynodeeditor  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> qtpynodeeditor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/klauer/qtpynodeeditor">Github Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qtpynodeeditor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>qtpynodeeditor.connection_painter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for qtpynodeeditor.connection_painter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QLineF</span><span class="p">,</span> <span class="n">QSize</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPainterPath</span><span class="p">,</span> <span class="n">QPainterPathStroker</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPen</span>
+
+
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">PortType</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span>
+<span class="kn">from</span> <span class="nn">.connection_geometry</span> <span class="k">import</span> <span class="n">ConnectionGeometry</span>
+<span class="kn">from</span> <span class="nn">.style</span> <span class="k">import</span> <span class="n">ConnectionStyle</span>
+
+
+<span class="n">use_debug_drawing</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">):</span>
+    <span class="n">source</span><span class="p">,</span> <span class="n">sink</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">geom</span><span class="o">.</span><span class="n">sink</span>
+    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">points_c1_c2</span><span class="p">()</span>
+
+    <span class="c1"># cubic spline</span>
+    <span class="n">cubic</span> <span class="o">=</span> <span class="n">QPainterPath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+    <span class="n">cubic</span><span class="o">.</span><span class="n">cubicTo</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">sink</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cubic</span>
+
+
+<span class="k">def</span> <span class="nf">debug_drawing</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
+    <span class="n">source</span><span class="p">,</span> <span class="n">sink</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">geom</span><span class="o">.</span><span class="n">sink</span>
+    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">points_c1_c2</span><span class="p">()</span>
+
+    <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawLine</span><span class="p">(</span><span class="n">QLineF</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">c1</span><span class="p">))</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawLine</span><span class="p">(</span><span class="n">QLineF</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">))</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawLine</span><span class="p">(</span><span class="n">QLineF</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">sink</span><span class="p">))</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
+
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawPath</span><span class="p">(</span><span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">))</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawRect</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">bounding_rect</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">draw_sketch_line</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">state</span>
+
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setWidth</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_line_width</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_color</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">DashLine</span><span class="p">)</span>
+
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
+
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
+
+        <span class="n">cubic</span> <span class="o">=</span> <span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+        <span class="c1"># cubic spline</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawPath</span><span class="p">(</span><span class="n">cubic</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">draw_hovered_or_selected</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
+    <span class="n">hovered</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">hovered</span>
+
+    <span class="n">graphics_object</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">graphics_object</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">graphics_object</span><span class="o">.</span><span class="n">isSelected</span><span class="p">()</span>
+
+    <span class="c1"># drawn as a fat background</span>
+    <span class="k">if</span> <span class="n">hovered</span> <span class="ow">or</span> <span class="n">selected</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">()</span>
+
+        <span class="n">line_width</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">line_width</span>
+
+        <span class="n">p</span><span class="o">.</span><span class="n">setWidth</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">line_width</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">((</span><span class="n">style</span><span class="o">.</span><span class="n">selected_halo_color</span>
+                    <span class="k">if</span> <span class="n">selected</span>
+                    <span class="k">else</span> <span class="n">style</span><span class="o">.</span><span class="n">hovered_color</span><span class="p">))</span>
+
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
+
+        <span class="c1"># cubic spline</span>
+        <span class="n">cubic</span> <span class="o">=</span> <span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawPath</span><span class="p">(</span><span class="n">cubic</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">draw_normal_line</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">state</span>
+
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># colors</span>
+    <span class="n">normal_color_out</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">()</span>
+    <span class="n">normal_color_in</span> <span class="o">=</span> <span class="n">normal_color_out</span>
+
+    <span class="n">selected_color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">selected_color</span>
+
+    <span class="n">gradient_color</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">style</span><span class="o">.</span><span class="n">use_data_defined_colors</span><span class="p">:</span>
+        <span class="n">data_type_out</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">data_type_in</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+
+        <span class="n">gradient_color</span> <span class="o">=</span> <span class="n">data_type_out</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">data_type_in</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="n">normal_color_out</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">(</span><span class="n">data_type_out</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">normal_color_in</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">(</span><span class="n">data_type_in</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">selected_color</span> <span class="o">=</span> <span class="n">normal_color_out</span><span class="o">.</span><span class="n">darker</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="c1"># geometry</span>
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
+    <span class="n">line_width</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">line_width</span>
+
+    <span class="c1"># draw normal line</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">()</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">setWidth</span><span class="p">(</span><span class="n">line_width</span><span class="p">)</span>
+
+    <span class="n">graphics_object</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">graphics_object</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">graphics_object</span><span class="o">.</span><span class="n">isSelected</span><span class="p">()</span>
+
+    <span class="n">cubic</span> <span class="o">=</span> <span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gradient_color</span><span class="p">:</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">normal_color_out</span>
+        <span class="k">if</span> <span class="n">selected</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">darker</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">segments</span> <span class="o">=</span> <span class="mi">60</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+            <span class="n">ratio_prev</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">segments</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">segments</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">segments</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">normal_color_in</span>
+                <span class="k">if</span> <span class="n">selected</span><span class="p">:</span>
+                    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">darker</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+
+                <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+            <span class="n">painter</span><span class="o">.</span><span class="n">drawLine</span><span class="p">(</span><span class="n">cubic</span><span class="o">.</span><span class="n">pointAtPercent</span><span class="p">(</span><span class="n">ratio_prev</span><span class="p">),</span> <span class="n">cubic</span><span class="o">.</span><span class="n">pointAtPercent</span><span class="p">(</span><span class="n">ratio</span><span class="p">))</span>
+
+        <span class="n">icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;:convert.png&quot;</span><span class="p">)</span>
+
+        <span class="n">pixmap</span> <span class="o">=</span> <span class="n">icon</span><span class="o">.</span><span class="n">pixmap</span><span class="p">(</span><span class="n">QSize</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawPixmap</span><span class="p">(</span><span class="n">cubic</span><span class="o">.</span><span class="n">pointAtPercent</span><span class="p">(</span><span class="mf">0.50</span><span class="p">)</span> <span class="o">-</span> <span class="n">QPoint</span><span class="p">(</span><span class="n">pixmap</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pixmap</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">pixmap</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">normal_color_out</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">selected</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">selected_color</span><span class="p">)</span>
+
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
+
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawPath</span><span class="p">(</span><span class="n">cubic</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConnectionPainter"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionPainter">[docs]</a><span class="k">class</span> <span class="nc">ConnectionPainter</span><span class="p">:</span>
+<div class="viewcode-block" id="ConnectionPainter.paint"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionPainter.paint">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">paint</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">,</span>
+              <span class="n">style</span><span class="p">:</span> <span class="n">ConnectionStyle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Paint</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        painter : QPainter</span>
+<span class="sd">        connection : Connection</span>
+<span class="sd">        style : ConnectionStyle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">draw_hovered_or_selected</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+        <span class="n">draw_sketch_line</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+        <span class="n">draw_normal_line</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_debug_drawing</span><span class="p">:</span>
+            <span class="n">debug_drawing</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">)</span>
+
+        <span class="c1"># draw end points</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
+        <span class="n">source</span><span class="p">,</span> <span class="n">sink</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">geom</span><span class="o">.</span><span class="n">sink</span>
+
+        <span class="n">point_diameter</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">point_diameter</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_color</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_color</span><span class="p">)</span>
+        <span class="n">point_radius</span> <span class="o">=</span> <span class="n">point_diameter</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">point_radius</span><span class="p">,</span> <span class="n">point_radius</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">sink</span><span class="p">,</span> <span class="n">point_radius</span><span class="p">,</span> <span class="n">point_radius</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConnectionPainter.get_painter_stroke"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionPainter.get_painter_stroke">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_painter_stroke</span><span class="p">(</span><span class="n">geom</span><span class="p">:</span> <span class="n">ConnectionGeometry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPainterPath</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get painter stroke</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        geom : ConnectionGeometry</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QPainterPath</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cubic</span> <span class="o">=</span> <span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">source</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">QPainterPath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="mi">20</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">segments</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">lineTo</span><span class="p">(</span><span class="n">cubic</span><span class="o">.</span><span class="n">pointAtPercent</span><span class="p">(</span><span class="n">ratio</span><span class="p">))</span>
+
+        <span class="n">stroker</span> <span class="o">=</span> <span class="n">QPainterPathStroker</span><span class="p">()</span>
+        <span class="n">stroker</span><span class="o">.</span><span class="n">setWidth</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stroker</span><span class="o">.</span><span class="n">createStroke</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Ken Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

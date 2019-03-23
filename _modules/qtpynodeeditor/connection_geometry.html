@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>qtpynodeeditor.connection_geometry &mdash; qtpynodeeditor  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> qtpynodeeditor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/klauer/qtpynodeeditor">Github Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qtpynodeeditor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>qtpynodeeditor.connection_geometry</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for qtpynodeeditor.connection_geometry</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QRectF</span>
+
+
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span>
+
+
+<div class="viewcode-block" id="ConnectionGeometry"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry">[docs]</a><span class="k">class</span> <span class="nc">ConnectionGeometry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
+        <span class="c1"># local object coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_in</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_out</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># self._animationPhase = 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_line_width</span> <span class="o">=</span> <span class="mf">3.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hovered</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_point_diameter</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">point_diameter</span>
+
+<div class="viewcode-block" id="ConnectionGeometry.get_end_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry.get_end_point">[docs]</a>    <span class="k">def</span> <span class="nf">get_end_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get end point</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        port_type : PortType</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">port_type</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out</span> <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConnectionGeometry.set_end_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry.set_end_point">[docs]</a>    <span class="k">def</span> <span class="nf">set_end_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set end point</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        port_type : PortType</span>
+<span class="sd">        point : QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_out</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="k">elif</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">port_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConnectionGeometry.move_end_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry.move_end_point">[docs]</a>    <span class="k">def</span> <span class="nf">move_end_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move end point</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        port_type : PortType</span>
+<span class="sd">        offset : QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_out</span> <span class="o">+=</span> <span class="n">offset</span>
+        <span class="k">elif</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in</span> <span class="o">+=</span> <span class="n">offset</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">port_type</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounding_rect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QRectF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bounding rect</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QRectF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points_c1_c2</span><span class="p">()</span>
+        <span class="n">basic_rect</span> <span class="o">=</span> <span class="n">QRectF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="p">)</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
+        <span class="n">c1c2_rect</span> <span class="o">=</span> <span class="n">QRectF</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
+
+        <span class="n">common_rect</span> <span class="o">=</span> <span class="n">basic_rect</span><span class="o">.</span><span class="n">united</span><span class="p">(</span><span class="n">c1c2_rect</span><span class="p">)</span>
+        <span class="n">corner_offset</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_point_diameter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_diameter</span><span class="p">)</span>
+        <span class="n">common_rect</span><span class="o">.</span><span class="n">setTopLeft</span><span class="p">(</span><span class="n">common_rect</span><span class="o">.</span><span class="n">topLeft</span><span class="p">()</span> <span class="o">-</span> <span class="n">corner_offset</span><span class="p">)</span>
+        <span class="n">common_rect</span><span class="o">.</span><span class="n">setBottomRight</span><span class="p">(</span><span class="n">common_rect</span><span class="o">.</span><span class="n">bottomRight</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">corner_offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">common_rect</span>
+
+<div class="viewcode-block" id="ConnectionGeometry.points_c1_c2"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry.points_c1_c2">[docs]</a>    <span class="k">def</span> <span class="nf">points_c1_c2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        points_c1_c2</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : pair&lt;QPointF, QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+
+        <span class="c1"># double yDistance = _in.y() - _out.y() - 100;</span>
+        <span class="n">default_offset</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">minimum</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">default_offset</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_distance</span><span class="p">)))</span>
+        <span class="n">vertical_offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ratio1</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">if</span> <span class="n">x_distance</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">vertical_offset</span> <span class="o">=</span> <span class="o">-</span><span class="n">minimum</span>
+            <span class="n">ratio1</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="c1"># double verticalOffset2 = vertical_offset;</span>
+        <span class="c1"># if (x_distance &lt;= 0)</span>
+        <span class="c1"># verticalOffset2 = qMin(default_offset, std::abs(yDistance));</span>
+        <span class="c1"># auto sign = [](double d) { return d &gt; 0.0 ? +1.0 : -1.0; };</span>
+
+        <span class="c1"># verticalOffset2 = 0.0;</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="n">minimum</span> <span class="o">*</span> <span class="n">ratio1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">vertical_offset</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="n">minimum</span> <span class="o">*</span> <span class="n">ratio1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">vertical_offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Source</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sink</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sink</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span>
+
+<div class="viewcode-block" id="ConnectionGeometry.line_width"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry.line_width">[docs]</a>    <span class="k">def</span> <span class="nf">line_width</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Line width</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : double</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_line_width</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hovered</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hovered</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hovered</span>
+
+    <span class="nd">@hovered</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">hovered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hovered</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hovered</span> <span class="o">=</span> <span class="n">hovered</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Ken Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

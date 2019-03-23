@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>qtpynodeeditor.node_graphics_object &mdash; qtpynodeeditor  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> qtpynodeeditor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/klauer/qtpynodeeditor">Github Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qtpynodeeditor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>qtpynodeeditor.node_graphics_object</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for qtpynodeeditor.node_graphics_object</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QVariant</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QPainter</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsItem</span><span class="p">,</span> <span class="n">QGraphicsObject</span><span class="p">,</span>
+                            <span class="n">QGraphicsProxyWidget</span><span class="p">,</span>
+                            <span class="n">QGraphicsSceneContextMenuEvent</span><span class="p">,</span>
+                            <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span>
+                            <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span>
+                            <span class="n">QGraphicsDropShadowEffect</span><span class="p">)</span>
+
+
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">ConnectionPolicy</span>
+<span class="kn">from</span> <span class="nn">.node_connection_interaction</span> <span class="k">import</span> <span class="n">NodeConnectionInteraction</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">INVALID</span>
+
+
+<div class="viewcode-block" id="NodeGraphicsObject"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject">[docs]</a><span class="k">class</span> <span class="nc">NodeGraphicsObject</span><span class="p">(</span><span class="n">QGraphicsObject</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="n">scene</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_node</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_locked</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemDoesntPropagateOpacityToChildren</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIsMovable</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIsFocusable</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIsSelectable</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemSendsScenePositionChanges</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCacheMode</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">DeviceCoordinateCache</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">style</span>
+        <span class="n">node_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">node</span>
+
+        <span class="n">effect</span> <span class="o">=</span> <span class="n">QGraphicsDropShadowEffect</span><span class="p">()</span>
+        <span class="n">effect</span><span class="o">.</span><span class="n">setOffset</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">effect</span><span class="o">.</span><span class="n">setBlurRadius</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">effect</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">node_style</span><span class="o">.</span><span class="n">shadow_color</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setGraphicsEffect</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setOpacity</span><span class="p">(</span><span class="n">node_style</span><span class="o">.</span><span class="n">opacity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAcceptHoverEvents</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setZValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_q_widget</span><span class="p">()</span>
+
+        <span class="c1"># connect to the move signals to emit the move signals in FlowScene</span>
+        <span class="k">def</span> <span class="nf">on_move</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_moved</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">on_move</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">on_move</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="o">...</span>
+
+<div class="viewcode-block" id="NodeGraphicsObject.node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.node">[docs]</a>    <span class="k">def</span> <span class="nf">node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Node</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : Node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.boundingRect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.boundingRect">[docs]</a>    <span class="k">def</span> <span class="nf">boundingRect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QRectF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        boundingRect</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QRectF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">bounding_rect</span></div>
+
+    <span class="k">def</span> <span class="nf">set_geometry_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prepareGeometryChange</span><span class="p">()</span>
+
+<div class="viewcode-block" id="NodeGraphicsObject.move_connections"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.move_connections">[docs]</a>    <span class="k">def</span> <span class="nf">move_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Visits all attached connections and corrects their corresponding end points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">all_connections</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">move</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.lock"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.lock">[docs]</a>    <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locked</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lock</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        locked : bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_locked</span> <span class="o">=</span> <span class="n">locked</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIsMovable</span><span class="p">,</span> <span class="ow">not</span> <span class="n">locked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIsFocusable</span><span class="p">,</span> <span class="ow">not</span> <span class="n">locked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIsSelectable</span><span class="p">,</span> <span class="ow">not</span> <span class="n">locked</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.paint"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.paint">[docs]</a>    <span class="k">def</span> <span class="nf">paint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span> <span class="n">widget</span><span class="p">:</span> <span class="n">QWidget</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Paint</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        painter : QPainter</span>
+<span class="sd">        option : QStyleOptionGraphicsItem</span>
+<span class="sd">        widget : QWidget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.node_painter</span> <span class="k">import</span> <span class="n">NodePainter</span>
+        <span class="c1"># TODO</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setClipRect</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">exposedRect</span><span class="p">)</span>
+        <span class="n">NodePainter</span><span class="o">.</span><span class="n">paint</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="p">,</span>
+                          <span class="n">node_style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">node</span><span class="p">,</span>
+                          <span class="n">connection_style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span>
+                          <span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.itemChange"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.itemChange">[docs]</a>    <span class="k">def</span> <span class="nf">itemChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">GraphicsItemChange</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">QVariant</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QVariant</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        itemChange</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        change : QGraphicsItem.GraphicsItemChange</span>
+<span class="sd">        value : QVariant</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QVariant</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ItemPositionChange</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move_connections</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">itemChange</span><span class="p">(</span><span class="n">change</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.mousePressEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mousePressEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneMouseEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locked</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># deselect all other items after self one is selected</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSelected</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">modifiers</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ControlModifier</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">clearSelection</span><span class="p">()</span>
+
+        <span class="n">node_geometry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
+
+        <span class="k">for</span> <span class="n">port_to_check</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
+            <span class="c1"># TODO do not pass sceneTransform</span>
+            <span class="n">port_index</span> <span class="o">=</span> <span class="n">node_geometry</span><span class="o">.</span><span class="n">check_hit_scene_point</span><span class="p">(</span><span class="n">port_to_check</span><span class="p">,</span>
+                                                             <span class="n">event</span><span class="o">.</span><span class="n">scenePos</span><span class="p">(),</span>
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">port_index</span> <span class="o">==</span> <span class="n">INVALID</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">node_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span>
+            <span class="n">connections</span> <span class="o">=</span> <span class="n">node_state</span><span class="o">.</span><span class="n">connections</span><span class="p">(</span><span class="n">port_to_check</span><span class="p">,</span> <span class="n">port_index</span><span class="p">)</span>
+
+            <span class="c1"># start dragging existing connection</span>
+            <span class="k">if</span> <span class="n">connections</span> <span class="ow">and</span> <span class="n">port_to_check</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+                <span class="n">conn</span><span class="p">,</span> <span class="o">=</span> <span class="n">connections</span>
+                <span class="n">interaction</span> <span class="o">=</span> <span class="n">NodeConnectionInteraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="p">)</span>
+                <span class="n">interaction</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="n">port_to_check</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">port_to_check</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                <span class="c1"># initialize new Connection</span>
+                <span class="n">out_policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">port_out_connection_policy</span><span class="p">(</span><span class="n">port_index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">connections</span> <span class="ow">and</span> <span class="n">out_policy</span> <span class="o">==</span> <span class="n">ConnectionPolicy</span><span class="o">.</span><span class="n">one</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">,</span> <span class="o">=</span> <span class="n">connections</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+                <span class="c1"># TODO_UPSTREAM: add to FlowScene</span>
+                <span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">create_connection_node</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">port_to_check</span><span class="p">,</span> <span class="n">port_index</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">set_connection</span><span class="p">(</span><span class="n">port_to_check</span><span class="p">,</span> <span class="n">port_index</span><span class="p">,</span> <span class="n">connection</span><span class="p">)</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">grabMouse</span><span class="p">()</span>
+
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">QPoint</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="p">())</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resizable</span><span class="p">()</span> <span class="ow">and</span> <span class="n">geom</span><span class="o">.</span><span class="n">resize_rect</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">pos</span><span class="p">):</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">resizing</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.mouseMoveEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.mouseMoveEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mouseMoveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mouseMoveEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneMouseEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">resizing</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span> <span class="o">-</span> <span class="n">event</span><span class="o">.</span><span class="n">lastPos</span><span class="p">()</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">w</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prepareGeometryChange</span><span class="p">()</span>
+                <span class="n">old_size</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="n">QSize</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">diff</span><span class="o">.</span><span class="n">y</span><span class="p">())</span>
+                <span class="n">w</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMaximumSize</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">widget_position</span><span class="p">)</span>
+                <span class="n">geom</span><span class="o">.</span><span class="n">recalculate_size</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">move_connections</span><span class="p">()</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseMoveEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">lastPos</span><span class="p">()</span> <span class="o">!=</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">move_connections</span><span class="p">()</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">ignore</span><span class="p">()</span>
+
+        <span class="n">bounding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">())</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">()</span><span class="o">.</span><span class="n">sceneRect</span><span class="p">()</span><span class="o">.</span><span class="n">united</span><span class="p">(</span><span class="n">bounding</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">()</span><span class="o">.</span><span class="n">setSceneRect</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.mouseReleaseEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.mouseReleaseEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mouseReleaseEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mouseReleaseEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneMouseEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">resizing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseReleaseEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="c1"># position connections precisely after fast node move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move_connections</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.hoverEnterEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.hoverEnterEvent">[docs]</a>    <span class="k">def</span> <span class="nf">hoverEnterEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        hoverEnterEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneHoverEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># void</span>
+        <span class="c1"># bring all the colliding nodes to background</span>
+        <span class="n">overlap_items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collidingItems</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">overlap_items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">zValue</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setZValue</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># bring self node forward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setZValue</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">hovered</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_hovered</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">screenPos</span><span class="p">())</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.hoverLeaveEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.hoverLeaveEvent">[docs]</a>    <span class="k">def</span> <span class="nf">hoverLeaveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        hoverLeaveEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneHoverEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">hovered</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_hover_left</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">)</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.hoverMoveEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.hoverMoveEvent">[docs]</a>    <span class="k">def</span> <span class="nf">hoverMoveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        hoverMoveEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        q_graphics_scene_hover_event : QGraphicsSceneHoverEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resizable</span><span class="p">()</span> <span class="ow">and</span> <span class="n">geom</span><span class="o">.</span><span class="n">resize_rect</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
+            <span class="n">QPoint</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">())</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">QCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">SizeFDiagCursor</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">QCursor</span><span class="p">())</span>
+
+        <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.mouseDoubleClickEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.mouseDoubleClickEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mouseDoubleClickEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mouseDoubleClickEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneMouseEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseDoubleClickEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_double_clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NodeGraphicsObject.contextMenuEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.contextMenuEvent">[docs]</a>    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneContextMenuEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        contextMenuEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QGraphicsSceneContextMenuEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_context_menu</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()))</span></div>
+
+    <span class="k">def</span> <span class="nf">embed_q_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span> <span class="o">=</span> <span class="n">QGraphicsProxyWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setWidget</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPreferredWidth</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">geom</span><span class="o">.</span><span class="n">recalculate_size</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">widget_position</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setOpacity</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIgnoresParentOpacity</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Ken Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>qtpynodeeditor.flow_view &mdash; qtpynodeeditor  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> qtpynodeeditor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/klauer/qtpynodeeditor">Github Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qtpynodeeditor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>qtpynodeeditor.flow_view</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for qtpynodeeditor.flow_view</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QLineF</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QContextMenuEvent</span><span class="p">,</span> <span class="n">QKeyEvent</span><span class="p">,</span> <span class="n">QMouseEvent</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPen</span><span class="p">,</span> <span class="n">QShowEvent</span><span class="p">,</span> <span class="n">QWheelEvent</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QGraphicsView</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span> <span class="n">QWidgetAction</span>
+
+
+<span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="k">import</span> <span class="n">ConnectionGraphicsObject</span>
+<span class="kn">from</span> <span class="nn">.flow_scene</span> <span class="k">import</span> <span class="n">FlowScene</span>
+<span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="k">import</span> <span class="n">NodeGraphicsObject</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">style</span> <span class="k">as</span> <span class="n">style_module</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FlowView"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView">[docs]</a><span class="k">class</span> <span class="nc">FlowView</span><span class="p">(</span><span class="n">QGraphicsView</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_click_pos</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setDragMode</span><span class="p">(</span><span class="n">QGraphicsView</span><span class="o">.</span><span class="n">ScrollHandDrag</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setRenderHint</span><span class="p">(</span><span class="n">QPainter</span><span class="o">.</span><span class="n">Antialiasing</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">style_module</span><span class="o">.</span><span class="n">default_style</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="n">style</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setBackgroundBrush</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">flow_view</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>
+
+        <span class="c1"># setViewportUpdateMode(QGraphicsView.FullViewportUpdate)</span>
+        <span class="c1"># setViewportUpdateMode(QGraphicsView.MinimalViewportUpdate)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setHorizontalScrollBarPolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setVerticalScrollBarPolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ScrollBarAlwaysOff</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setTransformationAnchor</span><span class="p">(</span><span class="n">QGraphicsView</span><span class="o">.</span><span class="n">AnchorUnderMouse</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCacheMode</span><span class="p">(</span><span class="n">QGraphicsView</span><span class="o">.</span><span class="n">CacheBackground</span><span class="p">)</span>
+        <span class="c1"># setViewport(new QGLWidget(QGLFormat(QGL.SampleBuffers)))</span>
+        <span class="k">if</span> <span class="n">scene</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setScene</span><span class="p">(</span><span class="n">scene</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FlowView.clear_selection_action"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.clear_selection_action">[docs]</a>    <span class="k">def</span> <span class="nf">clear_selection_action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear selection action</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QAction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span></div>
+
+<div class="viewcode-block" id="FlowView.delete_selection_action"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.delete_selection_action">[docs]</a>    <span class="k">def</span> <span class="nf">delete_selection_action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QAction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete selection action</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QAction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span></div>
+
+<div class="viewcode-block" id="FlowView.setScene"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.setScene">[docs]</a>    <span class="k">def</span> <span class="nf">setScene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="n">FlowScene</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        setScene</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scene : FlowScene</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="n">scene</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setScene</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="p">)</span>
+
+        <span class="c1"># setup actions</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Clear Selection&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key_Escape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">clearSelection</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clear_selection_action</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Delete Selection&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key_Delete</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key_Backspace</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delete_selected_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">scale_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mf">1.2</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span> <span class="o">**</span> <span class="mf">1.0</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">m11</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">scale_down</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mf">1.2</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span> <span class="o">**</span> <span class="o">-</span><span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete_selected_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Delete the selected connections first, ensuring that they won&#39;t be</span>
+        <span class="c1"># automatically deleted when selected nodes are deleted (deleting a node</span>
+        <span class="c1"># deletes some connections as well)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ConnectionGraphicsObject</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">connection</span><span class="p">())</span>
+
+        <span class="c1"># Delete the nodes; self will delete many of the connections.</span>
+        <span class="c1"># Selected connections were already deleted prior to self loop, otherwise</span>
+        <span class="c1"># qgraphicsitem_cast&lt;NodeGraphicsObject*&gt;(item) could be a use-after-free</span>
+        <span class="c1"># when a selected connection is deleted by deleting the node.</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">NodeGraphicsObject</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
+
+<div class="viewcode-block" id="FlowView.contextMenuEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.contextMenuEvent">[docs]</a>    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QContextMenuEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        contextMenuEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QContextMenuEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">contextMenuEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">model_menu</span> <span class="o">=</span> <span class="n">QMenu</span><span class="p">()</span>
+        <span class="n">skip_text</span> <span class="o">=</span> <span class="s2">&quot;skip me&quot;</span>
+
+        <span class="c1"># Add filterbox to the context menu</span>
+        <span class="n">txt_box</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">model_menu</span><span class="p">)</span>
+        <span class="n">txt_box</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span><span class="s2">&quot;Filter&quot;</span><span class="p">)</span>
+        <span class="n">txt_box</span><span class="o">.</span><span class="n">setClearButtonEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">txt_box_action</span> <span class="o">=</span> <span class="n">QWidgetAction</span><span class="p">(</span><span class="n">model_menu</span><span class="p">)</span>
+        <span class="n">txt_box_action</span><span class="o">.</span><span class="n">setDefaultWidget</span><span class="p">(</span><span class="n">txt_box</span><span class="p">)</span>
+        <span class="n">model_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">txt_box_action</span><span class="p">)</span>
+
+        <span class="c1"># Add result treeview to the context menu</span>
+        <span class="n">tree_view</span> <span class="o">=</span> <span class="n">QTreeWidget</span><span class="p">(</span><span class="n">model_menu</span><span class="p">)</span>
+        <span class="n">tree_view</span><span class="o">.</span><span class="n">header</span><span class="p">()</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">tree_view_action</span> <span class="o">=</span> <span class="n">QWidgetAction</span><span class="p">(</span><span class="n">model_menu</span><span class="p">)</span>
+        <span class="n">tree_view_action</span><span class="o">.</span><span class="n">setDefaultWidget</span><span class="p">(</span><span class="n">tree_view</span><span class="p">)</span>
+        <span class="n">model_menu</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">tree_view_action</span><span class="p">)</span>
+
+        <span class="n">top_level_items</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">categories</span><span class="p">():</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="n">tree_view</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cat</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">UserRole</span><span class="p">,</span> <span class="n">skip_text</span><span class="p">)</span>
+            <span class="n">top_level_items</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
+
+        <span class="n">registry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span>
+        <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">registered_models_category_association</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">top_level_items</span><span class="p">[</span><span class="n">category</span><span class="p">]</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">QTreeWidgetItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">UserRole</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+        <span class="n">tree_view</span><span class="o">.</span><span class="n">expandAll</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">click_handler</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="n">model_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">UserRole</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="n">skip_text</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">type_</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+                <span class="n">pos_view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos_view</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_placed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model not found&quot;</span><span class="p">)</span>
+
+            <span class="n">model_menu</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">tree_view</span><span class="o">.</span><span class="n">itemClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">click_handler</span><span class="p">)</span>
+
+        <span class="c1"># Setup filtering</span>
+        <span class="k">def</span> <span class="nf">filter_handler</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">top_lvl_item</span> <span class="ow">in</span> <span class="n">top_level_items</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">top_lvl_item</span><span class="o">.</span><span class="n">childCount</span><span class="p">()):</span>
+                    <span class="n">child</span> <span class="o">=</span> <span class="n">top_lvl_item</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">model_name</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">UserRole</span><span class="p">)</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">setHidden</span><span class="p">(</span><span class="n">text</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_name</span><span class="p">)</span>
+
+        <span class="n">txt_box</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">filter_handler</span><span class="p">)</span>
+
+        <span class="c1"># make sure the text box gets focus so the user doesn&#39;t have to click on it</span>
+        <span class="n">txt_box</span><span class="o">.</span><span class="n">setFocus</span><span class="p">()</span>
+        <span class="n">model_menu</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">globalPos</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="FlowView.wheelEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.wheelEvent">[docs]</a>    <span class="k">def</span> <span class="nf">wheelEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QWheelEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        wheelEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QWheelEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">angleDelta</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">ignore</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">y</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale_up</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale_down</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FlowView.keyPressEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.keyPressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QKeyEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        keyPressEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QKeyEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_Shift</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setDragMode</span><span class="p">(</span><span class="n">QGraphicsView</span><span class="o">.</span><span class="n">RubberBandDrag</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">keyPressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlowView.keyReleaseEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.keyReleaseEvent">[docs]</a>    <span class="k">def</span> <span class="nf">keyReleaseEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QKeyEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        keyReleaseEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QKeyEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_Shift</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setDragMode</span><span class="p">(</span><span class="n">QGraphicsView</span><span class="o">.</span><span class="n">ScrollHandDrag</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">keyReleaseEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlowView.mousePressEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.mousePressEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QMouseEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mousePressEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QMouseEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mousePressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_click_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="FlowView.mouseMoveEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.mouseMoveEvent">[docs]</a>    <span class="k">def</span> <span class="nf">mouseMoveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QMouseEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mouseMoveEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QMouseEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseMoveEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">()</span><span class="o">.</span><span class="n">mouseGrabberItem</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">buttons</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+            <span class="c1"># Make sure shift is not being pressed</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">modifiers</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ShiftModifier</span><span class="p">):</span>
+                <span class="n">difference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_click_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setSceneRect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sceneRect</span><span class="p">()</span><span class="o">.</span><span class="n">translated</span><span class="p">(</span><span class="n">difference</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">difference</span><span class="o">.</span><span class="n">y</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="FlowView.drawBackground"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.drawBackground">[docs]</a>    <span class="k">def</span> <span class="nf">drawBackground</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">QRectF</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        drawBackground</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        painter : QPainter</span>
+<span class="sd">        r : QRectF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">drawBackground</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">draw_grid</span><span class="p">(</span><span class="n">grid_step</span><span class="p">):</span>
+            <span class="n">window_rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">()</span>
+            <span class="n">tl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">window_rect</span><span class="o">.</span><span class="n">topLeft</span><span class="p">())</span>
+            <span class="n">br</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">window_rect</span><span class="o">.</span><span class="n">bottomRight</span><span class="p">())</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">/</span> <span class="n">grid_step</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">br</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">/</span> <span class="n">grid_step</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">/</span> <span class="n">grid_step</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">br</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">/</span> <span class="n">grid_step</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
+
+            <span class="c1"># vertical lines</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">QLineF</span><span class="p">(</span><span class="n">xi</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">,</span> <span class="n">xi</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">,</span> <span class="n">top</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">]</span>
+
+            <span class="c1"># horizontal lines</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">QLineF</span><span class="p">(</span><span class="n">left</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">,</span> <span class="n">yi</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">,</span> <span class="n">right</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">,</span> <span class="n">yi</span> <span class="o">*</span> <span class="n">grid_step</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bottom</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">top</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                 <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">painter</span><span class="o">.</span><span class="n">drawLines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+        <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">flow_view</span>
+        <span class="c1"># brush = self.backgroundBrush()</span>
+        <span class="n">pfine</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">fine_grid_color</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">pfine</span><span class="p">)</span>
+        <span class="n">draw_grid</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">coarse_grid_color</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">draw_grid</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlowView.showEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.showEvent">[docs]</a>    <span class="k">def</span> <span class="nf">showEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QShowEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        showEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QShowEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">setSceneRect</span><span class="p">(</span><span class="n">QRectF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">()))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">showEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlowView.scene"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.scene">[docs]</a>    <span class="k">def</span> <span class="nf">scene</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlowScene</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scene</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : FlowScene</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Ken Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

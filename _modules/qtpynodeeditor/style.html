@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>qtpynodeeditor.style &mdash; qtpynodeeditor  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> qtpynodeeditor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/klauer/qtpynodeeditor">Github Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qtpynodeeditor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>qtpynodeeditor.style</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for qtpynodeeditor.style</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QColor</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_qcolor</span><span class="p">(</span><span class="n">style_dict</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style_dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">QColor</span><span class="p">()</span>
+
+    <span class="n">name_or_list</span> <span class="o">=</span> <span class="n">style_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_or_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="o">*</span><span class="n">name_or_list</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="n">name_or_list</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loaded color </span><span class="si">%s</span><span class="s1"> = </span><span class="si">%s</span><span class="s1"> -&gt; </span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">name_or_list</span><span class="p">,</span>
+                 <span class="o">*</span><span class="n">color</span><span class="o">.</span><span class="n">getRgb</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">color</span>
+
+
+<div class="viewcode-block" id="Style"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Style">[docs]</a><span class="k">class</span> <span class="nc">Style</span><span class="p">:</span>
+    <span class="n">default_style</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;FlowViewStyle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;BackgroundColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">53</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">53</span><span class="p">],</span>
+            <span class="s2">&quot;FineGridColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span>
+            <span class="s2">&quot;CoarseGridColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;NodeStyle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;NormalBoundaryColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+            <span class="s2">&quot;SelectedBoundaryColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;GradientColor0&quot;</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GradientColor1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+            <span class="s2">&quot;GradientColor2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
+            <span class="s2">&quot;GradientColor3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">58</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">58</span><span class="p">],</span>
+            <span class="s2">&quot;ShadowColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+            <span class="s2">&quot;FontColor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;FontColorFaded&quot;</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ConnectionPointColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">169</span><span class="p">,</span> <span class="mi">169</span><span class="p">,</span> <span class="mi">169</span><span class="p">],</span>
+            <span class="s2">&quot;FilledConnectionPointColor&quot;</span><span class="p">:</span> <span class="s2">&quot;cyan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ErrorColor&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;WarningColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+
+            <span class="s2">&quot;PenWidth&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;HoveredPenWidth&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
+
+            <span class="s2">&quot;ConnectionPointDiameter&quot;</span><span class="p">:</span> <span class="mf">8.0</span><span class="p">,</span>
+
+            <span class="s2">&quot;Opacity&quot;</span><span class="p">:</span> <span class="mf">0.8</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ConnectionStyle&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;ConstructionColor&quot;</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NormalColor&quot;</span><span class="p">:</span> <span class="s2">&quot;darkcyan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;SelectedColor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="s2">&quot;SelectedHaloColor&quot;</span><span class="p">:</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;HoveredColor&quot;</span><span class="p">:</span> <span class="s2">&quot;lightcyan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;LineWidth&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+            <span class="s2">&quot;ConstructionLineWidth&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="s2">&quot;PointDiameter&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s2">&quot;UseDataDefinedColors&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">json_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">json_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_style</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_from_json</span><span class="p">(</span><span class="n">json_style</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Style.load_from_json"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Style.load_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load from json</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        json_style : str or dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_style</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">json_style</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_style</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="FlowViewStyle"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowViewStyle">[docs]</a><span class="k">class</span> <span class="nc">FlowViewStyle</span><span class="p">(</span><span class="n">Style</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fine_grid_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coarse_grid_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">json_style</span><span class="o">=</span><span class="n">json_style</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FlowViewStyle.load_from_json"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowViewStyle.load_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load from json</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        json_style : str or dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load_from_json</span><span class="p">(</span><span class="n">json_style</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;FlowViewStyle&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;BackgroundColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fine_grid_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;FineGridColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coarse_grid_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;CoarseGridColor&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ConnectionStyle"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionStyle">[docs]</a><span class="k">class</span> <span class="nc">ConnectionStyle</span><span class="p">(</span><span class="n">Style</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Style for connections</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    construction_color : QColor</span>
+<span class="sd">    normal_color : QColor</span>
+<span class="sd">    selected_color : QColor</span>
+<span class="sd">    selected_halo_color : QColor</span>
+<span class="sd">    hovered_color : QColor</span>
+<span class="sd">    line_width : float</span>
+<span class="sd">    construction_line_width : float</span>
+<span class="sd">    point_diameter : float</span>
+<span class="sd">    use_data_defined_colors : bool</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construction_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_halo_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hovered_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_width</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construction_line_width</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_diameter</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_data_defined_colors</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">json_style</span><span class="o">=</span><span class="n">json_style</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ConnectionStyle.load_from_json"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionStyle.load_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load from json</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        json_style : str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load_from_json</span><span class="p">(</span><span class="n">json_style</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;ConnectionStyle&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construction_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;ConstructionColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;NormalColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;SelectedColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_halo_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;SelectedHaloColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hovered_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;HoveredColor&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;LineWidth&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construction_line_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;ConstructionLineWidth&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_diameter</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;PointDiameter&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_data_defined_colors</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;UseDataDefinedColors&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ConnectionStyle.get_normal_color"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionStyle.get_normal_color">[docs]</a>    <span class="k">def</span> <span class="nf">get_normal_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QColor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normal color</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        type_id : str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QColor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO verify</span>
+        <span class="c1">#   std::size_t hash = qHash(type_id);</span>
+        <span class="c1">#   std::size_t const hue_range = 0xFF;</span>
+        <span class="c1">#   qsrand(hash);</span>
+        <span class="c1">#   std::size_t hue = qrand() % hue_range;</span>
+        <span class="c1">#   std::size_t sat = 120 + hash % 129;</span>
+        <span class="c1">#   return QColor::fromHsl(hue, sat, 160);</span>
+        <span class="c1"># }</span>
+        <span class="k">if</span> <span class="n">type_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_color</span>
+
+        <span class="nb">hash</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">type_id</span><span class="p">)</span>
+        <span class="n">hue_range</span> <span class="o">=</span> <span class="mh">0xFF</span>
+
+        <span class="n">hue</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">hue_range</span><span class="p">)</span>
+        <span class="n">sat</span> <span class="o">=</span> <span class="mi">120</span> <span class="o">+</span> <span class="nb">hash</span> <span class="o">%</span> <span class="mi">129</span>
+        <span class="k">return</span> <span class="n">QColor</span><span class="o">.</span><span class="n">fromHsl</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span> <span class="n">sat</span><span class="p">,</span> <span class="mi">160</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="NodeStyle"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeStyle">[docs]</a><span class="k">class</span> <span class="nc">NodeStyle</span><span class="p">(</span><span class="n">Style</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal_boundary_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_boundary_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient_colors</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">QColor</span><span class="p">()),</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shadow_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_color_faded</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_point_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filled_connection_point_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">warning_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pen_width</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hovered_pen_width</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_point_diameter</span> <span class="o">=</span> <span class="mf">5.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opacity</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">json_style</span><span class="o">=</span><span class="n">json_style</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NodeStyle.load_from_json"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeStyle.load_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load from json</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        json_style : str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load_from_json</span><span class="p">(</span><span class="n">json_style</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;NodeStyle&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal_boundary_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;NormalBoundaryColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_boundary_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span>
+            <span class="n">style</span><span class="p">,</span> <span class="s1">&#39;SelectedBoundaryColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient_colors</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;GradientColor0&#39;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;GradientColor1&#39;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;GradientColor2&#39;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;GradientColor3&#39;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shadow_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;ShadowColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;FontColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_color_faded</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;FontColorFaded&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_point_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span>
+            <span class="n">style</span><span class="p">,</span> <span class="s1">&#39;ConnectionPointColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filled_connection_point_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span>
+            <span class="n">style</span><span class="p">,</span> <span class="s1">&#39;FilledConnectionPointColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warning_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;WarningColor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_color</span> <span class="o">=</span> <span class="n">_get_qcolor</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="s1">&#39;ErrorColor&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pen_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;PenWidth&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hovered_pen_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;HoveredPenWidth&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_point_diameter</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+            <span class="n">style</span><span class="p">[</span><span class="s1">&#39;ConnectionPointDiameter&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opacity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;Opacity&#39;</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="StyleCollection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.StyleCollection">[docs]</a><span class="k">class</span> <span class="nc">StyleCollection</span><span class="p">:</span>
+    <span class="s1">&#39;Container for all styles&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flow_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">NodeStyle</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+
+        <span class="k">if</span> <span class="n">connection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectionStyle</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
+
+        <span class="k">if</span> <span class="n">flow_view</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flow_view</span> <span class="o">=</span> <span class="n">FlowViewStyle</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flow_view</span> <span class="o">=</span> <span class="n">flow_view</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">json_doc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_doc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">json_style</span> <span class="o">=</span> <span class="n">json_doc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">json_style</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_doc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">StyleCollection</span><span class="p">(</span>
+            <span class="n">node</span><span class="o">=</span><span class="n">NodeStyle</span><span class="p">(</span><span class="n">json_style</span><span class="p">),</span>
+            <span class="n">connection</span><span class="o">=</span><span class="n">ConnectionStyle</span><span class="p">(</span><span class="n">json_style</span><span class="p">),</span>
+            <span class="n">flow_view</span><span class="o">=</span><span class="n">FlowViewStyle</span><span class="p">(</span><span class="n">json_style</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<span class="n">default_style</span> <span class="o">=</span> <span class="n">StyleCollection</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Ken Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
