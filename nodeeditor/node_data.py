@@ -47,6 +47,9 @@ class NodeData:
 
 class NodeDataModel(QObject, Serializable):
     name = None
+    caption = None
+    caption_visible = True
+
     data_updated = Signal(PortIndex)
     data_invalidated = Signal(PortIndex)
     computing_started = Signal()
@@ -64,31 +67,13 @@ class NodeDataModel(QObject, Serializable):
         # For all subclasses, if no name is defined, default to the class name
         if cls.name is None:
             cls.name = cls.__name__
+        if cls.caption is None and cls.caption_visible:
+            cls.caption = cls.name
 
     @property
     def style(self):
         'Style collection for drawing this data model'
         return self._style
-
-    def caption(self) -> str:
-        """
-        Caption is used in GUI
-
-        Returns
-        -------
-        value : str
-        """
-        ...
-
-    def caption_visible(self) -> bool:
-        """
-        It is possible to hide caption in GUI
-
-        Returns
-        -------
-        value : bool
-        """
-        return True
 
     def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
         """

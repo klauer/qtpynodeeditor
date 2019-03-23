@@ -55,6 +55,8 @@ class IntegerData(NodeData):
 
 
 class MathOperationDataModel(NodeDataModel):
+    caption_visible = True
+
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
         self._number1 = None
@@ -63,28 +65,20 @@ class MathOperationDataModel(NodeDataModel):
         self._validation_state = NodeValidationState.warning
         self._validation_message = 'Uninitialized'
 
-    def caption(self) -> str:
-        return self.name
-
-    def caption_visible(self) -> bool:
-        return True
-
     def n_ports(self, port_type: PortType) -> int:
         if port_type == PortType.input:
             return 2
         elif port_type == PortType.output:
             return 1
 
-        raise ValueError('Unknown port type')
-
     def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
         return True
 
     def _check_inputs(self):
         number1_ok = (self._number1 is not None and
-                      self._number1.data_type.id in ('Decimal', 'integer'))
+                      self._number1.data_type.id in ('decimal', 'integer'))
         number2_ok = (self._number2 is not None and
-                      self._number2.data_type.id in ('Decimal', 'integer'))
+                      self._number2.data_type.id in ('decimal', 'integer'))
 
         if not number1_ok or not number2_ok:
             self._validation_state = NodeValidationState.warning
@@ -226,6 +220,7 @@ class MultiplicationModel(MathOperationDataModel):
 
 class NumberSourceDataModel(NodeDataModel):
     name = "NumberSource"
+    caption_visible = False
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -239,12 +234,6 @@ class NumberSourceDataModel(NodeDataModel):
     @property
     def number(self):
         return self._number
-
-    def caption(self) -> str:
-        return "Number Source"
-
-    def caption_visible(self) -> bool:
-        return False
 
     def save(self) -> dict:
         'Add to the JSON dictionary to save the state of the NumberSource'
@@ -268,7 +257,6 @@ class NumberSourceDataModel(NodeDataModel):
             return 0
         elif port_type == PortType.output:
             return 1
-        raise ValueError('Unknown port type')
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return DecimalData.data_type
@@ -310,6 +298,7 @@ class NumberSourceDataModel(NodeDataModel):
 
 class NumberDisplayModel(NodeDataModel):
     name = "NumberDisplay"
+    caption_visible = False
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -319,15 +308,11 @@ class NumberDisplayModel(NodeDataModel):
         self._validation_state = NodeValidationState.warning
         self._validation_message = 'Uninitialized'
 
-    def caption_visible(self) -> bool:
-        return False
-
     def n_ports(self, port_type: PortType) -> int:
         if port_type == PortType.input:
             return 1
         elif port_type == PortType.output:
             return 0
-        raise ValueError('Unknown port type')
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return DecimalData.data_type

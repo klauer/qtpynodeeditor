@@ -11,12 +11,11 @@ class MyNodeData(nodeeditor.NodeData):
 
 class BasicDataModel(nodeeditor.NodeDataModel):
     name = 'MyDataModel'
+    caption = 'Caption'
+    caption_visible = True
 
     def model(self):
         return 'MyDataModel'
-
-    def caption(self):
-        return 'Caption'
 
     def n_ports(self, port_type):
         return 3

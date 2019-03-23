@@ -439,9 +439,9 @@ class NodeGeometry:
         -------
         value : int
         """
-        if not self._data_model.caption_visible():
+        if not self._data_model.caption_visible:
             return 0
-        name = self._data_model.caption()
+        name = self._data_model.caption
         return self._bold_font_metrics.boundingRect(name).height()
 
     @property
@@ -453,9 +453,9 @@ class NodeGeometry:
         -------
         value : int
         """
-        if not self._data_model.caption_visible():
+        if not self._data_model.caption_visible:
             return 0
-        name = self._data_model.caption()
+        name = self._data_model.caption
         return self._bold_font_metrics.boundingRect(name).width()
 
     def port_width(self, port_type: PortType) -> int:

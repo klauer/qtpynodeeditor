@@ -119,9 +119,9 @@ class NodePainter:
         state : NodeState
         model : NodeDataModel
         """
-        if not model.caption_visible():
+        if not model.caption_visible:
             return
-        name = model.caption()
+        name = model.caption
         f = painter.font()
         f.setBold(True)
         metrics = QFontMetrics(f)

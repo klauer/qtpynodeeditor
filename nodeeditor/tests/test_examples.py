@@ -46,5 +46,13 @@ def test_iterate(scene):
         print(data, data.number if hasattr(data, 'number') else '')
 
 
+def test_smoke_zero_inputs(scene, example):
+    for node in scene.iterate_over_nodes():
+        widget = node.data.embedded_widget()
+        if widget is not None:
+            if hasattr(widget, 'setText'):
+                widget.setText('0.0')
+
+
 def test_save_and_load(scene):
     scene.__setstate__(scene.__getstate__())
