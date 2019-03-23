@@ -121,7 +121,7 @@ class NodeConnectionInteraction:
         # 1.5) If the connection is possible but a type conversion is needed,
         # assign a convertor to connection
         if converter:
-            self._connection.set_type_converter(converter)
+            self._connection.type_converter = converter
 
         # 2) Assign node to required port in Connection
         required_port = self.connection_required_port
