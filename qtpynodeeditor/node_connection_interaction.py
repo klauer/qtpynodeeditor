@@ -95,13 +95,15 @@ class NodeConnectionInteraction:
 
     def try_connect(self) -> bool:
         """
-        1) Check conditions from 'can_connect'
-        1.5) If the connection is possible but a type conversion is needed, add
-             a converter node to the scene, and connect it properly
-        2) Assign node to required port in Connection
-        3) Assign Connection to empty port in NodeState
-        4) Adjust Connection geometry
-        5) Poke model to initiate data transfer
+        Try to connect the nodes. Steps::
+
+            1) Check conditions from 'can_connect'
+            1.5) If the connection is possible but a type conversion is needed, add
+                 a converter node to the scene, and connect it properly
+            2) Assign node to required port in Connection
+            3) Assign Connection to empty port in NodeState
+            4) Adjust Connection geometry
+            5) Poke model to initiate data transfer
 
         Returns
         -------
