@@ -1,4 +1,7 @@
 from .enums import NodeValidationState, PortType, ConnectionPolicy
+from .exceptions import (NodeConnectionFailure, ConnectionRequiresPortFailure,
+                         ConnectionSelfFailure, ConnectionPointFailure,
+                         ConnectionPortNotEmptyFailure)
 from .style import Style, NodeStyle, ConnectionStyle, FlowViewStyle, StyleCollection
 from .connection import Connection
 from .connection_geometry import ConnectionGeometry

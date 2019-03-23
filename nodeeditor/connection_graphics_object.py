@@ -111,7 +111,8 @@ class ConnectionGraphicsObject(QGraphicsObject):
             node_graphics = node.graphics_object
             node_geom = node.geometry
             scene_pos = node_geom.port_scene_position(
-                self._connection.get_port_index(port_type), port_type, node_graphics.sceneTransform()
+                port_type, self._connection.get_port_index(port_type),
+                node_graphics.sceneTransform()
             )
 
             inverted, invertible = self.sceneTransform().inverted()
@@ -207,7 +208,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         if node and interaction.try_connect():
             node.reset_reaction_to_connection()
 
-        if self._state.requires_port():
+        if self._state.requires_port:
             self._scene.delete_connection(self._connection)
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent):

@@ -184,7 +184,7 @@ class NodeGraphicsObject(QGraphicsObject):
                     self._scene.delete_connection(conn)
 
                 # TODO_UPSTREAM: add to FlowScene
-                connection = self._scene.create_connection_node(port_to_check, self._node, port_index)
+                connection = self._scene.create_connection_node(self._node, port_to_check, port_index)
                 self._node.state.set_connection(port_to_check, port_index, connection)
                 connection.graphics_object.grabMouse()
 

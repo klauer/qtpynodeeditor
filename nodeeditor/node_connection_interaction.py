@@ -169,7 +169,6 @@ class NodeConnectionInteraction:
         self._connection.clear_node(port_to_disconnect)
         self._connection.required_port = port_to_disconnect
         self._connection.graphics_object.grabMouse()
-        return True
 
     @property
     def connection_required_port(self) -> PortType:
@@ -213,7 +212,7 @@ class NodeConnectionInteraction:
         value : QPointF
         """
         geom = self._node.geometry
-        p = geom.port_scene_position(port_index, port_type)
+        p = geom.port_scene_position(port_type, port_index)
         ngo = self._node.graphics_object
         return ngo.sceneTransform().map(p)
 
@@ -231,7 +230,7 @@ class NodeConnectionInteraction:
         value : PortIndex
         """
         node_geom = self._node.geometry
-        scene_transform = self._node.node_graphics_object.sceneTransform()
+        scene_transform = self._node.graphics_object.sceneTransform()
         port_index = node_geom.check_hit_scene_point(port_type, scene_point, scene_transform)
         return port_index
 

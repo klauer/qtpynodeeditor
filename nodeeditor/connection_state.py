@@ -78,4 +78,4 @@ class ConnectionState:
     def reset_last_hovered_node(self):
         if self._last_hovered_node:
             self._last_hovered_node.reset_reaction_to_connection()
-        self._last_hovered_node = None
+            self._last_hovered_node = None

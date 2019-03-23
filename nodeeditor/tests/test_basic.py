@@ -176,3 +176,37 @@ def test_smoke_node_size_updated(scene, view, model):
     node = scene.create_node(model)
     node.on_node_size_updated()
     view.update()
+
+
+def test_smoke_connection_interaction(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    conn = scene.create_connection_node(node1, PortType.output, port_index=0)
+    interaction = nodeeditor.NodeConnectionInteraction(
+        node=node2, connection=conn, scene=scene)
+
+    node_scene_transform = node2.graphics_object.sceneTransform()
+    pos = node2.geometry.port_scene_position(PortType.input, 0,
+                                             node_scene_transform)
+
+    conn.geometry.set_end_point(PortType.input, pos)
+
+    with pytest.raises(nodeeditor.ConnectionPointFailure):
+        interaction.can_connect()
+
+    conn.geometry.set_end_point(PortType.output, pos)
+    with pytest.raises(nodeeditor.ConnectionPointFailure):
+        interaction.can_connect()
+
+    assert interaction.node_port_is_empty(PortType.input, 0)
+    assert interaction.connection_required_port == PortType.input
+
+    # TODO node still not on it?
+    interaction.can_connect = lambda: (0, None)
+
+    assert interaction.try_connect()
+
+    interaction.disconnect(PortType.output)
+    interaction.connection_end_scene_position(PortType.input)
+    interaction.node_port_scene_position(PortType.input, 0)
+    interaction.node_port_index_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))

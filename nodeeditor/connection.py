@@ -34,7 +34,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         self._converter = converter
         self._style = style
         self._connection_geometry = ConnectionGeometry(style)
-        self._connection_graphics_object = None
+        self._graphics_object = None
 
     @classmethod
     def from_node(cls, port_type: PortType, node: NodeBase, port_index: PortIndex,
@@ -90,9 +90,9 @@ class Connection(QObject, Serializable, ConnectionBase):
             self._out_node.graphics_object.update()
             self._out_node = None
 
-        if self._connection_graphics_object is not None:
-            self._connection_graphics_object._cleanup()
-            self._connection_graphics_object = None
+        if self._graphics_object is not None:
+            self._graphics_object._cleanup()
+            self._graphics_object = None
 
     def __del__(self):
         try:
@@ -184,11 +184,11 @@ class Connection(QObject, Serializable, ConnectionBase):
         ----------
         graphics : ConnectionGraphicsObject
         """
-        return self._connection_graphics_object
+        return self._graphics_object
 
     @graphics_object.setter
     def graphics_object(self, graphics: ConnectionGraphicsObject):
-        self._connection_graphics_object = graphics
+        self._graphics_object = graphics
 
         # this function is only called when the ConnectionGraphicsObject is
         # newly created. At self moment both end coordinates are (0, 0) in
@@ -200,11 +200,13 @@ class Connection(QObject, Serializable, ConnectionBase):
             attached_port = opposite_port(self.required_port)
             attached_port_index = self.get_port_index(attached_port)
             node = self.get_node(attached_port)
-            node_scene_transform = node.node_graphics_object.sceneTransform()
-            pos = node.geometry.port_scene_position(attached_port_index, attached_port, node_scene_transform)
-            self._connection_graphics_object.setPos(pos)
+            node_scene_transform = node.graphics_object.sceneTransform()
+            pos = node.geometry.port_scene_position(attached_port,
+                                                    attached_port_index,
+                                                    node_scene_transform)
+            self._graphics_object.setPos(pos)
 
-        self._connection_graphics_object.move()
+        self._graphics_object.move()
 
     def set_node_to_port(self, node: NodeBase, port_type: PortType, port_index: PortIndex):
         """

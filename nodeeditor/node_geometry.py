@@ -264,14 +264,15 @@ class NodeGeometry:
         self._width = width
         self._height = height
 
-    def port_scene_position(self, index: PortIndex, port_type: PortType, t: QTransform = None) -> QPointF:
+    def port_scene_position(self, port_type: PortType, index: PortIndex,
+                            t: QTransform = None) -> QPointF:
         """
         Port scene position
 
         Parameters
         ----------
-        index : PortIndex
         port_type : PortType
+        index : PortIndex
         t : QTransform
 
         Returns
@@ -282,7 +283,6 @@ class NodeGeometry:
             t = QTransform()
 
         step = self._entry_height + self._spacing
-
         total_height = float(self.caption_height) + step * index
         # TODO_UPSTREAM: why?
         total_height += step / 2.0
@@ -318,7 +318,7 @@ class NodeGeometry:
 
         tolerance = 2.0 * self._style.connection_point_diameter
         for i in range(self._data_model.n_ports(port_type)):
-            pp = self.port_scene_position(i, port_type, scene_transform)
+            pp = self.port_scene_position(port_type, i, scene_transform)
             p = pp - scene_point
             distance = math.sqrt(QPointF.dotProduct(p, p))
             if distance < tolerance:
@@ -422,9 +422,9 @@ class NodeGeometry:
         """
         converter_node_pos = (
             source_node.graphics_object.pos()
-            + source_node.geometry.port_scene_position(source_port_index, source_port)
+            + source_node.geometry.port_scene_position(source_port, source_port_index)
             + target_node.graphics_object.pos()
-            + target_node.geometry.port_scene_position(target_port_index, target_port)
+            + target_node.geometry.port_scene_position(target_port, target_port_index)
         ) / 2.0
         converter_node_pos.setX(converter_node_pos.x() - new_node.geometry.width / 2.0)
         converter_node_pos.setY(converter_node_pos.y() - new_node.geometry.height / 2.0)

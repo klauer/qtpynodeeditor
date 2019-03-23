@@ -152,7 +152,7 @@ class NodePainter:
         metrics = painter.fontMetrics()
         for port_type in (PortType.output, PortType.input):
             for i, entries in enumerate(state.get_entries(port_type)):
-                p = geom.port_scene_position(i, port_type)
+                p = geom.port_scene_position(port_type, i)
                 if not entries:
                     painter.setPen(node_style.font_color_faded)
                 else:
@@ -194,7 +194,7 @@ class NodePainter:
         reduced_diameter = diameter * 0.6
         for port_type in (PortType.output, PortType.input):
             for i, entries in enumerate(state.get_entries(port_type)):
-                p = geom.port_scene_position(i, port_type)
+                p = geom.port_scene_position(port_type, i)
                 data_type = model.data_type(port_type, i)
                 can_connect = (
                     not entries or
@@ -258,7 +258,7 @@ class NodePainter:
                 if not entries:
                     continue
 
-                p = geom.port_scene_position(i, port_type)
+                p = geom.port_scene_position(port_type, i)
                 data_type = model.data_type(port_type, i)
                 if connection_style.use_data_defined_colors:
                     c = connection_style.get_normal_color(data_type.id)
