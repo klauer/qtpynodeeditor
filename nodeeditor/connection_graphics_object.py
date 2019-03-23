@@ -33,8 +33,8 @@ class ConnectionGraphicsObject(QGraphicsObject):
         super().__init__()
         self._scene = scene
         self._connection = connection
-        self._state = connection.connection_state()
-        self._geometry = connection.connection_geometry()
+        self._state = connection.state
+        self._geometry = connection.geometry
         self._style = connection.style.connection
 
         self._scene.addItem(self)
@@ -75,7 +75,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         -------
         value : QRectF
         """
-        return self._geometry.bounding_rect()
+        return self._geometry.bounding_rect
 
     def shape(self) -> QPainterPath:
         """
@@ -101,17 +101,18 @@ class ConnectionGraphicsObject(QGraphicsObject):
         Updates the position of both ends
         """
         conn = self._connection
-        cgo = conn.get_connection_graphics_object()
+        cgo = conn.graphics_object
 
-        for port_type in (PortType.In, PortType.Out):
+        for port_type in (PortType.input, PortType.output):
             node = self._connection.get_node(port_type)
             if node is None:
                 continue
 
-            node_graphics = node.node_graphics_object()
-            node_geom = node.node_geometry()
+            node_graphics = node.graphics_object
+            node_geom = node.geometry
             scene_pos = node_geom.port_scene_position(
-                self._connection.get_port_index(port_type), port_type, node_graphics.sceneTransform()
+                port_type, self._connection.get_port_index(port_type),
+                node_graphics.sceneTransform()
             )
 
             inverted, invertible = self.sceneTransform().inverted()
@@ -173,7 +174,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
         node = self._scene.locate_node_at(event.scenePos(), view.transform())
         self._state.interact_with_node(node)
-        state_required = self._state.required_port()
+        state_required = self._state.required_port
         if node:
             node.react_to_possible_connection(
                 state_required,
@@ -183,7 +184,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
 
         # -------------------
         offset = event.pos() - event.lastPos()
-        required_port = self._connection.required_port()
+        required_port = self._connection.required_port
         if required_port != PortType.none:
             self._geometry.move_end_point(required_port, offset)
 
@@ -207,7 +208,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         if node and interaction.try_connect():
             node.reset_reaction_to_connection()
 
-        if self._state.requires_port():
+        if self._state.requires_port:
             self._scene.delete_connection(self._connection)
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent):
@@ -218,7 +219,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneHoverEvent
         """
-        self._geometry.set_hovered(True)
+        self._geometry.hovered = True
         self.update()
         self._scene.connection_hovered.emit(self.connection(),
                                             event.screenPos())
@@ -232,7 +233,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneHoverEvent
         """
-        self._geometry.set_hovered(False)
+        self._geometry.hovered = False
         self.update()
         self._scene.connection_hover_left.emit(self.connection())
         event.accept()

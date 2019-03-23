@@ -149,13 +149,13 @@ class FlowView(QGraphicsView):
         model_menu.addAction(tree_view_action)
 
         top_level_items = {}
-        for cat in self._scene.registry().categories():
+        for cat in self._scene.registry.categories():
             item = QTreeWidgetItem(tree_view)
             item.setText(0, cat)
             item.setData(0, Qt.UserRole, skip_text)
             top_level_items[cat] = item
 
-        registry = self._scene.registry()
+        registry = self._scene.registry
         for model, category in registry.registered_models_category_association().items():
             self.parent = top_level_items[category]
             item = QTreeWidgetItem(self.parent)
@@ -169,11 +169,11 @@ class FlowView(QGraphicsView):
             if model_name == skip_text:
                 return
 
-            type_ = self._scene.registry().create(model_name)
+            type_ = self._scene.registry.create(model_name)
             if type_:
                 node = self._scene.create_node(type_)
                 pos_view = self.mapToScene(event.pos())
-                node.node_graphics_object().setPos(pos_view)
+                node.graphics_object.setPos(pos_view)
                 self._scene.node_placed.emit(node)
             else:
                 logger.debug("Model not found")
@@ -300,7 +300,7 @@ class FlowView(QGraphicsView):
             painter.drawLines(lines)
 
         style = self._style.flow_view
-        brush = self.backgroundBrush()
+        # brush = self.backgroundBrush()
         pfine = QPen(style.fine_grid_color, 1.0)
         painter.setPen(pfine)
         draw_grid(15)

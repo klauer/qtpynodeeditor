@@ -3,6 +3,7 @@ from qtpy.QtGui import QPainter, QPainterPath, QPainterPathStroker, QIcon, QPen
 
 
 from .enums import PortType
+from .base import ConnectionBase
 from .connection_geometry import ConnectionGeometry
 from .style import ConnectionStyle
 
@@ -11,8 +12,7 @@ use_debug_drawing = False
 
 
 def cubic_path(geom):
-    source = geom.source()
-    sink = geom.sink()
+    source, sink = geom.source, geom.sink
     c1, c2 = geom.points_c1_c2()
 
     # cubic spline
@@ -23,11 +23,8 @@ def cubic_path(geom):
 
 
 def debug_drawing(painter, connection):
-    geom = connection.connection_geometry()
-
-    source = geom.source()
-    sink = geom.sink()
-
+    geom = connection.geometry
+    source, sink = geom.source, geom.sink
     c1, c2 = geom.points_c1_c2()
 
     painter.setPen(Qt.red)
@@ -44,13 +41,13 @@ def debug_drawing(painter, connection):
     painter.drawPath(cubic_path(geom))
     painter.setPen(Qt.yellow)
 
-    painter.drawRect(geom.boundingRect())
+    painter.drawRect(geom.bounding_rect)
 
 
 def draw_sketch_line(painter, connection, style):
-    state = connection.connection_state()
+    state = connection.state
 
-    if state.requires_port():
+    if state.requires_port:
         p = QPen()
         p.setWidth(style.construction_line_width)
         p.setColor(style.construction_color)
@@ -59,7 +56,7 @@ def draw_sketch_line(painter, connection, style):
         painter.setPen(p)
         painter.setBrush(Qt.NoBrush)
 
-        geom = connection.connection_geometry()
+        geom = connection.geometry
 
         cubic = cubic_path(geom)
         # cubic spline
@@ -67,10 +64,10 @@ def draw_sketch_line(painter, connection, style):
 
 
 def draw_hovered_or_selected(painter, connection, style):
-    geom = connection.connection_geometry()
-    hovered = geom.hovered()
+    geom = connection.geometry
+    hovered = geom.hovered
 
-    graphics_object = connection.get_connection_graphics_object()
+    graphics_object = connection.graphics_object
     selected = graphics_object.isSelected()
 
     # drawn as a fat background
@@ -93,9 +90,9 @@ def draw_hovered_or_selected(painter, connection, style):
 
 
 def draw_normal_line(painter, connection, style):
-    state = connection.connection_state()
+    state = connection.state
 
-    if state.requires_port():
+    if state.requires_port:
         return
 
     # colors
@@ -106,8 +103,8 @@ def draw_normal_line(painter, connection, style):
 
     gradient_color = False
     if style.use_data_defined_colors:
-        data_type_out = connection.data_type(PortType.Out)
-        data_type_in = connection.data_type(PortType.In)
+        data_type_out = connection.data_type(PortType.output)
+        data_type_in = connection.data_type(PortType.input)
 
         gradient_color = data_type_out.id != data_type_in.id
 
@@ -116,14 +113,14 @@ def draw_normal_line(painter, connection, style):
         selected_color = normal_color_out.darker(200)
 
     # geometry
-    geom = connection.connection_geometry()
+    geom = connection.geometry
     line_width = style.line_width
 
     # draw normal line
     p = QPen()
     p.setWidth(line_width)
 
-    graphics_object = connection.get_connection_graphics_object()
+    graphics_object = connection.graphics_object
     selected = graphics_object.isSelected()
 
     cubic = cubic_path(geom)
@@ -171,7 +168,8 @@ def draw_normal_line(painter, connection, style):
 
 class ConnectionPainter:
     @staticmethod
-    def paint(painter: QPainter, connection, style):
+    def paint(painter: QPainter, connection: ConnectionBase,
+              style: ConnectionStyle):
         """
         Paint
 
@@ -188,9 +186,8 @@ class ConnectionPainter:
             debug_drawing(painter, connection)
 
         # draw end points
-        geom = connection.connection_geometry()
-        source = geom.source()
-        sink = geom.sink()
+        geom = connection.geometry
+        source, sink = geom.source, geom.sink
 
         point_diameter = style.point_diameter
         painter.setPen(style.construction_color)
@@ -213,7 +210,7 @@ class ConnectionPainter:
         value : QPainterPath
         """
         cubic = cubic_path(geom)
-        source = geom.source()
+        source = geom.source
         result = QPainterPath(source)
         segments = 20
 

@@ -3,7 +3,7 @@ import logging
 from qtpy import QtWidgets
 
 import nodeeditor
-from nodeeditor import NodeData, NodeDataType, NodeDataModel, StyleCollection
+from nodeeditor import NodeData, NodeDataType, NodeDataModel, StyleCollection, PortType
 
 
 style_json = '''
@@ -48,27 +48,22 @@ style_json = '''
 
 
 class MyNodeData(NodeData):
-    _type = NodeDataType('MyNodeData', 'My Node Data')
+    data_type = NodeDataType(id='MyNodeData', name='My Node Data')
 
 
 class MyDataModel(NodeDataModel):
-    def name(self):
-        return 'MyDataModel'
+    name = 'MyDataModel'
+    caption = 'Caption'
+    caption_visible = True
+    num_ports = {PortType.input: 3,
+                 PortType.output: 3,
+                 }
 
     def model(self):
         return 'MyDataModel'
 
-    def caption(self):
-        return 'Caption'
-
-    def save(self):
-        return {'name': self.name()}
-
-    def n_ports(self, port_type):
-        return 3
-
     def data_type(self, port_type, port_index):
-        return MyNodeData._type
+        return MyNodeData.data_type
 
     def out_data(self, data):
         return MyNodeData()
@@ -80,22 +75,24 @@ class MyDataModel(NodeDataModel):
         return None
 
 
-logging.basicConfig(level='DEBUG')
-app = QtWidgets.QApplication([])
+def main(app):
+    style = StyleCollection.from_json(style_json)
 
-style = StyleCollection.from_json(style_json)
-# style = StyleCollection()
-model = MyDataModel(style=style)
+    registry = nodeeditor.DataModelRegistry()
+    registry.register_model(MyDataModel, category='My Category', style=style)
+    scene = nodeeditor.FlowScene(registry=registry)
 
-registry = nodeeditor.DataModelRegistry()
-registry.register_model(model, category='My Category')
-scene = nodeeditor.FlowScene(registry=registry)
+    view = nodeeditor.FlowView(scene)
+    view.setWindowTitle("Style example")
+    view.resize(800, 600)
 
-view = nodeeditor.FlowView(scene)
-view.setWindowTitle("Style example")
-view.resize(800, 600)
-view.show()
+    node = scene.create_node(MyDataModel)
+    return scene, view, [node]
 
-node = scene.create_node(model)
 
-app.exec_()
+if __name__ == '__main__':
+    logging.basicConfig(level='DEBUG')
+    app = QtWidgets.QApplication([])
+    scene, view, nodes = main(app)
+    view.show()
+    app.exec_()

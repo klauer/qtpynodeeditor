@@ -1,8 +1,7 @@
 [flake8]
-ignore = E402,W504,E225,E261,E203,E211,E226,E302,E202,E303,E501,E231
+ignore = W503
 exclude = 
     .git
     __pycache__
-    ophyd/_version.py
-    ophyd/areadetector/docs.py
+    nodeeditor/_version.py
 max-line-length = 115

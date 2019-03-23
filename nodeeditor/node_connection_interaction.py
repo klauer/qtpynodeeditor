@@ -7,9 +7,8 @@ from .exceptions import (NodeConnectionFailure, ConnectionRequiresPortFailure,
                          ConnectionSelfFailure, ConnectionPointFailure,
                          ConnectionPortNotEmptyFailure)
 from .base import NodeBase, FlowSceneBase, ConnectionBase
-from .node_data import NodeDataModel
 from .port import PortType, PortIndex, opposite_port, INVALID
-from .type_converter import TypeConverter, DefaultTypeConverter
+from .type_converter import DefaultTypeConverter
 
 
 logger = logging.getLogger(__name__)
@@ -52,10 +51,10 @@ class NodeConnectionInteraction:
         NodeConnectionFailure
         """
         # 1) Connection requires a port
-        required_port = self.connection_required_port()
+        required_port = self.connection_required_port
         if required_port == PortType.none:
             raise ConnectionRequiresPortFailure(f'Connection requires a port')
-        elif required_port not in (PortType.In, PortType.Out):
+        elif required_port not in (PortType.input, PortType.output):
             raise ValueError(f'Invalid port specified {required_port}')
 
         # 1.5) Forbid connecting the node to itself
@@ -79,14 +78,14 @@ class NodeConnectionInteraction:
 
         # 4) Connection type equals node port type, or there is a registered type conversion that can translate between the two
         connection_data_type = self._connection.data_type(opposite_port(required_port))
-        model_target = self._node.node_data_model()
+        model_target = self._node.data
 
         candidate_node_data_type = model_target.data_type(required_port, port_index)
         if connection_data_type.id == candidate_node_data_type.id:
             return port_index, DefaultTypeConverter
 
-        registry = self._scene.registry()
-        if required_port == PortType.In:
+        registry = self._scene.registry
+        if required_port == PortType.input:
             converter = registry.get_type_converter(connection_data_type,
                                                     candidate_node_data_type)
         else:
@@ -122,8 +121,8 @@ class NodeConnectionInteraction:
             self._connection.set_type_converter(converter)
 
         # 2) Assign node to required port in Connection
-        required_port = self.connection_required_port()
-        self._node.node_state().set_connection(required_port, port_index, self._connection)
+        required_port = self.connection_required_port
+        self._node.state.set_connection(required_port, port_index, self._connection)
 
         # 3) Assign Connection to empty port in NodeState
 
@@ -131,12 +130,12 @@ class NodeConnectionInteraction:
         self._connection.set_node_to_port(self._node, required_port, port_index)
 
         # 4) Adjust Connection geometry
-        self._node.node_graphics_object().move_connections()
+        self._node.graphics_object.move_connections()
 
         # 5) Poke model to intiate data transfer
-        out_node = self._connection.get_node(PortType.Out)
+        out_node = self._connection.get_node(PortType.output)
         if out_node:
-            out_port_index = self._connection.get_port_index(PortType.Out)
+            out_port_index = self._connection.get_port_index(PortType.output)
             out_node.on_data_updated(out_port_index)
 
         return True
@@ -157,7 +156,7 @@ class NodeConnectionInteraction:
         value : bool
         """
         port_index = self._connection.get_port_index(port_to_disconnect)
-        state = self._node.node_state()
+        state = self._node.state
 
         # clear pointer to Connection in the NodeState
         state.erase_connection(port_to_disconnect, port_index,
@@ -168,10 +167,10 @@ class NodeConnectionInteraction:
 
         # clear Connection side
         self._connection.clear_node(port_to_disconnect)
-        self._connection.set_required_port(port_to_disconnect)
-        self._connection.get_connection_graphics_object().grabMouse()
-        return True
+        self._connection.required_port = port_to_disconnect
+        self._connection.graphics_object.grabMouse()
 
+    @property
     def connection_required_port(self) -> PortType:
         """
         Connection required port
@@ -180,8 +179,7 @@ class NodeConnectionInteraction:
         -------
         value : PortType
         """
-        state = self._connection.connection_state()
-        return state.required_port()
+        return self._connection.state.required_port
 
     def connection_end_scene_position(self, port_type: PortType) -> QPointF:
         """
@@ -195,8 +193,8 @@ class NodeConnectionInteraction:
         -------
         value : QPointF
         """
-        go = self._connection.get_connection_graphics_object()
-        geometry = self._connection.connection_geometry()
+        go = self._connection.graphics_object
+        geometry = self._connection.geometry
         end_point = geometry.get_end_point(port_type)
         return go.mapToScene(end_point)
 
@@ -213,9 +211,9 @@ class NodeConnectionInteraction:
         -------
         value : QPointF
         """
-        geom = self._node.node_geometry()
-        p = geom.port_scene_position(port_index, port_type)
-        ngo = self._node.node_graphics_object()
+        geom = self._node.geometry
+        p = geom.port_scene_position(port_type, port_index)
+        ngo = self._node.graphics_object
         return ngo.sceneTransform().map(p)
 
     def node_port_index_under_scene_point(self, port_type: PortType, scene_point: QPointF) -> PortIndex:
@@ -231,8 +229,8 @@ class NodeConnectionInteraction:
         -------
         value : PortIndex
         """
-        node_geom = self._node.node_geometry()
-        scene_transform = self._node.node_graphics_object().sceneTransform()
+        node_geom = self._node.geometry
+        scene_transform = self._node.graphics_object.sceneTransform()
         port_index = node_geom.check_hit_scene_point(port_type, scene_point, scene_transform)
         return port_index
 
@@ -249,9 +247,9 @@ class NodeConnectionInteraction:
         -------
         value : bool
         """
-        node_state = self._node.node_state()
+        node_state = self._node.state
         entries = node_state.get_entries(port_type)
         if not entries[port_index]:
             return True
-        out_policy = self._node.node_data_model().port_out_connection_policy(port_index)
-        return port_type == PortType.Out and out_policy == ConnectionPolicy.Many
+        out_policy = self._node.data.port_out_connection_policy(port_index)
+        return port_type == PortType.output and out_policy == ConnectionPolicy.many

@@ -1,7 +1,6 @@
 import os
 import json
-from qtpy.QtCore import (QByteArray, QDir, QFile, QFileInfo, QIODevice,
-                         QJsonDocument, QPoint, QPointF, QSizeF, QUuid, Qt)
+from qtpy.QtCore import (QDir, QPoint, QPointF, QSizeF, Qt)
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
@@ -86,14 +85,15 @@ class FlowScene(QGraphicsScene):
     def locate_node_at(self, point, transform):
         return locate_node_at(point, self, transform)
 
-    def create_connection_node(self, connected_port: PortType, node: Node, port_index: PortIndex) -> Connection:
+    def create_connection_node(self, node: Node, connected_port: PortType,
+                               port_index: PortIndex) -> Connection:
         """
         Create connection
 
         Parameters
         ----------
-        connected_port : PortType
         node : Node
+        connected_port : PortType
         port_index : PortIndex
 
         Returns
@@ -105,7 +105,7 @@ class FlowScene(QGraphicsScene):
         cgo = ConnectionGraphicsObject(self, connection)
 
         # after self function connection points are set to node port
-        connection.set_graphics_object(cgo)
+        connection.graphics_object = cgo
         self._connections.append(connection)
 
         # Note: self connection isn't truly created yet. It's only partially created.
@@ -137,11 +137,11 @@ class FlowScene(QGraphicsScene):
                                            converter=converter,
                                            style=self._style)
         cgo = ConnectionGraphicsObject(self, connection)
-        node_in.node_state().set_connection(PortType.In, port_index_in, connection)
-        node_out.node_state().set_connection(PortType.Out, port_index_out, connection)
+        node_in.state.set_connection(PortType.input, port_index_in, connection)
+        node_out.state.set_connection(PortType.output, port_index_out, connection)
 
         # after self function connection points are set to node port
-        connection.set_graphics_object(cgo)
+        connection.graphics_object = cgo
 
         # trigger data propagation
         node_out.on_data_updated(port_index_out)
@@ -161,8 +161,8 @@ class FlowScene(QGraphicsScene):
         -------
         value : Connection
         """
-        node_in_id = QUuid(connection_json["in_id"])
-        node_out_id = QUuid(connection_json["out_id"])
+        node_in_id = connection_json["in_id"]
+        node_out_id = connection_json["out_id"]
 
         port_index_in = connection_json["in_index"]
         port_index_out = connection_json["out_index"]
@@ -171,7 +171,7 @@ class FlowScene(QGraphicsScene):
 
         def get_converter():
             converter = connection_json.get("converter", None)
-            if converter is not None:
+            if converter is None:
                 return DefaultTypeConverter
 
             in_type = NodeDataType(
@@ -223,11 +223,11 @@ class FlowScene(QGraphicsScene):
         -------
         value : Node
         """
-        node = Node(data_model)
+        model = self._registry.create(data_model.name)
+        node = Node(model)
         ngo = NodeGraphicsObject(self, node)
-        node.set_graphics_object(ngo)
-
-        self._nodes[node.id()] = node
+        node.graphics_object = ngo
+        self._nodes[node.id] = node
         self.node_created.emit(node)
         return node
 
@@ -247,11 +247,12 @@ class FlowScene(QGraphicsScene):
         data_model = self._registry.create(model_name)
         if not data_model:
             raise ValueError("No registered model with name {}".format(model_name))
-        node = Node(data_model)
-        node.set_graphics_object(NodeGraphicsObject(self, node))
-        node.restore(node_json)
 
-        self._nodes[node.id()] = node
+        node = Node(data_model)
+        node.graphics_object = NodeGraphicsObject(self, node)
+        node.__setstate__(node_json)
+
+        self._nodes[node.id] = node
         self.node_created.emit(node)
         return node
 
@@ -265,12 +266,13 @@ class FlowScene(QGraphicsScene):
         """
         # call signal
         self.node_deleted.emit(node)
-        for conn in list(node.node_state().all_connections):
+        for conn in list(node.state.all_connections):
             self.delete_connection(conn)
 
         node._cleanup()
-        del self._nodes[node.id()]
+        del self._nodes[node.id]
 
+    @property
     def registry(self) -> DataModelRegistry:
         """
         Registry
@@ -281,125 +283,88 @@ class FlowScene(QGraphicsScene):
         """
         return self._registry
 
-    def set_registry(self, registry: DataModelRegistry):
-        """
-        Set registry
-
-        Parameters
-        ----------
-        registry : DataModelRegistry
-        """
+    @registry.setter
+    def registry(self, registry: DataModelRegistry):
         self._registry = registry
 
-    def iterate_over_nodes(self, visitor: callable):
-        """
-        Iterate over nodes
+    def to_digraph(self):
+        '''
+        Create a networkx digraph
 
-        Parameters
-        ----------
-        visitor callable(Node)
+        Returns
+        -------
+        digraph : networkx.DiGraph
+            The generated DiGraph
+
+        Raises
+        ------
+        ImportError
+            If networkx is unavailable
+        '''
+        import networkx
+        graph = networkx.DiGraph()
+        for node in self._nodes.values():
+            graph.add_node(node)
+
+        for node in self._nodes.values():
+            graph.add_edges_from(conn.nodes
+                                 for conn in node.state.all_connections)
+
+        return graph
+
+    def auto_arrange(self, layout='bipartite', scale=700, align='horizontal',
+                     **kwargs):
+        '''
+        Automatically arrange nodes with networkx, if available
+
+        Raises
+        ------
+        ImportError
+            If networkx is unavailable
+        '''
+        import networkx
+        dig = self.to_digraph()
+
+        layouts = {
+            name: getattr(networkx.layout, '{}_layout'.format(name))
+            for name in ('bipartite', 'circular', 'kamada_kawai', 'random',
+                         'shell', 'spring', 'spectral')
+        }
+
+        try:
+            layout_func = layouts[layout]
+        except KeyError:
+            raise ValueError('Unknown layout type {}'.format(layout)) from None
+
+        layout = layout_func(dig, **kwargs)
+        for node, pos in layout.items():
+            pos_x, pos_y = pos
+            self.set_node_position(node, (pos_x * scale, pos_y * scale))
+
+    def iterate_over_nodes(self):
+        """
+        Generator: Iterate over nodes
         """
         for node in self._nodes.values():
-            visitor(node)
+            yield node
 
-    def iterate_over_node_data(self, visitor: callable):
+    def iterate_over_node_data(self):
         """
-        Iterate over node data
-
-        Parameters
-        ----------
-        visitor : callable(NodeDataModel)
+        Generator: Iterate over node data
         """
         for node in self._nodes.values():
-            visitor(node.node_data_model())
+            yield node.data
 
-    def iterate_over_node_data_dependent_order(self, visitor: callable):
+    def iterate_over_node_data_dependent_order(self):
         """
-        Iterate over node data dependent order
-
-        Parameters
-        ----------
-        visitor : callable(NodeDataModel)
+        Generator: Iterate over node data dependent order
         """
-        # void
-        # FlowScene::
-        # iterate_over_node_data_dependent_order(std::function<void(NodeDataModel*)> const & visitor)
-        # {
-        #   std::set<QUuid> visited_nodes;
-
-        #   //A leaf node is a node with no input ports, or all possible input ports empty
-        #   auto is_node_leaf =
-        #     [](Node const &node, NodeDataModel const &model)
-        #     {
-        #       for (unsigned int i = 0; i < model.n_ports(PortType::In); ++i)
-        #       {
-        #         auto connections = node.node_state().connections(PortType::In, i);
-        #         if (not connections.empty())
-        #         {
-        #           return False;
-        #         }
-        #       }
-
-        #       return True;
-        #     };
-
-        #   //Iterate over "leaf" nodes
-        #   for (auto const &_node : _nodes)
-        #   {
-        #     auto const &node = _node.second;
-        #     auto model       = node->node_data_model();
-
-        #     if (is_node_leaf(node, model))
-        #     {
-        #       visitor(model);
-        #       visited_nodes.insert(node->id());
-        #     }
-        #   }
-
-        #   auto are_node_inputs_visited_before =
-        #     [&](Node const &node, NodeDataModel const &model)
-        #     {
-        #       for (size_t i = 0; i < model.n_ports(PortType::In); ++i)
-        #       {
-        #         auto connections = node.node_state().connections(PortType::In, i);
-
-        #         for (auto& conn : connections)
-        #         {
-        #           if (visited_nodes.find(conn.second->get_node(PortType::Out)->id()) == visited_nodes.end())
-        #           {
-        #             return False;
-        #           }
-        #         }
-        #       }
-
-        #       return True;
-        #     };
-
-        #   //Iterate over dependent nodes
-        #   while (_nodes.size() != visited_nodes.size())
-        #   {
-        #     for (auto const &_node : _nodes)
-        #     {
-        #       auto const &node = _node.second;
-        #       if (visited_nodes.find(node->id()) != visited_nodes.end())
-        #         continue;
-
-        #       auto model = node->node_data_model();
-
-        #       if (are_node_inputs_visited_before(node, model))
-        #       {
-        #         visitor(model);
-        #         visited_nodes.insert(node->id());
-        #       }
-        #     }
-        #   }
-        # }
         visited_nodes = []
 
         # A leaf node is a node with no input ports, or all possible input ports empty
         def is_node_leaf(node, model):
-            for i in range(model.n_ports(PortType.In)):
-                connections = node.node_state().connections(PortType.In, i)
+            for i in range(model.num_ports[PortType.input]):
+                connections = node.state.connections(PortType.input, i)
                 if connections is None:
                     return False
 
@@ -407,16 +372,16 @@ class FlowScene(QGraphicsScene):
 
         # Iterate over "leaf" nodes
         for node in self._nodes.values():
-            model = node.node_data_model()
+            model = node.data
             if is_node_leaf(node, model):
-                visitor(model)
+                yield model
                 visited_nodes.append(node)
 
         def are_node_inputs_visited_before(node, model):
-            for i in range(model.n_ports(PortType.In)):
-                connections = node.node_state().connections(PortType.In, i)
+            for i in range(model.num_ports[PortType.input]):
+                connections = node.state.connections(PortType.input, i)
                 for conn in connections:
-                    other = conn.get_node(PortType.Out)
+                    other = conn.get_node(PortType.output)
                     if visited_nodes and other == visited_nodes[-1]:
                         return False
             return True
@@ -427,9 +392,9 @@ class FlowScene(QGraphicsScene):
                 if node in visited_nodes and node is not visited_nodes[-1]:
                     continue
 
-                model = node.node_data_model()
+                model = node.data
                 if are_node_inputs_visited_before(node, model):
-                    visitor(model)
+                    yield model
                     visited_nodes.append(node)
 
     def get_node_position(self, node: Node) -> QPointF:
@@ -444,7 +409,7 @@ class FlowScene(QGraphicsScene):
         -------
         value : QPointF
         """
-        return node.node_graphics_object().pos()
+        return node.graphics_object.pos()
 
     def set_node_position(self, node: Node, pos: QPointF):
         """
@@ -455,7 +420,11 @@ class FlowScene(QGraphicsScene):
         node : Node
         pos : QPointF
         """
-        ngo = node.node_graphics_object()
+        if not isinstance(pos, QPointF):
+            px, py = pos
+            pos = QPointF(px, py)
+
+        ngo = node.graphics_object
         ngo.setPos(pos)
         ngo.move_connections()
 
@@ -471,7 +440,7 @@ class FlowScene(QGraphicsScene):
         -------
         value : QSizeF
         """
-        return QSizeF(node.node_geometry().width(), node.node_geometry().height())
+        return QSizeF(node.geometry.width, node.geometry.height)
 
     def nodes(self) -> dict:
         """
@@ -480,7 +449,7 @@ class FlowScene(QGraphicsScene):
         Returns
         -------
         value : dict
-            Key: QUuid
+            Key: uuid
             Value: Node
         """
         return dict(self._nodes)
@@ -529,11 +498,9 @@ class FlowScene(QGraphicsScene):
                 file_name += ".flow"
 
             with open(file_name, 'wt') as f:
-                json.dump(self.save_to_memory(), f)
+                json.dump(self.__getstate__(), f)
 
     def load(self, file_name=None):
-        self.clear_scene()
-
         if file_name is None:
             file_name, _ = QFileDialog.getOpenFileName(
                 None, "Open Flow Scene", QDir.homePath(),
@@ -543,11 +510,13 @@ class FlowScene(QGraphicsScene):
             return
 
         with open(file_name, 'rt') as f:
-            self.load_from_memory(f.read())
+            doc = json.load(f)
 
-    def save_to_memory(self) -> dict:
+        self.__setstate__(doc)
+
+    def __getstate__(self) -> dict:
         """
-        Save to memory
+        Save scene state to a dictionary
 
         Returns
         -------
@@ -557,28 +526,27 @@ class FlowScene(QGraphicsScene):
         nodes_json_array = []
         connection_json_array = []
         for node in self._nodes.values():
-            nodes_json_array.append(node.save())
+            nodes_json_array.append(node.__getstate__())
 
         scene_json["nodes"] = nodes_json_array
         for connection in self._connections:
-            connection_json = connection.save()
-            if not connection_json.isEmpty():
+            connection_json = connection.__getstate__()
+            if connection_json:
                 connection_json_array.append(connection_json)
 
         scene_json["connections"] = connection_json_array
         return scene_json
 
-    def load_from_memory(self, doc: str):
+    def __setstate__(self, doc: dict):
         """
-        Load from memory
+        Load scene state from a dictionary
 
         Parameters
         ----------
-        doc : str or dict
-            JSON-formatted string or dictionary of settings
+        doc : dict
+            Dictionary of settings
         """
-        if not isinstance(doc, dict):
-            doc = json.loads(doc)
+        self.clear_scene()
 
         for node in doc["nodes"]:
             self.restore_node(node)
@@ -605,12 +573,12 @@ class FlowScene(QGraphicsScene):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.Out)
-        to = conn.get_node(PortType.In)
+        from_ = conn.get_node(PortType.output)
+        to = conn.get_node(PortType.input)
         assert from_ is not None
         assert to is not None
-        from_.node_data_model().output_connection_created(conn)
-        to.node_data_model().input_connection_created(conn)
+        from_.data.output_connection_created(conn)
+        to.data.input_connection_created(conn)
 
     def send_connection_deleted_to_nodes(self, conn: Connection):
         """
@@ -620,9 +588,9 @@ class FlowScene(QGraphicsScene):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.Out)
-        to = conn.get_node(PortType.In)
+        from_ = conn.get_node(PortType.output)
+        to = conn.get_node(PortType.input)
         assert from_ is not None
         assert to is not None
-        from_.node_data_model().output_connection_deleted(conn)
-        to.node_data_model().input_connection_deleted(conn)
+        from_.data.output_connection_deleted(conn)
+        to.data.input_connection_deleted(conn)

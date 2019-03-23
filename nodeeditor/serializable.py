@@ -5,16 +5,16 @@ class Serializable:
 
         Returns
         -------
-        value : QJsonObject
+        value : dict
         """
         ...
 
-    def restore(self, q_json_object: dict):
+    def restore(self, state: dict):
         """
         Restore
 
         Parameters
         ----------
-        q_json_object : QJsonObject
+        state : dict
         """
         ...

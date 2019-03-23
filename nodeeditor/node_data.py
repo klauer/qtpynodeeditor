@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
 from qtpy.QtCore import Signal
@@ -21,36 +23,40 @@ class NodeData:
     The actual data is stored in subtypes
     """
 
-    def __init__(self, data_type=None):
-        if data_type is not None:
-            self._type = data_type
+    data_type = NodeDataType(None, None)
 
-    def same_type(self, node_data) -> bool:
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if cls.data_type is None:
+            raise ValueError('Subclasses must set the `data_type` attribute')
+
+    def same_type(self, other) -> bool:
         """
-        Same type
+        Is another NodeData instance of the same type?
 
         Parameters
         ----------
-        node_data : NodeData
+        other : NodeData
 
         Returns
         -------
         value : bool
         """
-        return self.type().id == node_data.type().id
-
-    def type(self) -> NodeDataType:
-        """
-        Type for inner use
-
-        Returns
-        -------
-        value : NodeDataType
-        """
-        return self._type
+        return self.data_type.id == other.data_type.id
 
 
 class NodeDataModel(QObject, Serializable):
+    name = None
+    caption = None
+    caption_visible = True
+    num_ports = {PortType.input: 1,
+                 PortType.output: 1,
+                 }
+
+    port_caption = {PortType.input: defaultdict(str),
+                    PortType.output: defaultdict(str),
+                    }
+
     data_updated = Signal(PortIndex)
     data_invalidated = Signal(PortIndex)
     computing_started = Signal()
@@ -63,45 +69,18 @@ class NodeDataModel(QObject, Serializable):
             style = style_module.default_style
         self._style = style
 
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # For all subclasses, if no name is defined, default to the class name
+        if cls.name is None:
+            cls.name = cls.__name__
+        if cls.caption is None and cls.caption_visible:
+            cls.caption = cls.name
+
     @property
     def style(self):
         'Style collection for drawing this data model'
         return self._style
-
-    def caption(self) -> str:
-        """
-        Caption is used in GUI
-
-        Returns
-        -------
-        value : str
-        """
-        ...
-
-    def caption_visible(self) -> bool:
-        """
-        It is possible to hide caption in GUI
-
-        Returns
-        -------
-        value : bool
-        """
-        return True
-
-    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        """
-        Port caption is used in GUI to label individual ports
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : str
-        """
-        return ""
 
     def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
         """
@@ -118,39 +97,50 @@ class NodeDataModel(QObject, Serializable):
         """
         return False
 
-    def name(self) -> str:
+    def save(self) -> dict:
         """
-        Name makes self model unique
+        Subclasses may implement this to save additional state for
+        pickling/saving to JSON.
 
         Returns
         -------
-        value : str
+        value : dict
         """
-        ...
+        return {}
 
-    def save(self) -> dict:
+    def restore(self, doc: dict):
         """
-        Save
+        Subclasses may implement this to load additional state from
+        pickled or saved-to-JSON data.
+
+        Parameters
+        ----------
+        value : dict
+        """
+        return {}
+
+    def __setstate__(self, doc: dict):
+        """
+        Set the state of the NodeDataModel
+
+        Parameters
+        ----------
+        doc : dict
+        """
+        self.restore(doc)
+        return doc
+
+    def __getstate__(self) -> dict:
+        """
+        Get the state of the NodeDataModel for saving/pickling
 
         Returns
         -------
         value : QJsonObject
         """
-        return {'name': self.name()}
-
-    def n_ports(self, port_type: PortType) -> int:
-        """
-        N ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        """
-        ...
+        doc = {'name': self.name}
+        doc.update(**self.save())
+        return doc
 
     def data_type(self, port_type: PortType, port_index: PortIndex):
         """
@@ -179,9 +169,9 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : ConnectionPolicy
         """
-        return ConnectionPolicy.Many
+        return ConnectionPolicy.many
 
-    # @property
+    @property
     def node_style(self) -> style_module.NodeStyle:
         """
         Node style
@@ -194,7 +184,7 @@ class NodeDataModel(QObject, Serializable):
 
     def set_in_data(self, node_data: NodeData, port: PortIndex):
         """
-        Triggers the algorithm
+        Triggers the algorithm; to be overridden by subclasses
 
         Parameters
         ----------
@@ -245,7 +235,7 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : NodeValidationState
         """
-        return NodeValidationState.Valid
+        return NodeValidationState.valid
 
     def validation_message(self) -> str:
         """
