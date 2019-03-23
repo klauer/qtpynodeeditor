@@ -13,12 +13,12 @@ class BasicDataModel(nodeeditor.NodeDataModel):
     name = 'MyDataModel'
     caption = 'Caption'
     caption_visible = True
+    num_ports = {'input': 3,
+                 'output': 3
+                 }
 
     def model(self):
         return 'MyDataModel'
-
-    def n_ports(self, port_type):
-        return 3
 
     def data_type(self, port_type, port_index):
         return MyNodeData.data_type

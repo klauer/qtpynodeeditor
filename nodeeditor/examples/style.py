@@ -3,7 +3,7 @@ import logging
 from qtpy import QtWidgets
 
 import nodeeditor
-from nodeeditor import NodeData, NodeDataType, NodeDataModel, StyleCollection
+from nodeeditor import NodeData, NodeDataType, NodeDataModel, StyleCollection, PortType
 
 
 style_json = '''
@@ -55,12 +55,12 @@ class MyDataModel(NodeDataModel):
     name = 'MyDataModel'
     caption = 'Caption'
     caption_visible = True
+    num_ports = {PortType.input: 3,
+                 PortType.output: 3,
+                 }
 
     def model(self):
         return 'MyDataModel'
-
-    def n_ports(self, port_type):
-        return 3
 
     def data_type(self, port_type, port_index):
         return MyNodeData.data_type

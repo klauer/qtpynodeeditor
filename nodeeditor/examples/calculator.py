@@ -56,6 +56,9 @@ class IntegerData(NodeData):
 
 class MathOperationDataModel(NodeDataModel):
     caption_visible = True
+    num_ports = {PortType.input: 2,
+                 PortType.output: 1,
+                 }
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -64,12 +67,6 @@ class MathOperationDataModel(NodeDataModel):
         self._result = None
         self._validation_state = NodeValidationState.warning
         self._validation_message = 'Uninitialized'
-
-    def n_ports(self, port_type: PortType) -> int:
-        if port_type == PortType.input:
-            return 2
-        elif port_type == PortType.output:
-            return 1
 
     def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
         return True
@@ -156,16 +153,11 @@ class AdditionModel(MathOperationDataModel):
 
 class DivisionModel(MathOperationDataModel):
     name = "Division"
-
-    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        if port_type == PortType.input:
-            if port_index == 0:
-                return 'Dividend'
-            elif port_index == 1:
-                return 'Divisor'
-        elif port_type == PortType.output:
-            return 'Result'
-
+    port_caption = {'input': {0: 'Dividend',
+                              1: 'Divisor',
+                              },
+                    'output': {0: 'Result'},
+                    }
 
     def compute(self):
         if self._number2.number == 0.0:
@@ -180,15 +172,11 @@ class DivisionModel(MathOperationDataModel):
 
 class ModuloModel(MathOperationDataModel):
     name = 'Modulo'
-
-    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        if port_type==PortType.input:
-            if port_index == 0:
-                return 'Dividend'
-            elif port_index == 1:
-                return 'Divisor'
-        elif port_type == PortType.output:
-            return 'Result'
+    port_caption = {'input': {0: 'Dividend',
+                              1: 'Divisor',
+                              },
+                    'output': {0: 'Result'},
+                    }
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return IntegerData.data_type
@@ -204,15 +192,11 @@ class ModuloModel(MathOperationDataModel):
 
 class MultiplicationModel(MathOperationDataModel):
     name = 'Multiplication'
-
-    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        if port_type==PortType.input:
-            if port_index == 0:
-                return 'A'
-            elif port_index == 1:
-                return 'B'
-        elif port_type == PortType.output:
-            return 'Result'
+    port_caption = {'input': {0: 'A',
+                              1: 'B',
+                              },
+                    'output': {0: 'Result'},
+                    }
 
     def compute(self):
             self._result = DecimalData(self._number1.number * self._number2.number)
@@ -221,6 +205,10 @@ class MultiplicationModel(MathOperationDataModel):
 class NumberSourceDataModel(NodeDataModel):
     name = "NumberSource"
     caption_visible = False
+    num_ports = {PortType.input: 0,
+                 PortType.output: 1,
+                 }
+    port_caption = {'output': {0: 'Result'}}
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -251,12 +239,6 @@ class NumberSourceDataModel(NodeDataModel):
         else:
             self._number = DecimalData(value)
             self._line_edit.setText(self._number.number_as_text())
-
-    def n_ports(self, port_type: PortType) -> int:
-        if port_type == PortType.input:
-            return 0
-        elif port_type == PortType.output:
-            return 1
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return DecimalData.data_type
@@ -299,6 +281,10 @@ class NumberSourceDataModel(NodeDataModel):
 class NumberDisplayModel(NodeDataModel):
     name = "NumberDisplay"
     caption_visible = False
+    num_ports = {PortType.input: 1,
+                 PortType.output: 0,
+                 }
+    port_caption = {'input': {0: 'Number'}}
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -307,12 +293,6 @@ class NumberDisplayModel(NodeDataModel):
         self._label.setMargin(3)
         self._validation_state = NodeValidationState.warning
         self._validation_message = 'Uninitialized'
-
-    def n_ports(self, port_type: PortType) -> int:
-        if port_type == PortType.input:
-            return 1
-        elif port_type == PortType.output:
-            return 0
 
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return DecimalData.data_type
@@ -328,7 +308,7 @@ class NumberDisplayModel(NodeDataModel):
         '''
         self._number = data
         number_ok = (self._number is not None and
-                     self._number.data_type.id in ('Decimal', 'integer'))
+                     self._number.data_type.id in ('decimal', 'integer'))
 
         if number_ok:
             self._validation_state = NodeValidationState.valid
@@ -348,15 +328,11 @@ class NumberDisplayModel(NodeDataModel):
 
 class SubtractionModel(MathOperationDataModel):
     name = "Subtraction"
-
-    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        if port_type==PortType.input:
-            if port_index == 0:
-                return 'Minuend'
-            elif port_index == 1:
-                return 'Subtrahend'
-        elif port_type == PortType.output:
-            return 'Result'
+    port_caption = {'input': {0: 'Minuend',
+                              1: 'Subtrahend'
+                              },
+                    'output': {0: 'Result'},
+                    }
 
     def compute(self):
         self._validation_state = NodeValidationState.valid

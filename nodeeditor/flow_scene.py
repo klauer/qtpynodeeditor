@@ -363,7 +363,7 @@ class FlowScene(QGraphicsScene):
 
         # A leaf node is a node with no input ports, or all possible input ports empty
         def is_node_leaf(node, model):
-            for i in range(model.n_ports(PortType.input)):
+            for i in range(model.num_ports[PortType.input]):
                 connections = node.state.connections(PortType.input, i)
                 if connections is None:
                     return False
@@ -378,7 +378,7 @@ class FlowScene(QGraphicsScene):
                 visited_nodes.append(node)
 
         def are_node_inputs_visited_before(node, model):
-            for i in range(model.n_ports(PortType.input)):
+            for i in range(model.num_ports[PortType.input]):
                 connections = node.state.connections(PortType.input, i)
                 for conn in connections:
                     other = conn.get_node(PortType.output)

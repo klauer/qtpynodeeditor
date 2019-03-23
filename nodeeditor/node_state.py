@@ -15,8 +15,8 @@ class NodeState:
         ----------
         model : NodeDataModel
         '''
-        self._max_in = model.n_ports(PortType.input)
-        self._max_out = model.n_ports(PortType.output)
+        self._max_in = model.num_ports[PortType.input]
+        self._max_out = model.num_ports[PortType.output]
         self._connections = {
             PortType.input: OrderedDict((i, []) for i in range(self._max_in)),
             PortType.output: OrderedDict((i, []) for i in range(self._max_out)),

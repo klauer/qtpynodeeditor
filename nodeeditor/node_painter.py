@@ -159,7 +159,7 @@ class NodePainter:
                     painter.setPen(node_style.font_color)
 
                 if model.port_caption_visible(port_type, i):
-                    s = model.port_caption(port_type, i)
+                    s = model.port_caption[port_type][i]
                 else:
                     s = model.data_type(port_type, i).name
 

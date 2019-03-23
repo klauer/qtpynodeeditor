@@ -1,4 +1,4 @@
-import threading
+from collections import defaultdict
 
 from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
@@ -49,6 +49,13 @@ class NodeDataModel(QObject, Serializable):
     name = None
     caption = None
     caption_visible = True
+    num_ports = {PortType.input: 1,
+                 PortType.output: 1,
+                 }
+
+    port_caption = {PortType.input: defaultdict(str),
+                    PortType.output: defaultdict(str),
+                    }
 
     data_updated = Signal(PortIndex)
     data_invalidated = Signal(PortIndex)
@@ -74,21 +81,6 @@ class NodeDataModel(QObject, Serializable):
     def style(self):
         'Style collection for drawing this data model'
         return self._style
-
-    def port_caption(self, port_type: PortType, port_index: PortIndex) -> str:
-        """
-        Port caption is used in GUI to label individual ports
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : str
-        """
-        return ""
 
     def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
         """
@@ -149,20 +141,6 @@ class NodeDataModel(QObject, Serializable):
         doc = {'name': self.name}
         doc.update(**self.save())
         return doc
-
-    def n_ports(self, port_type: PortType) -> int:
-        """
-        N ports
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : int
-        """
-        ...
 
     def data_type(self, port_type: PortType, port_index: PortIndex):
         """

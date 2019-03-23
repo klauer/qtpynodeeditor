@@ -22,8 +22,6 @@ class NodeGeometry:
         self._height = 150
         self._hovered = False
         self._input_port_width = 70
-        self._n_sinks = data_model.n_ports(PortType.input)
-        self._n_sources = data_model.n_ports(PortType.output)
         self._output_port_width = 70
         self._spacing = 20
         self._style = data_model.style.node
@@ -158,7 +156,8 @@ class NodeGeometry:
         """
         self._hovered = bool(h)
 
-    def n_sources(self) -> int:
+    @property
+    def num_sources(self) -> int:
         """
         N sources
 
@@ -166,9 +165,10 @@ class NodeGeometry:
         -------
         value : int
         """
-        return self._data_model.n_ports(PortType.output)
+        return self._data_model.num_ports[PortType.output]
 
-    def n_sinks(self) -> int:
+    @property
+    def num_sinks(self) -> int:
         """
         N sinks
 
@@ -176,7 +176,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        return self._data_model.n_ports(PortType.input)
+        return self._data_model.num_ports[PortType.input]
 
     @property
     def dragging_pos(self) -> QPointF:
@@ -238,7 +238,7 @@ class NodeGeometry:
 
         self._entry_height = self._font_metrics.height()
 
-        max_num_of_entries = max((self._n_sinks, self._n_sources))
+        max_num_of_entries = max((self.num_sinks, self.num_sources))
         step = self._entry_height + self._spacing
         height = step * max_num_of_entries
 
@@ -317,7 +317,7 @@ class NodeGeometry:
             return INVALID
 
         tolerance = 2.0 * self._style.connection_point_diameter
-        for i in range(self._data_model.n_ports(port_type)):
+        for i in range(self._data_model.num_ports[port_type]):
             pp = self.port_scene_position(port_type, i, scene_transform)
             p = pp - scene_point
             distance = math.sqrt(QPointF.dotProduct(p, p))
@@ -472,10 +472,10 @@ class NodeGeometry:
         """
         def get_name(i):
             if self._data_model.port_caption_visible(port_type, i):
-                return self._data_model.port_caption(port_type, i)
+                return self._data_model.port_caption[port_type][i]
             return self._data_model.data_type(port_type, i).name
 
-        names = [get_name(i) for i in range(self._data_model.n_ports(port_type))]
+        names = [get_name(i) for i in range(self._data_model.num_ports[port_type])]
         if not names:
             return 0
 
