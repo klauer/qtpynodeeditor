@@ -27,6 +27,18 @@ Documentation
 `Sphinx-generated documentation <https://klauer.github.io/qtpynodeeditor/>`_
 
 
+Screenshots
+-----------
+
+`Style example <https://github.com/klauer/qtpynodeeditor/blob/master/qtpynodeeditor/examples/style.py>`_
+
+.. image:: https://raw.githubusercontent.com/klauer/qtpynodeeditor/assets/screenshots/style.png
+
+`Calculator example <https://github.com/klauer/qtpynodeeditor/blob/master/qtpynodeeditor/examples/calculator.py>`_
+
+.. image:: https://raw.githubusercontent.com/klauer/qtpynodeeditor/assets/screenshots/calculator.png
+
+
 Installation
 ------------
 ::

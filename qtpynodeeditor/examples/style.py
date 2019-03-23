@@ -80,7 +80,7 @@ def main(app):
 
     registry = qtpynodeeditor.DataModelRegistry()
     registry.register_model(MyDataModel, category='My Category', style=style)
-    scene = qtpynodeeditor.FlowScene(registry=registry)
+    scene = qtpynodeeditor.FlowScene(style=style, registry=registry)
 
     view = qtpynodeeditor.FlowView(scene)
     view.setWindowTitle("Style example")
