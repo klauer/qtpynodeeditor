@@ -271,7 +271,7 @@
         <span class="c1"># 1.5) If the connection is possible but a type conversion is needed,</span>
         <span class="c1"># assign a convertor to connection</span>
         <span class="k">if</span> <span class="n">converter</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">set_type_converter</span><span class="p">(</span><span class="n">converter</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">type_converter</span> <span class="o">=</span> <span class="n">converter</span>
 
         <span class="c1"># 2) Assign node to required port in Connection</span>
         <span class="n">required_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_required_port</span>

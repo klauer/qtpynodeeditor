@@ -232,6 +232,11 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="o">...</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">style_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">style_module</span><span class="o">.</span><span class="n">StyleCollection</span><span class="p">:</span>
+        <span class="s1">&#39;The style collection for the scene&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span>
+
     <span class="k">def</span> <span class="nf">locate_node_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">locate_node_at</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
 
