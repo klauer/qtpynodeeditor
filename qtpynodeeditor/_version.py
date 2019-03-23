@@ -43,7 +43,7 @@ def get_config():
     cfg.style = "pep440"
     cfg.tag_prefix = "v"
     cfg.parentdir_prefix = "None"
-    cfg.versionfile_source = "nodeeditor/_version.py"
+    cfg.versionfile_source = "qtpynodeeditor/_version.py"
     cfg.verbose = False
     return cfg
 

@@ -1,6 +1,6 @@
 [run]
 source =
-    nodeeditor
+    qtpynodeeditor
 [report]
 omit =
     #versioning
@@ -8,4 +8,4 @@ omit =
     *_version.py
     #tests
     *test*
-    nodeeditor/tests/*
+    qtpynodeeditor/tests/*

@@ -3,10 +3,10 @@ ignore = W503
 exclude = 
     .git
     __pycache__
-    nodeeditor/_version.py
+    qtpynodeeditor/_version.py
     build
     dist
     versioneer.py
-    nodeeditor/_version.py
+    qtpynodeeditor/_version.py
     docs/source/conf.py
 max-line-length = 115
