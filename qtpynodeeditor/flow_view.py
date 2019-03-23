@@ -8,14 +8,13 @@ from qtpy.QtWidgets import QAction, QGraphicsView, QLineEdit, QMenu, QTreeWidget
 from .connection_graphics_object import ConnectionGraphicsObject
 from .flow_scene import FlowScene
 from .node_graphics_object import NodeGraphicsObject
-from . import style as style_module
 
 
 logger = logging.getLogger(__name__)
 
 
 class FlowView(QGraphicsView):
-    def __init__(self, scene, style=None, parent=None):
+    def __init__(self, scene, parent=None):
         super().__init__(parent=parent)
 
         self._clear_selection_action = None
@@ -25,12 +24,6 @@ class FlowView(QGraphicsView):
 
         self.setDragMode(QGraphicsView.ScrollHandDrag)
         self.setRenderHint(QPainter.Antialiasing)
-
-        if style is None:
-            style = style_module.default_style
-
-        self._style = style
-        self.setBackgroundBrush(style.flow_view.background_color)
 
         # setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
         # setViewportUpdateMode(QGraphicsView.MinimalViewportUpdate)
@@ -43,6 +36,9 @@ class FlowView(QGraphicsView):
         # setViewport(new QGLWidget(QGLFormat(QGL.SampleBuffers)))
         if scene is not None:
             self.setScene(scene)
+
+        self._style = self._scene.style_collection
+        self.setBackgroundBrush(self._style.flow_view.background_color)
 
     def clear_selection_action(self) -> QAction:
         """

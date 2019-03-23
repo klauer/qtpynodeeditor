@@ -82,6 +82,11 @@ class FlowScene(QGraphicsScene):
         except Exception:
             ...
 
+    @property
+    def style_collection(self) -> style_module.StyleCollection:
+        'The style collection for the scene'
+        return self._style
+
     def locate_node_at(self, point, transform):
         return locate_node_at(point, self, transform)
 
