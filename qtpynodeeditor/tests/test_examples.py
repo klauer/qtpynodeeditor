@@ -3,7 +3,7 @@ from qtpynodeeditor import examples
 
 
 @pytest.fixture(scope='function',
-                params=['style', 'calculator'])
+                params=['style', 'calculator', 'connection_colors'])
 def example(qtbot, qapp, request):
     example_module = getattr(examples, request.param)
     scene, view, nodes = example_module.main(qapp)
