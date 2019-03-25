@@ -174,11 +174,10 @@ class ConnectionStyle(Style):
         if type_id is None:
             return self.normal_color
 
-        hash = id(type_id)
         hue_range = 0xFF
-        random.seed(hash)
+        random.seed(type_id)
         hue = random.randint(0, hue_range)
-        sat = 120 + hash % 129
+        sat = 120 + id(type_id) % 129
         return QColor.fromHsl(hue, sat, 160)
 
 
