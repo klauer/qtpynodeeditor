@@ -59,13 +59,10 @@ class MyDataModel(NodeDataModel):
                  PortType.output: 3,
                  }
 
-    def model(self):
-        return 'MyDataModel'
-
     def data_type(self, port_type, port_index):
         return MyNodeData.data_type
 
-    def out_data(self, data):
+    def out_data(self, port):
         return MyNodeData()
 
     def set_in_data(self, node_data, port):
