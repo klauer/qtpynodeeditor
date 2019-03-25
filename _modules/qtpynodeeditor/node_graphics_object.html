@@ -148,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for qtpynodeeditor.node_graphics_object</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QVariant</span><span class="p">,</span> <span class="n">Qt</span>
+<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">QVariant</span><span class="p">,</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QPainter</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsItem</span><span class="p">,</span> <span class="n">QGraphicsObject</span><span class="p">,</span>
                             <span class="n">QGraphicsProxyWidget</span><span class="p">,</span>
@@ -361,8 +361,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">prepareGeometryChange</span><span class="p">()</span>
                 <span class="n">old_size</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="n">QSize</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">diff</span><span class="o">.</span><span class="n">y</span><span class="p">())</span>
                 <span class="n">w</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMaximumSize</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
+
+                <span class="n">old_size_f</span> <span class="o">=</span> <span class="n">QSizeF</span><span class="p">(</span><span class="n">old_size</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="n">old_size_f</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMaximumSize</span><span class="p">(</span><span class="n">old_size_f</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">widget_position</span><span class="p">)</span>
                 <span class="n">geom</span><span class="o">.</span><span class="n">recalculate_size</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -438,9 +440,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resizable</span><span class="p">()</span> <span class="ow">and</span> <span class="n">geom</span><span class="o">.</span><span class="n">resize_rect</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
-            <span class="n">QPoint</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">())</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resizable</span><span class="p">()</span> <span class="ow">and</span>
+                <span class="n">geom</span><span class="o">.</span><span class="n">resize_rect</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">QPoint</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">()))):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">QCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">SizeFDiagCursor</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">QCursor</span><span class="p">())</span>
