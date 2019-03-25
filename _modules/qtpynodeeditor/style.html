@@ -321,22 +321,13 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : QColor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO verify</span>
-        <span class="c1">#   std::size_t hash = qHash(type_id);</span>
-        <span class="c1">#   std::size_t const hue_range = 0xFF;</span>
-        <span class="c1">#   qsrand(hash);</span>
-        <span class="c1">#   std::size_t hue = qrand() % hue_range;</span>
-        <span class="c1">#   std::size_t sat = 120 + hash % 129;</span>
-        <span class="c1">#   return QColor::fromHsl(hue, sat, 160);</span>
-        <span class="c1"># }</span>
         <span class="k">if</span> <span class="n">type_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_color</span>
 
-        <span class="nb">hash</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">type_id</span><span class="p">)</span>
         <span class="n">hue_range</span> <span class="o">=</span> <span class="mh">0xFF</span>
-
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">type_id</span><span class="p">)</span>
         <span class="n">hue</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">hue_range</span><span class="p">)</span>
-        <span class="n">sat</span> <span class="o">=</span> <span class="mi">120</span> <span class="o">+</span> <span class="nb">hash</span> <span class="o">%</span> <span class="mi">129</span>
+        <span class="n">sat</span> <span class="o">=</span> <span class="mi">120</span> <span class="o">+</span> <span class="nb">id</span><span class="p">(</span><span class="n">type_id</span><span class="p">)</span> <span class="o">%</span> <span class="mi">129</span>
         <span class="k">return</span> <span class="n">QColor</span><span class="o">.</span><span class="n">fromHsl</span><span class="p">(</span><span class="n">hue</span><span class="p">,</span> <span class="n">sat</span><span class="p">,</span> <span class="mi">160</span><span class="p">)</span></div></div>
 
 
