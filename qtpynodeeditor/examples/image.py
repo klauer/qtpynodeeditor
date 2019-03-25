@@ -4,8 +4,7 @@ from qtpy import QtWidgets, QtCore, QtGui
 from qtpy.QtCore import Qt
 
 import qtpynodeeditor
-from qtpynodeeditor import (NodeData, NodeDataType, NodeDataModel,
-                            StyleCollection, PortType)
+from qtpynodeeditor import (NodeData, NodeDataType, NodeDataModel, PortType)
 
 
 class PixmapData(NodeData):
