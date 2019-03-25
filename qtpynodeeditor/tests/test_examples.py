@@ -1,4 +1,6 @@
 import pytest
+from qtpy import QtGui, QtCore
+
 from qtpynodeeditor import examples
 
 
@@ -52,6 +54,49 @@ def test_smoke_zero_inputs(scene, example):
         if widget is not None:
             if hasattr(widget, 'setText'):
                 widget.setText('0.0')
+
+
+class MySceneEvent(QtGui.QMouseEvent):
+    last_pos = QtCore.QPoint(0, 0)
+    scene_pos = QtCore.QPoint(0, 0)
+
+    def lastPos(self):
+        return self.last_pos
+
+    def screenPos(self):
+        return self.scene_pos
+
+    def scenePos(self):
+        return self.scene_pos
+
+
+def test_smoke_mouse(qtbot, nodes):
+    for node in nodes:
+        ngo = node.graphics_object
+        # TODO qtbot doesn't work with QGraphicsObjects
+        # qtbot.mouseClick(ngo)
+
+        ev = MySceneEvent(QtCore.QEvent.MouseButtonPress, QtCore.QPointF(0, 0),
+                          QtCore.Qt.LeftButton, QtCore.Qt.LeftButton,
+                          QtCore.Qt.NoModifier)
+
+        if node.data.num_ports['input']:
+            pos = node.geometry.port_scene_position('input', 0)
+        else:
+            pos = node.geometry.port_scene_position('output', 0)
+
+        ev.scene_pos = QtCore.QPoint(pos.x(), pos.y())
+        ev.last_pos = QtCore.QPoint(pos.x(), pos.y())
+
+        if node.data.resizable():
+            # Other case will try to propagate to mouseMoveEvent
+            node.state.resizing = True
+            ngo.mouseMoveEvent(ev)
+
+        ngo.mousePressEvent(ev)
+        ngo.hoverEnterEvent(ev)
+        ngo.hoverMoveEvent(ev)
+        ngo.hoverLeaveEvent(ev)
 
 
 def test_save_and_load(scene):

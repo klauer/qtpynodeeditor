@@ -290,9 +290,8 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         pos = event.pos()
         geom = self._node.geometry
-        if self._node.data.resizable() and geom.resize_rect.contains(
-            QPoint(pos.x(), pos.y())
-        ):
+        if (self._node.data.resizable() and
+                geom.resize_rect.contains(QPoint(pos.x(), pos.y()))):
             self.setCursor(QCursor(Qt.SizeFDiagCursor))
         else:
             self.setCursor(QCursor())
