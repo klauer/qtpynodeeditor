@@ -23,7 +23,7 @@ class BasicDataModel(nodeeditor.NodeDataModel):
     def data_type(self, port_type, port_index):
         return MyNodeData.data_type
 
-    def out_data(self, data):
+    def out_data(self, port_index):
         return MyNodeData()
 
     def set_in_data(self, node_data, port):

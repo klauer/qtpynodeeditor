@@ -171,22 +171,13 @@ class ConnectionStyle(Style):
         -------
         value : QColor
         """
-        # TODO verify
-        #   std::size_t hash = qHash(type_id);
-        #   std::size_t const hue_range = 0xFF;
-        #   qsrand(hash);
-        #   std::size_t hue = qrand() % hue_range;
-        #   std::size_t sat = 120 + hash % 129;
-        #   return QColor::fromHsl(hue, sat, 160);
-        # }
         if type_id is None:
             return self.normal_color
 
-        hash = id(type_id)
         hue_range = 0xFF
-
+        random.seed(type_id)
         hue = random.randint(0, hue_range)
-        sat = 120 + hash % 129
+        sat = 120 + id(type_id) % 129
         return QColor.fromHsl(hue, sat, 160)
 
 
