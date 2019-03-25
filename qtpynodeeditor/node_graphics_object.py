@@ -1,4 +1,4 @@
-from qtpy.QtCore import QPoint, QRectF, QSize, QVariant, Qt
+from qtpy.QtCore import QPoint, QRectF, QSize, QSizeF, QVariant, Qt
 from qtpy.QtGui import QCursor, QPainter
 from qtpy.QtWidgets import (QGraphicsItem, QGraphicsObject,
                             QGraphicsProxyWidget,
@@ -211,8 +211,10 @@ class NodeGraphicsObject(QGraphicsObject):
                 self.prepareGeometryChange()
                 old_size = w.size() + QSize(diff.x(), diff.y())
                 w.setFixedSize(old_size)
-                self._proxy_widget.setMinimumSize(old_size)
-                self._proxy_widget.setMaximumSize(old_size)
+
+                old_size_f = QSizeF(old_size)
+                self._proxy_widget.setMinimumSize(old_size_f)
+                self._proxy_widget.setMaximumSize(old_size_f)
                 self._proxy_widget.setPos(geom.widget_position)
                 geom.recalculate_size()
                 self.update()
