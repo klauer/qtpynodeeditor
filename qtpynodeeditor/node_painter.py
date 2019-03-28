@@ -150,27 +150,23 @@ class NodePainter:
         node_style : NodeStyle
         """
         metrics = painter.fontMetrics()
-        for port_type in (PortType.output, PortType.input):
-            for i, entries in enumerate(state.get_entries(port_type)):
-                p = geom.port_scene_position(port_type, i)
-                if not entries:
-                    painter.setPen(node_style.font_color_faded)
-                else:
-                    painter.setPen(node_style.font_color)
 
-                if model.port_caption_visible(port_type, i):
-                    s = model.port_caption[port_type][i]
-                else:
-                    s = model.data_type(port_type, i).name
+        for port in state.ports:
+            scene_pos = port.scene_position
+            if not port.connections:
+                painter.setPen(node_style.font_color_faded)
+            else:
+                painter.setPen(node_style.font_color)
 
-                rect = metrics.boundingRect(s)
-                p.setY(p.y() + rect.height() / 4.0)
-                if port_type == PortType.input:
-                    p.setX(5.0)
-                elif port_type == PortType.output:
-                    p.setX(geom.width - 5.0 - rect.width())
+            display_text = port.display_text
+            rect = metrics.boundingRect(display_text)
+            scene_pos.setY(scene_pos.y() + rect.height() / 4.0)
+            if port.port_type == PortType.input:
+                scene_pos.setX(5.0)
+            elif port.port_type == PortType.output:
+                scene_pos.setX(geom.width - 5.0 - rect.width())
 
-                painter.drawText(p, s)
+            painter.drawText(scene_pos, display_text)
 
     @staticmethod
     def draw_connection_points(painter: QPainter, geom: NodeGeometry,
@@ -192,46 +188,41 @@ class NodePainter:
         """
         diameter = node_style.connection_point_diameter
         reduced_diameter = diameter * 0.6
-        for port_type in (PortType.output, PortType.input):
-            for i, entries in enumerate(state.get_entries(port_type)):
-                p = geom.port_scene_position(port_type, i)
-                data_type = model.data_type(port_type, i)
-                can_connect = (
-                    not entries or
-                    (port_type == PortType.output and
-                     model.port_out_connection_policy(i) == ConnectionPolicy.many
-                     )
-                )
+        for port in state.ports:
+            scene_pos = port.scene_position
+            can_connect = port.can_connect
+            port_type = port.port_type
+            data_type = port.data_type
 
-                r = 1.0
-                if state.is_reacting and can_connect and port_type == state.reacting_port_type:
-                    diff = geom.dragging_pos - p
-                    dist = math.sqrt(QPointF.dotProduct(diff, diff))
+            r = 1.0
+            if state.is_reacting and can_connect and port_type == state.reacting_port_type:
+                diff = geom.dragging_pos - scene_pos
+                dist = math.sqrt(QPointF.dotProduct(diff, diff))
 
-                    registry = scene.registry
-                    dtype1, dtype2 = state.reacting_data_type, data_type
-                    if port_type != PortType.input:
-                        dtype2, dtype1 = dtype1, dtype2
+                registry = scene.registry
+                dtype1, dtype2 = state.reacting_data_type, data_type
+                if port_type != PortType.input:
+                    dtype2, dtype1 = dtype1, dtype2
 
-                    type_convertable = registry.get_type_converter(dtype1, dtype2) is not None
-                    if dtype1.id == dtype2.id or type_convertable:
-                        thres = 40.0
-                        r = ((2.0 - dist / thres)
-                             if dist < thres
-                             else 1.0)
-                    else:
-                        thres = 80.0
-                        r = ((dist / thres)
-                             if dist < thres
-                             else 1.0)
-
-                if connection_style.use_data_defined_colors:
-                    brush = connection_style.get_normal_color(data_type.id)
+                type_convertable = registry.get_type_converter(dtype1, dtype2) is not None
+                if dtype1.id == dtype2.id or type_convertable:
+                    thres = 40.0
+                    r = ((2.0 - dist / thres)
+                         if dist < thres
+                         else 1.0)
                 else:
-                    brush = node_style.connection_point_color
+                    thres = 80.0
+                    r = ((dist / thres)
+                         if dist < thres
+                         else 1.0)
 
-                painter.setBrush(brush)
-                painter.drawEllipse(p, reduced_diameter * r, reduced_diameter * r)
+            if connection_style.use_data_defined_colors:
+                brush = connection_style.get_normal_color(data_type.id)
+            else:
+                brush = node_style.connection_point_color
+
+            painter.setBrush(brush)
+            painter.drawEllipse(scene_pos, reduced_diameter * r, reduced_diameter * r)
 
     @staticmethod
     def draw_filled_connection_points(painter: QPainter, geom: NodeGeometry,
@@ -253,20 +244,18 @@ class NodePainter:
         connection_style : ConnectionStyle
         """
         diameter = node_style.connection_point_diameter
-        for port_type in (PortType.output, PortType.input):
-            for i, entries in enumerate(state.get_entries(port_type)):
-                if not entries:
-                    continue
+        for port in state.ports:
+            if not port.connections:
+                continue
 
-                p = geom.port_scene_position(port_type, i)
-                data_type = model.data_type(port_type, i)
-                if connection_style.use_data_defined_colors:
-                    c = connection_style.get_normal_color(data_type.id)
-                else:
-                    c = node_style.filled_connection_point_color
-                painter.setPen(c)
-                painter.setBrush(c)
-                painter.drawEllipse(p, diameter * 0.4, diameter * 0.4)
+            scene_pos = port.scene_position
+            if connection_style.use_data_defined_colors:
+                c = connection_style.get_normal_color(port.data_type.id)
+            else:
+                c = node_style.filled_connection_point_color
+            painter.setPen(c)
+            painter.setBrush(c)
+            painter.drawEllipse(scene_pos, diameter * 0.4, diameter * 0.4)
 
     @staticmethod
     def draw_resize_rect(painter: QPainter, geom: NodeGeometry, model: NodeDataModel):

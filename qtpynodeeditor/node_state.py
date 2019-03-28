@@ -32,6 +32,21 @@ class NodeState:
         self._reacting_data_type = None
         self._resizing = False
 
+    @property
+    def ports(self):
+        yield from self.input_ports
+        yield from self.output_ports
+
+    @property
+    def input_ports(self):
+        for idx, port in self._ports[PortType.input].items():
+            yield port
+
+    @property
+    def output_ports(self):
+        for idx, port in self._ports[PortType.output].items():
+            yield port
+
     def get_entries(self, port_type: PortType) -> list:
         """
         Returns a list of connections.
