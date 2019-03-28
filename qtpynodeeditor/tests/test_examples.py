@@ -34,8 +34,8 @@ def test_smoke_example(example):
 
 def test_iterate(scene):
     for node in scene.iterate_over_nodes():
-        scene.get_node_size(node)
-        scene.set_node_position(node, scene.get_node_position(node))
+        print(node.size)
+        node.position = node.position
 
     print('Node data iterator')
     print('------------------')

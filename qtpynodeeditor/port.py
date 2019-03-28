@@ -25,3 +25,11 @@ class Port:
 def opposite_port(port: PortType):
     return {PortType.input: PortType.output,
             PortType.output: PortType.input}.get(port, PortType.none)
+
+
+class NodePort:
+    def __init__(self, state, port_type: PortType, index: PortIndex):
+        self.state = state
+        self.port_type = port_type
+        self.index = index
+        self.connections = []

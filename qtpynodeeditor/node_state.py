@@ -3,7 +3,7 @@ from collections import OrderedDict
 from .enums import ReactToConnectionState
 from .base import ConnectionBase
 from .node_data import NodeDataType
-from .port import PortType, PortIndex
+from .port import PortType, PortIndex, NodePort
 
 
 class NodeState:

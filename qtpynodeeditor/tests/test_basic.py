@@ -67,8 +67,8 @@ def test_instantiation(view):
 
 def test_create_node(scene, model):
     node = scene.create_node(model)
-    assert node in scene.nodes().values()
-    assert node.id in scene.nodes()
+    assert node in scene.nodes.values()
+    assert node.id in scene.nodes
 
 
 def test_selected_nodes(scene, model):
@@ -88,7 +88,7 @@ def test_create_connection(scene, view, model):
 
     view.update()
 
-    assert len(scene.connections()) == 1
+    assert len(scene.connections) == 1
     all_c1 = node1.state.all_connections
     assert len(all_c1) == 1
     all_c2 = node1.state.all_connections
@@ -107,7 +107,7 @@ def test_create_connection(scene, view, model):
     assert out_port == 2
 
     scene.delete_connection(conn)
-    assert len(scene.connections()) == 0
+    assert len(scene.connections) == 0
     all_c1 = node1.state.all_connections
     assert len(all_c1) == 0
     all_c2 = node1.state.all_connections
@@ -125,8 +125,8 @@ def test_clear_scene(scene, view, model):
 
     scene.clear_scene()
 
-    assert len(scene.nodes()) == 0
-    assert len(scene.connections()) == 0
+    assert len(scene.nodes) == 0
+    assert len(scene.connections) == 0
     all_c1 = node1.state.all_connections
     assert len(all_c1) == 0
     all_c2 = node1.state.all_connections
@@ -139,21 +139,21 @@ def test_save_load(tmp_path, scene, view, model):
 
     created_nodes = (node1, node2)
 
-    assert len(scene.nodes()) == len(created_nodes)
+    assert len(scene.nodes) == len(created_nodes)
 
     for node in created_nodes:
-        assert node in scene.nodes().values()
-        assert node.id in scene.nodes()
+        assert node in scene.nodes.values()
+        assert node.id in scene.nodes
 
     fname = tmp_path / 'temp.flow'
     scene.save(fname)
     scene.load(fname)
 
-    assert len(scene.nodes()) == len(created_nodes)
+    assert len(scene.nodes) == len(created_nodes)
 
     for node in created_nodes:
-        assert node not in scene.nodes().values()
-        assert node.id in scene.nodes()
+        assert node not in scene.nodes.values()
+        assert node.id in scene.nodes
 
 
 @pytest.mark.parametrize('reset, port_type',

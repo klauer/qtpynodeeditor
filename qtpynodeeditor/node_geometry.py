@@ -1,6 +1,6 @@
 import math
 
-from qtpy.QtCore import QPointF, QRect, QRectF
+from qtpy.QtCore import QPointF, QRect, QRectF, QSizeF
 from qtpy.QtGui import QFont, QFontMetrics, QTransform
 
 from .base import NodeBase
@@ -480,3 +480,18 @@ class NodeGeometry:
             return 0
 
         return max(self._font_metrics.width(name) for name in names)
+
+    @property
+    def size(self):
+        """
+        Get the node size
+
+        Parameters
+        ----------
+        node : Node
+
+        Returns
+        -------
+        value : QSizeF
+        """
+        return QSizeF(self.width, self.height)

@@ -1,6 +1,6 @@
 import uuid
 
-from qtpy.QtCore import QObject, QPointF, Property
+from qtpy.QtCore import QObject, QPointF, Property, QSizeF
 
 from .enums import ReactToConnectionState
 from .base import NodeBase, Serializable
@@ -69,9 +69,9 @@ class Node(QObject, Serializable, NodeBase):
         state : dict
         """
         self._uid = state["id"]
-        pos = state["position"]
-        point = QPointF(pos["x"], pos["y"])
-        self._graphics_obj.setPos(point)
+        if self._graphics_obj:
+            pos = state["position"]
+            self.position = (pos["x"], pos["y"])
         self._node_data_model.__setstate__(state["model"])
 
     @property
@@ -210,3 +210,42 @@ class Node(QObject, Serializable, NodeBase):
         self.geometry.recalculate_size()
         for conn in self.state.all_connections:
             conn.graphics_object.move()
+
+    @property
+    def size(self) -> QSizeF:
+        """
+        Get the node size
+
+        Parameters
+        ----------
+        node : Node
+
+        Returns
+        -------
+        value : QSizeF
+        """
+        return self._geometry.size
+
+    @property
+    def position(self) -> QPointF:
+        """
+        Get the node position
+
+        Parameters
+        ----------
+        node : Node
+
+        Returns
+        -------
+        value : QPointF
+        """
+        return self._graphics_obj.pos()
+
+    @position.setter
+    def position(self, pos):
+        if not isinstance(pos, QPointF):
+            px, py = pos
+            pos = QPointF(px, py)
+
+        self._graphics_obj.setPos(pos)
+        self._graphics_obj.move_connections()
