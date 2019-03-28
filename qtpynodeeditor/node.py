@@ -3,13 +3,12 @@ import uuid
 from qtpy.QtCore import QObject, QPointF, Property
 
 from .enums import ReactToConnectionState
-from .base import NodeBase
+from .base import NodeBase, Serializable
 from .node_data import NodeData, NodeDataModel, NodeDataType
 from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_state import NodeState
 from .port import PortType, PortIndex
-from .serializable import Serializable
 
 
 class Node(QObject, Serializable, NodeBase):

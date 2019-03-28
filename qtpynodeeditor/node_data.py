@@ -5,8 +5,8 @@ from qtpy.QtWidgets import QWidget
 from qtpy.QtCore import Signal
 
 from . import style as style_module
+from .base import Serializable
 from .enums import NodeValidationState, PortType, ConnectionPolicy
-from .serializable import Serializable
 from .port import PortIndex
 
 

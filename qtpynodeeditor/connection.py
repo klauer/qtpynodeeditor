@@ -4,14 +4,13 @@ from qtpy.QtCore import QObject
 from qtpy.QtCore import Signal
 
 
-from .base import ConnectionBase, NodeBase
+from .base import ConnectionBase, NodeBase, Serializable
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
 from .connection_state import ConnectionState
 from .node import NodeDataType
 from .node_data import NodeData
 from .port import PortType, INVALID, opposite_port, PortIndex
-from .serializable import Serializable
 from .style import StyleCollection
 from .type_converter import TypeConverter
 
