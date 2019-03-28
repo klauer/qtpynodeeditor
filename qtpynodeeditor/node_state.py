@@ -7,7 +7,7 @@ from .port import PortType, PortIndex, NodePort
 
 
 class NodeState:
-    def __init__(self, model):
+    def __init__(self, node):
         '''
         node_state
 
@@ -15,12 +15,18 @@ class NodeState:
         ----------
         model : NodeDataModel
         '''
-        self._max_in = model.num_ports[PortType.input]
-        self._max_out = model.num_ports[PortType.output]
-        self._connections = {
-            PortType.input: OrderedDict((i, []) for i in range(self._max_in)),
-            PortType.output: OrderedDict((i, []) for i in range(self._max_out)),
-        }
+        self._ports = {PortType.input: OrderedDict(),
+                       PortType.output: OrderedDict()
+                       }
+
+        model = node.data
+        for port_type in (PortType.input, PortType.output):
+            num_ports = model.num_ports[port_type]
+            self._ports[port_type] = OrderedDict(
+                (i, NodePort(node, port_type=port_type, index=i))
+                for i in range(num_ports)
+            )
+
         self._reaction = ReactToConnectionState.not_reacting
         self._reacting_port_type = PortType.none
         self._reacting_data_type = None
@@ -28,7 +34,7 @@ class NodeState:
 
     def get_entries(self, port_type: PortType) -> list:
         """
-        Returns vector of connections.
+        Returns a list of connections.
 
         Parameters
         ----------
@@ -39,14 +45,14 @@ class NodeState:
         value : list
             List of Connection lists
         """
-        return list(self._connections[port_type].values())
+        return list(port.connections for port in self._ports[port_type].values())
 
     @property
     def all_connections(self):
         return [connection
-                for port_type in (PortType.input, PortType.output)
-                for port, connections in self._connections[port_type].items()
-                for connection in connections
+                for port_type, ports in self._ports.items()
+                for idx, port in ports.items()
+                for connection in port.connections
                 ]
 
     def connections(self, port_type: PortType, port_index: PortIndex) -> list:
@@ -62,7 +68,7 @@ class NodeState:
         -------
         value : list
         """
-        return list(self._connections[port_type][port_index])
+        return list(self._ports[port_type][port_index].connections)
 
     def set_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """
@@ -74,7 +80,7 @@ class NodeState:
         port_index : PortIndex
         connection : Connection
         """
-        self._connections[port_type][port_index].append(connection)
+        self._ports[port_type][port_index].add_connection(connection)
 
     def erase_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """
@@ -86,11 +92,7 @@ class NodeState:
         port_index : PortIndex
         connection : Connection
         """
-        try:
-            self._connections[port_type][port_index].remove(connection)
-        except ValueError:
-            # TODO: should not be reaching this
-            ...
+        self._ports[port_type][port_index].remove_connection(connection)
 
     @property
     def reaction(self) -> ReactToConnectionState:

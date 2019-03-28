@@ -9,6 +9,7 @@ from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_state import NodeState
 from .port import PortType, PortIndex
+from .style import NodeStyle
 
 
 class Node(QObject, Serializable, NodeBase):
@@ -24,8 +25,8 @@ class Node(QObject, Serializable, NodeBase):
         self._node_data_model = data_model
         self._uid = str(uuid.uuid4())
         self._style = data_model.node_style
-        self._state = NodeState(self._node_data_model)
-        self._geometry = NodeGeometry(self._node_data_model)
+        self._state = NodeState(self)
+        self._geometry = NodeGeometry(self)
         self._graphics_obj = None
         self._geometry.recalculate_size()
 
@@ -249,3 +250,13 @@ class Node(QObject, Serializable, NodeBase):
 
         self._graphics_obj.setPos(pos)
         self._graphics_obj.move_connections()
+
+    @property
+    def style(self) -> NodeStyle:
+        'Node style'
+        return self._style
+
+    @property
+    def state(self) -> NodeState:
+        'Node state'
+        return self._state

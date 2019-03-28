@@ -10,11 +10,10 @@ from .port import PortIndex, INVALID
 
 
 class NodeGeometry:
-    def __init__(self, data_model: NodeDataModel):
+    def __init__(self, node: NodeBase):
         super().__init__()
-        self._node_data_model = data_model
-
-        self._data_model = data_model
+        self._node = node
+        self._data_model = node.data
         self._dragging_pos = QPointF(-1000, -1000)
         self._entry_width = 0
         self._entry_height = 20
@@ -24,7 +23,7 @@ class NodeGeometry:
         self._input_port_width = 70
         self._output_port_width = 70
         self._spacing = 20
-        self._style = data_model.style.node
+        self._style = node.style
         self._width = 100
 
         f = QFont()

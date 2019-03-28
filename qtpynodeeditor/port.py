@@ -1,3 +1,4 @@
+from .base import ConnectionBase
 from .enums import PortType
 
 
@@ -28,8 +29,20 @@ def opposite_port(port: PortType):
 
 
 class NodePort:
-    def __init__(self, state, port_type: PortType, index: PortIndex):
-        self.state = state
+    def __init__(self, node, *, port_type: PortType, index: PortIndex):
+        self.node = node
         self.port_type = port_type
         self.index = index
         self.connections = []
+        self.opposite_port = {PortType.input: PortType.output,
+                              PortType.output: PortType.input}[self.port_type]
+
+    def add_connection(self, connection: ConnectionBase):
+        self.connections.append(connection)
+
+    def remove_connection(self, connection: ConnectionBase):
+        try:
+            self.connections.remove(connection)
+        except ValueError:
+            # TODO: should not be reaching this
+            ...
