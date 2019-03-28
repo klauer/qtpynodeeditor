@@ -21,7 +21,7 @@ def locate_node_at(scene_point, scene, view_transform):
                         Qt.DescendingOrder, view_transform)
     filtered_items = [item for item in items
                       if isinstance(item, NodeGraphicsObject)]
-    return filtered_items[0].node() if filtered_items else None
+    return filtered_items[0].node if filtered_items else None
 
 
 class FlowScene(QGraphicsScene):
@@ -495,7 +495,7 @@ class FlowScene(QGraphicsScene):
         -------
         value : list of Node
         """
-        return [item.node() for item in self.selectedItems()
+        return [item.node for item in self.selectedItems()
                 if isinstance(item, NodeGraphicsObject)]
 
     def clear_scene(self):

@@ -68,6 +68,7 @@ class NodeGraphicsObject(QGraphicsObject):
         super().setPos(pos)
         self.move_connections()
 
+    @property
     def node(self):
         """
         Node

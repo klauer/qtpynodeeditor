@@ -57,6 +57,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         except Exception:
             ...
 
+    @property
     def connection(self) -> ConnectionBase:
         """
         Connection
@@ -221,8 +222,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         """
         self._geometry.hovered = True
         self.update()
-        self._scene.connection_hovered.emit(self.connection(),
-                                            event.screenPos())
+        self._scene.connection_hovered.emit(self.connection, event.screenPos())
         event.accept()
 
     def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent):
@@ -235,7 +235,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         """
         self._geometry.hovered = False
         self.update()
-        self._scene.connection_hover_left.emit(self.connection())
+        self._scene.connection_hover_left.emit(self.connection)
         event.accept()
 
     def add_graphics_effect(self):

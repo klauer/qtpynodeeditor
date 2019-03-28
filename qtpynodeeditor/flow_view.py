@@ -107,7 +107,7 @@ class FlowView(QGraphicsView):
         # deletes some connections as well)
         for item in self._scene.selectedItems():
             if isinstance(item, ConnectionGraphicsObject):
-                self._scene.delete_connection(item.connection())
+                self._scene.delete_connection(item.connection)
 
         # Delete the nodes; self will delete many of the connections.
         # Selected connections were already deleted prior to self loop, otherwise
@@ -115,7 +115,7 @@ class FlowView(QGraphicsView):
         # when a selected connection is deleted by deleting the node.
         for item in self._scene.selectedItems():
             if isinstance(item, NodeGraphicsObject):
-                self._scene.remove_node(item.node())
+                self._scene.remove_node(item.node)
 
     def contextMenuEvent(self, event: QContextMenuEvent):
         """
