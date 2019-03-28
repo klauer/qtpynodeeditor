@@ -6,7 +6,7 @@ from qtpy.QtGui import QFont, QFontMetrics, QTransform
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
 from .node_data import NodeDataModel
-from .port import PortIndex, INVALID
+from .port import NodePort, PortIndex
 
 
 class NodeGeometry:
@@ -290,7 +290,7 @@ class NodeGeometry:
             x = self._width + self._style.connection_point_diameter
             result = QPointF(x, total_height)
         elif port_type == PortType.input:
-            x = 0.0 - self._style.connection_point_diameter
+            x = -float(self._style.connection_point_diameter)
             result = QPointF(x, total_height)
         else:
             raise ValueError(port_type)
@@ -298,7 +298,7 @@ class NodeGeometry:
         return t.map(result)
 
     def check_hit_scene_point(self, port_type: PortType, scene_point: QPointF,
-                              scene_transform: QTransform) -> PortIndex:
+                              scene_transform: QTransform) -> NodePort:
         """
         Check hit scene point
 
@@ -310,20 +310,17 @@ class NodeGeometry:
 
         Returns
         -------
-        value : PortIndex
+        value : NodePort
         """
         if port_type == PortType.none:
-            return INVALID
+            return None
 
         tolerance = 2.0 * self._style.connection_point_diameter
-        for i in range(self._data_model.num_ports[port_type]):
-            pp = self.port_scene_position(port_type, i, scene_transform)
-            p = pp - scene_point
-            distance = math.sqrt(QPointF.dotProduct(p, p))
+        for idx, port in self._node.state[port_type].items():
+            pos = port.get_mapped_scene_position(scene_transform) - scene_point
+            distance = math.sqrt(QPointF.dotProduct(pos, pos))
             if distance < tolerance:
-                return PortIndex(i)
-
-        return INVALID
+                return port
 
     @property
     def resize_rect(self) -> QRect:

@@ -20,7 +20,7 @@ class NodeState:
                        }
 
         model = node.data
-        for port_type in (PortType.input, PortType.output):
+        for port_type in self._ports:
             num_ports = model.num_ports[port_type]
             self._ports[port_type] = OrderedDict(
                 (i, NodePort(node, port_type=port_type, index=i))
@@ -32,6 +32,9 @@ class NodeState:
         self._reacting_data_type = None
         self._resizing = False
 
+    def __getitem__(self, key):
+        return self._ports[key]
+
     @property
     def ports(self):
         yield from self.input_ports
@@ -39,28 +42,11 @@ class NodeState:
 
     @property
     def input_ports(self):
-        for idx, port in self._ports[PortType.input].items():
-            yield port
+        yield from self[PortType.input].values()
 
     @property
     def output_ports(self):
-        for idx, port in self._ports[PortType.output].items():
-            yield port
-
-    def get_entries(self, port_type: PortType) -> list:
-        """
-        Returns a list of connections.
-
-        Parameters
-        ----------
-        port_type : PortType
-
-        Returns
-        -------
-        value : list
-            List of Connection lists
-        """
-        return list(port.connections for port in self._ports[port_type].values())
+        yield from self[PortType.output].values()
 
     @property
     def all_connections(self):

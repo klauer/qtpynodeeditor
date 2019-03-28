@@ -106,3 +106,19 @@ class NodePort(QObject):
     def scene_position(self):
         return self.node.geometry.port_scene_position(self.port_type,
                                                       self.index)
+
+    def get_mapped_scene_position(self, transform):
+        """
+        Node port scene position after a transform
+
+        Parameters
+        ----------
+        port_type : PortType
+        port_index : PortIndex
+
+        Returns
+        -------
+        value : QPointF
+        """
+        ngo = self.node.graphics_object
+        return ngo.sceneTransform().map(self.scene_position)

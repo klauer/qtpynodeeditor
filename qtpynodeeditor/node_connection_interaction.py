@@ -64,26 +64,25 @@ class NodeConnectionInteraction:
 
         # 2) connection point is on top of the node port
         connection_point = self.connection_end_scene_position(required_port)
-        port_index = self.node_port_index_under_scene_point(required_port,
-                                                            connection_point)
-        if port_index == INVALID:
+        port = self.node_port_under_scene_point(required_port,
+                                                connection_point)
+        if not port:
             raise ConnectionPointFailure(
                 f'Connection point {connection_point} is not on node {node}')
 
         # 3) Node port is vacant
-        if not self.node_port_is_empty(required_port, port_index):
+        if not port.can_connect:
             raise ConnectionPortNotEmptyFailure(
-                f'Port {required_port} {port_index} not empty'
+                f'Port {required_port} {port} cannot connect'
             )
 
         # 4) Connection type equals node port type, or there is a registered
         #    type conversion that can translate between the two
         connection_data_type = self._connection.data_type(opposite_port(required_port))
-        model_target = self._node.data
 
-        candidate_node_data_type = model_target.data_type(required_port, port_index)
+        candidate_node_data_type = port.data_type
         if connection_data_type.id == candidate_node_data_type.id:
-            return port_index, DefaultTypeConverter
+            return port, DefaultTypeConverter
 
         registry = self._scene.registry
         if required_port == PortType.input:
@@ -92,7 +91,7 @@ class NodeConnectionInteraction:
         else:
             converter = registry.get_type_converter(candidate_node_data_type,
                                                     connection_data_type)
-        return port_index, converter
+        return port, converter
 
     def try_connect(self) -> bool:
         """
@@ -112,7 +111,7 @@ class NodeConnectionInteraction:
         """
         # 1) Check conditions from 'can_connect'
         try:
-            port_index, converter = self.can_connect()
+            port, converter = self.can_connect()
         except NodeConnectionFailure as ex:
             logger.debug('Cannot connect node', exc_info=ex)
             logger.info('Cannot connect node: %s', ex)
@@ -125,12 +124,12 @@ class NodeConnectionInteraction:
 
         # 2) Assign node to required port in Connection
         required_port = self.connection_required_port
-        self._node.state.set_connection(required_port, port_index, self._connection)
+        self._node.state.set_connection(required_port, port.index, self._connection)
 
         # 3) Assign Connection to empty port in NodeState
 
         # The port is not longer required after self function
-        self._connection.set_node_to_port(self._node, required_port, port_index)
+        self._connection.set_node_to_port(self._node, required_port, port.index)
 
         # 4) Adjust Connection geometry
         self._node.graphics_object.move_connections()
@@ -214,14 +213,13 @@ class NodeConnectionInteraction:
         -------
         value : QPointF
         """
-        geom = self._node.geometry
-        p = geom.port_scene_position(port_type, port_index)
-        ngo = self._node.graphics_object
-        return ngo.sceneTransform().map(p)
+        port = self._node.state[port_type][port_index]
+        return port.get_mapped_scene_position(
+            self._node.graphics_object.sceneTransform())
 
-    def node_port_index_under_scene_point(self, port_type: PortType, scene_point: QPointF) -> PortIndex:
+    def node_port_under_scene_point(self, port_type: PortType, scene_point: QPointF) -> NodeBase:
         """
-        Node port index under scene point
+        Node port under scene point
 
         Parameters
         ----------
@@ -234,8 +232,7 @@ class NodeConnectionInteraction:
         """
         node_geom = self._node.geometry
         scene_transform = self._node.graphics_object.sceneTransform()
-        port_index = node_geom.check_hit_scene_point(port_type, scene_point, scene_transform)
-        return port_index
+        return node_geom.check_hit_scene_point(port_type, scene_point, scene_transform)
 
     def node_port_is_empty(self, port_type: PortType, port_index: PortIndex) -> bool:
         """
@@ -250,9 +247,5 @@ class NodeConnectionInteraction:
         -------
         value : bool
         """
-        node_state = self._node.state
-        entries = node_state.get_entries(port_type)
-        if not entries[port_index]:
-            return True
-        out_policy = self._node.data.port_out_connection_policy(port_index)
-        return port_type == PortType.output and out_policy == ConnectionPolicy.many
+        port = self._node.state[port_type][port_index]
+        return port.can_connect

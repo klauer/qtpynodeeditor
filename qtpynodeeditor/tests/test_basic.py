@@ -202,11 +202,11 @@ def test_smoke_connection_interaction(scene, view, model):
     assert interaction.connection_required_port == PortType.input
 
     # TODO node still not on it?
-    interaction.can_connect = lambda: (0, None)
+    interaction.can_connect = lambda: (node1.state[PortType.input][0], None)
 
     assert interaction.try_connect()
 
     interaction.disconnect(PortType.output)
     interaction.connection_end_scene_position(PortType.input)
     interaction.node_port_scene_position(PortType.input, 0)
-    interaction.node_port_index_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))
+    interaction.node_port_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))

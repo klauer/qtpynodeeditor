@@ -167,14 +167,13 @@ class NodeGraphicsObject(QGraphicsObject):
 
         for port_to_check in (PortType.input, PortType.output):
             # TODO do not pass sceneTransform
-            port_index = node_geometry.check_hit_scene_point(port_to_check,
-                                                             event.scenePos(),
-                                                             self.sceneTransform())
-            if port_index == INVALID:
+            port = node_geometry.check_hit_scene_point(port_to_check,
+                                                       event.scenePos(),
+                                                       self.sceneTransform())
+            if not port:
                 continue
 
-            node_state = self._node.state
-            connections = node_state.connections(port_to_check, port_index)
+            connections = port.connections
 
             # start dragging existing connection
             if connections and port_to_check == PortType.input:
@@ -183,14 +182,16 @@ class NodeGraphicsObject(QGraphicsObject):
                 interaction.disconnect(port_to_check)
             elif port_to_check == PortType.output:
                 # initialize new Connection
-                out_policy = self._node.data.port_out_connection_policy(port_index)
+                out_policy = port.connection_policy
                 if connections and out_policy == ConnectionPolicy.one:
                     conn, = connections
                     self._scene.delete_connection(conn)
 
                 # TODO_UPSTREAM: add to FlowScene
-                connection = self._scene.create_connection_node(self._node, port_to_check, port_index)
-                self._node.state.set_connection(port_to_check, port_index, connection)
+                connection = self._scene.create_connection_node(
+                    self._node, port_to_check, port.index)
+                self._node.state.set_connection(
+                    port_to_check, port.index, connection)
                 connection.graphics_object.grabMouse()
 
         pos = QPoint(event.pos().x(), event.pos().y())
