@@ -64,6 +64,10 @@ class NodeGraphicsObject(QGraphicsObject):
         except Exception:
             ...
 
+    def setPos(self, pos):
+        super().setPos(pos)
+        self.move_connections()
+
     def node(self):
         """
         Node

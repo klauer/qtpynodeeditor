@@ -43,7 +43,8 @@ class FlowScene(QGraphicsScene):
     node_hovered = Signal(Node, QPoint)
     node_moved = Signal(Node, QPointF)
 
-    def __init__(self, registry=None, style=None, parent=None):
+    def __init__(self, registry=None, style=None, parent=None,
+                 allow_node_creation=True, allow_node_deletion=True):
         '''
         Create a new flow scene
 
@@ -65,6 +66,8 @@ class FlowScene(QGraphicsScene):
 
         self._style = style
         self._registry = registry
+        self.allow_node_deletion = allow_node_creation
+        self.allow_node_creation = allow_node_deletion
 
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
@@ -81,6 +84,22 @@ class FlowScene(QGraphicsScene):
             self._cleanup()
         except Exception:
             ...
+
+    @property
+    def allow_node_creation(self):
+        return self._allow_node_creation
+
+    @allow_node_creation.setter
+    def allow_node_creation(self, allow):
+        self._allow_node_creation = bool(allow)
+
+    @property
+    def allow_node_deletion(self):
+        return self._allow_node_deletion
+
+    @allow_node_deletion.setter
+    def allow_node_deletion(self, allow):
+        self._allow_node_deletion = bool(allow)
 
     @property
     def style_collection(self) -> style_module.StyleCollection:
@@ -269,7 +288,6 @@ class FlowScene(QGraphicsScene):
         ----------
         node : Node
         """
-        # call signal
         self.node_deleted.emit(node)
         for conn in list(node.state.all_connections):
             self.delete_connection(conn)
