@@ -148,7 +148,6 @@ class NodeDataModel(QObject, Serializable):
             if default is None:
                 raise ValueError('Cannot leave {} unspecified'.format(attr))
 
-            print('fill', cls, attr, default, new_dict(default))
             setattr(cls, attr, new_dict(default))
 
         fill_defaults('port_caption', '')
