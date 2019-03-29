@@ -298,7 +298,6 @@
             <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot leave </span><span class="si">{}</span><span class="s1"> unspecified&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">))</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fill&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">(</span><span class="n">default</span><span class="p">))</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">(</span><span class="n">default</span><span class="p">))</span>
 
         <span class="n">fill_defaults</span><span class="p">(</span><span class="s1">&#39;port_caption&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
