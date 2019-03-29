@@ -54,8 +54,11 @@ class NodeDataModel(QObject, Serializable):
                     PortType.output: defaultdict(str),
                     }
 
-    data_updated = Signal(Port)
-    data_invalidated = Signal(Port)
+    # data_updated and data_invalidated refer to the port index that has
+    # changed:
+    data_updated = Signal(int)
+    data_invalidated = Signal(int)
+
     computing_started = Signal()
     computing_finished = Signal()
     embedded_widget_size_updated = Signal()
@@ -180,14 +183,14 @@ class NodeDataModel(QObject, Serializable):
         """
         return self._style.node
 
-    def set_in_data(self, node_data: NodeData, port: PortIndex):
+    def set_in_data(self, node_data: NodeData, port: Port):
         """
         Triggers the algorithm; to be overridden by subclasses
 
         Parameters
         ----------
         node_data : NodeData
-        port : PortIndex
+        port : Port
         """
         ...
 

@@ -31,7 +31,7 @@ class Node(QObject, Serializable, NodeBase):
         self._geometry.recalculate_size()
 
         # propagate data: model => node
-        self._data_model.data_updated.connect(self.on_data_updated)
+        self._data_model.data_updated.connect(self._on_port_index_data_updated)
         self._data_model.embedded_widget_size_updated.connect(self.on_node_size_updated)
 
     def __getitem__(self, key):
@@ -185,7 +185,7 @@ class Node(QObject, Serializable, NodeBase):
         elif input_port.port_type != PortType.input:
             raise ValueError('Port is not an input port')
 
-        self._data_model.set_in_data(node_data, input_port.index)
+        self._data_model.set_in_data(node_data, input_port)
 
         # Recalculate the nodes visuals. A data change can result in the node
         # taking more space than before, so self forces a recalculate+repaint
@@ -195,13 +195,26 @@ class Node(QObject, Serializable, NodeBase):
         self._graphics_obj.update()
         self._graphics_obj.move_connections()
 
-    def on_data_updated(self, port: Port):
+    def _on_port_index_data_updated(self, port_index: PortIndex):
         """
-        Fetches data from model's OUT #index port and propagates it to the connection
+        Data has been updated on this Node's output port port_index;
+        propagate it to any connections.
 
         Parameters
         ----------
         index : PortIndex
+        """
+        port = self[PortType.output][port_index]
+        self.on_data_updated(port)
+
+    def on_data_updated(self, port: Port):
+        """
+        Fetches data from model's output port and propagates it along the
+        connection
+
+        Parameters
+        ----------
+        port : Port
         """
         node_data = port.data
         for conn in port.connections:

@@ -334,7 +334,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     def propagate_data(self, node_data: NodeData):
         """
-        Propagate data
+        Propagate the given data from the output port -> input port.
 
         Parameters
         ----------
