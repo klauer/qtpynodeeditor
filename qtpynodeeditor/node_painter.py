@@ -46,7 +46,7 @@ class NodePainter:
         graphics_object = node.graphics_object
         geom.recalculate_size(painter.font())
 
-        model = node.data
+        model = node.model
         NodePainter.draw_node_rect(painter, geom, model, graphics_object,
                                    node_style)
         NodePainter.draw_connection_points(painter, geom, state, model, scene,

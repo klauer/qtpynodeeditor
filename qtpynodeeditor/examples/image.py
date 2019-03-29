@@ -19,6 +19,7 @@ class ImageLoaderModel(NodeDataModel):
     num_ports = {PortType.input: 0,
                  PortType.output: 1,
                  }
+    data_type = PixmapData
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -65,9 +66,6 @@ class ImageLoaderModel(NodeDataModel):
     def resizable(self):
         return True
 
-    def data_type(self, port_type, port):
-        return PixmapData.data_type
-
     def out_data(self, port):
         return PixmapData(self._pixmap)
 
@@ -80,6 +78,7 @@ class ImageShowModel(NodeDataModel):
     num_ports = {PortType.input: 1,
                  PortType.output: 1,
                  }
+    data_type = PixmapData
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -108,9 +107,6 @@ class ImageShowModel(NodeDataModel):
                 self._label.setPixmap(pixmap.scaled(w, h, Qt.KeepAspectRatio))
 
         return False
-
-    def data_type(self, port_type, port_index):
-        return PixmapData.data_type
 
     def set_in_data(self, node_data, port):
         self._node_data = node_data

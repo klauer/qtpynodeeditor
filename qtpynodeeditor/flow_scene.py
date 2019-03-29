@@ -215,7 +215,7 @@ class FlowSceneModel(QObject):
         Generator: Iterate over node data
         """
         for node in self._nodes.values():
-            yield node.data
+            yield node.model
 
     def iterate_over_node_data_dependent_order(self):
         """
@@ -233,7 +233,7 @@ class FlowSceneModel(QObject):
 
         # Iterate over "leaf" nodes
         for node in self._nodes.values():
-            model = node.data
+            model = node.model
             if is_node_leaf(node, model):
                 yield model
                 visited_nodes.append(node)
@@ -252,7 +252,7 @@ class FlowSceneModel(QObject):
                 if node in visited_nodes and node is not visited_nodes[-1]:
                     continue
 
-                model = node.data
+                model = node.model
                 if are_node_inputs_visited_before(node, model):
                     yield model
                     visited_nodes.append(node)

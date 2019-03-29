@@ -33,8 +33,8 @@ class Port(QObject):
         return list(self._connections)
 
     @property
-    def data_model(self):
-        return self.node.data
+    def model(self):
+        return self.node.model
 
     @property
     def data(self):

@@ -19,7 +19,7 @@ class NodeState:
                        PortType.output: OrderedDict()
                        }
 
-        model = node.data
+        model = node.model
         for port_type in self._ports:
             num_ports = model.num_ports[port_type]
             self._ports[port_type] = OrderedDict(

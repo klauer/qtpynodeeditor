@@ -16,12 +16,10 @@ class BasicDataModel(nodeeditor.NodeDataModel):
     num_ports = {'input': 3,
                  'output': 3
                  }
+    data_type = MyNodeData.data_type
 
     def model(self):
         return 'MyDataModel'
-
-    def data_type(self, port_type, port_index):
-        return MyNodeData.data_type
 
     def out_data(self, port_index):
         return MyNodeData()

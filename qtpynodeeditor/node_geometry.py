@@ -12,7 +12,7 @@ class NodeGeometry:
     def __init__(self, node: NodeBase):
         super().__init__()
         self._node = node
-        self._data_model = node.data
+        self._model = node.model
         self._dragging_pos = QPointF(-1000, -1000)
         self._entry_width = 0
         self._entry_height = 20
@@ -163,7 +163,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        return self._data_model.num_ports[PortType.output]
+        return self._model.num_ports[PortType.output]
 
     @property
     def num_sinks(self) -> int:
@@ -174,7 +174,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        return self._data_model.num_ports[PortType.input]
+        return self._model.num_ports[PortType.input]
 
     @property
     def dragging_pos(self) -> QPointF:
@@ -240,7 +240,7 @@ class NodeGeometry:
         step = self._entry_height + self._spacing
         height = step * max_num_of_entries
 
-        w = self._data_model.embedded_widget()
+        w = self._model.embedded_widget()
         if w:
             height = max((height, w.height()))
 
@@ -249,13 +249,13 @@ class NodeGeometry:
         self._output_port_width = self.port_width(PortType.output)
         width = self._input_port_width + self._output_port_width + 2 * self._spacing
 
-        w = self._data_model.embedded_widget()
+        w = self._model.embedded_widget()
         if w:
             width += w.width()
 
         width = max((width, self.caption_width))
 
-        if self._data_model.validation_state() != NodeValidationState.valid:
+        if self._model.validation_state() != NodeValidationState.valid:
             width = max((width, self.validation_width))
             height += self.validation_height + self._spacing
 
@@ -345,11 +345,11 @@ class NodeGeometry:
         -------
         value : QPointF
         """
-        w = self._data_model.embedded_widget()
+        w = self._model.embedded_widget()
         if not w:
             return QPointF()
 
-        if self._data_model.validation_state() != NodeValidationState.valid:
+        if self._model.validation_state() != NodeValidationState.valid:
             return QPointF(
                 self._spacing + self.port_width(PortType.input),
                 (self.caption_height + self._height - self.validation_height -
@@ -370,7 +370,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        msg = self._data_model.validation_message()
+        msg = self._model.validation_message()
         return self._bold_font_metrics.boundingRect(msg).height()
 
     @property
@@ -382,7 +382,7 @@ class NodeGeometry:
         -------
         value : int
         """
-        msg = self._data_model.validation_message()
+        msg = self._model.validation_message()
         return self._bold_font_metrics.boundingRect(msg).width()
 
     @staticmethod
@@ -434,9 +434,9 @@ class NodeGeometry:
         -------
         value : int
         """
-        if not self._data_model.caption_visible:
+        if not self._model.caption_visible:
             return 0
-        name = self._data_model.caption
+        name = self._model.caption
         return self._bold_font_metrics.boundingRect(name).height()
 
     @property
@@ -448,9 +448,9 @@ class NodeGeometry:
         -------
         value : int
         """
-        if not self._data_model.caption_visible:
+        if not self._model.caption_visible:
             return 0
-        name = self._data_model.caption
+        name = self._model.caption
         return self._bold_font_metrics.boundingRect(name).width()
 
     def port_width(self, port_type: PortType) -> int:
@@ -465,12 +465,8 @@ class NodeGeometry:
         -------
         value : int
         """
-        def get_name(i):
-            if self._data_model.port_caption_visible(port_type, i):
-                return self._data_model.port_caption[port_type][i]
-            return self._data_model.data_type(port_type, i).name
-
-        names = [get_name(i) for i in range(self._data_model.num_ports[port_type])]
+        names = [port.display_text
+                 for port in self._node[port_type].values()]
         if not names:
             return 0
 
