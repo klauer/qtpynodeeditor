@@ -7,7 +7,7 @@ from qtpy.QtGui import QDoubleValidator
 
 import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
-                            NodeValidationState, PortIndex)
+                            NodeValidationState, PortIndex, Port)
 
 
 class DecimalData(NodeData):
@@ -119,7 +119,7 @@ class MathOperationDataModel(NodeDataModel):
         '''
         return self._result
 
-    def set_in_data(self, data: NodeData, port_index: PortIndex):
+    def set_in_data(self, data: NodeData, port: Port):
         '''
         New data at the input of the node
 
@@ -128,9 +128,9 @@ class MathOperationDataModel(NodeDataModel):
         data : NodeData
         port_index : PortIndex
         '''
-        if port_index == 0:
+        if port.index == 0:
             self._number1 = data
-        elif port_index == 1:
+        elif port.index == 1:
             self._number2 = data
 
         if self._check_inputs():
@@ -300,7 +300,7 @@ class NumberDisplayModel(NodeDataModel):
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return DecimalData.data_type
 
-    def set_in_data(self, data: NodeData, int: int):
+    def set_in_data(self, data: NodeData, port: Port):
         '''
         New data propagated to the input
 
@@ -408,25 +408,19 @@ def main(app):
         node_b.data.embedded_widget().setText('2.0')
         inputs.append(node_b)
 
-        scene.create_connection(
-            node_out=node_a, port_index_out=0,
-            node_in=node_operation, port_index_in=0,
-            converter=None
-        )
+        scene.create_connection(node_a[PortType.output][0],
+                                node_operation[PortType.input][0],
+                                )
 
-        scene.create_connection(
-            node_out=node_b, port_index_out=0,
-            node_in=node_operation, port_index_in=1,
-            converter=None
-        )
+        scene.create_connection(node_a[PortType.output][0],
+                                node_operation[PortType.input][1],
+                                )
 
         node_display = scene.create_node(NumberDisplayModel)
 
-        scene.create_connection(
-            node_out=node_operation, port_index_out=0,
-            node_in=node_display, port_index_in=0,
-            converter=None
-        )
+        scene.create_connection(node_operation[PortType.output][0],
+                                node_display[PortType.input][0],
+                                )
 
     try:
         scene.auto_arrange(nodes=inputs, layout='bipartite')

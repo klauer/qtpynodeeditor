@@ -4,14 +4,12 @@ from qtpy.QtCore import QObject
 from qtpy.QtCore import Signal
 
 
-from .base import ConnectionBase, NodeBase
+from .base import ConnectionBase, Serializable
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
-from .connection_state import ConnectionState
-from .node import NodeDataType
+from .node import NodeDataType, Node
 from .node_data import NodeData
-from .port import PortType, INVALID, opposite_port, PortIndex
-from .serializable import Serializable
+from .port import PortType, opposite_port, PortIndex, Port
 from .style import StyleCollection
 from .type_converter import TypeConverter
 
@@ -21,74 +19,56 @@ class Connection(QObject, Serializable, ConnectionBase):
     connection_made_incomplete = Signal(QObject)
     updated = Signal(QObject)
 
-    def __init__(self, in_node: NodeBase, out_node: NodeBase, *,
-                 style, port_index_in=INVALID, port_index_out=INVALID,
-                 converter=None):
+    def __init__(self, port_a: Port, port_b: Port = None, *,
+                 style: StyleCollection, converter: TypeConverter = None):
         super().__init__()
         self._uid = str(uuid.uuid4())
-        self._in_node = in_node
-        self._in_port_index = port_index_in
-        self._out_node = out_node
-        self._out_port_index = port_index_out
-        self._connection_state = ConnectionState()
+
+        if port_a is None:
+            raise ValueError('port_a is required')
+        elif port_a is port_b:
+            raise ValueError('Cannot connect a port to itself')
+
+        if port_a.port_type == PortType.input:
+            in_port = port_a
+            out_port = port_b
+        else:
+            in_port = port_b
+            out_port = port_a
+
+        if in_port is not None and out_port is not None:
+            if in_port.port_type == out_port.port_type:
+                raise ValueError('Cannot connect two ports of the same type')
+
+        self._ports = {
+            PortType.input: in_port,
+            PortType.output: out_port
+        }
+
+        if in_port and out_port:
+            self._required_port = PortType.none
+        elif in_port:
+            self._required_port = PortType.output
+        else:
+            self._required_port = PortType.input
+
+        self._last_hovered_node = None
         self._converter = converter
         self._style = style
         self._connection_geometry = ConnectionGeometry(style)
         self._graphics_object = None
-
-    @classmethod
-    def from_node(cls, port_type: PortType, node: NodeBase, port_index: PortIndex,
-                  style: StyleCollection):
-        '''
-        New Connection is attached to the port of the given Node. The port has
-        parameters (port_type, port_index). The opposite connection end will
-        require another port.
-
-        Parameters
-        ----------
-        port_type : PortType
-        node : Node
-        port_index : PortIndex
-        style : StyleCollection
-        '''
-        inst = cls(None, None, style=style)
-        inst.set_node_to_port(node, port_type, port_index)
-        inst.required_port = opposite_port(port_type)
-        return inst
-
-    @classmethod
-    def from_nodes(cls, node_in, port_index_in, node_out, port_index_out, *,
-                   converter, style):
-        '''
-        Create connection
-
-        Parameters
-        ----------
-        node_in : Node
-        port_index_in : PortIndex
-        node_out : Node
-        port_index_out : PortIndex
-        converter : TypeConverter
-        style : StyleCollection
-        '''
-        inst = cls(node_in, node_out, style=style, port_index_in=port_index_in,
-                   port_index_out=port_index_out, converter=converter)
-        inst.set_node_to_port(node_in, PortType.input, port_index_in)
-        inst.set_node_to_port(node_out, PortType.output, port_index_out)
-        return inst
 
     def _cleanup(self):
         if self.is_complete:
             self.connection_made_incomplete.emit(self)
 
         self.propagate_empty_data()
-        if self._in_node:
-            self._in_node.graphics_object.update()
-            self._in_node = None
+        self.last_hovered_node = None
 
-        if self._out_node:
-            self._out_node.graphics_object.update()
-            self._out_node = None
+        for port_type, port in self.valid_ports.items():
+            if port.node.graphics_object is not None:
+                port.node.graphics_object.update()
+            self._ports[port] = None
 
         if self._graphics_object is not None:
             self._graphics_object._cleanup()
@@ -101,7 +81,7 @@ class Connection(QObject, Serializable, ConnectionBase):
             ...
 
     @property
-    def style(self):
+    def style(self) -> StyleCollection:
         return self._style
 
     def __getstate__(self) -> dict:
@@ -112,14 +92,15 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : dict
         """
-        if not (self._in_node and self._out_node):
+        in_port, out_port = self.ports
+        if not in_port and not out_port:
             return {}
 
         connection_json = dict(
-            in_id=self._in_node.id,
-            in_index=self._in_port_index,
-            out_id=self._out_node.id,
-            out_index=self._out_port_index,
+            in_id=in_port.node.id,
+            in_index=in_port.index,
+            out_id=out_port.node.id,
+            out_index=out_port.index,
         )
 
         if self._converter:
@@ -137,6 +118,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         return connection_json
 
+    @property
     def id(self) -> str:
         """
         Unique identifier (uuid)
@@ -156,7 +138,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : PortType
         """
-        return self._connection_state.required_port
+        return self._required_port
 
     @required_port.setter
     def required_port(self, dragging: PortType):
@@ -167,13 +149,13 @@ class Connection(QObject, Serializable, ConnectionBase):
         ----------
         dragging : PortType
         """
-        self._connection_state.required_port = dragging
-        if dragging == PortType.output:
-            self._out_node = None
-            self._out_port_index = INVALID
-        elif dragging == PortType.input:
-            self._in_node = None
-            self._in_port_index = INVALID
+        self._required_port = dragging
+        try:
+            port = self.valid_ports[dragging]
+        except KeyError:
+            ...
+        else:
+            port.remove_connection(self)
 
     @property
     def graphics_object(self) -> ConnectionGraphicsObject:
@@ -208,47 +190,28 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         self._graphics_object.move()
 
-    def set_node_to_port(self, node: NodeBase, port_type: PortType, port_index: PortIndex):
+    def connect_to(self, port: Port):
         """
-        Assigns a node to the required port. It is assumed that there is a required port, no extra checks
+        Assigns a node to the required port.
 
         Parameters
         ----------
-        node : Node
-        port_type : PortType
-        port_index : PortIndex
+        port : Port
         """
-        was_incomplete = not self.is_complete
-        if port_type == PortType.output:
-            self._out_node = node
-            self._out_port_index = port_index
-        else:
-            self._in_node = node
-            self._in_port_index = port_index
+        if self._ports[port.port_type] is not None:
+            raise ValueError('Port already specified')
 
-        self._connection_state.required_port = PortType.none
+        was_incomplete = not self.is_complete
+        self._ports[port.port_type] = port
         self.updated.emit(self)
+        self.required_port = PortType.none
         if self.is_complete and was_incomplete:
             self.connection_completed.emit(self)
 
     def remove_from_nodes(self):
-        if self._in_node:
-            self._in_node.state.erase_connection(PortType.input,
-                                                 self._in_port_index, self)
-        if self._out_node:
-            self._out_node.state.erase_connection(PortType.output,
-                                                  self._out_port_index, self)
-
-    @property
-    def state(self) -> ConnectionState:
-        """
-        Connection state
-
-        Returns
-        -------
-        value : ConnectionState
-        """
-        return self._connection_state
+        for port in self._ports.values():
+            if port is not None:
+                port.remove_connection(self)
 
     @property
     def geometry(self) -> ConnectionGeometry:
@@ -261,7 +224,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         """
         return self._connection_geometry
 
-    def get_node(self, port_type: PortType) -> NodeBase:
+    def get_node(self, port_type: PortType) -> Node:
         """
         Get node
 
@@ -273,15 +236,19 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : Node
         """
-        if port_type == PortType.input:
-            return self._in_node
-        elif port_type == PortType.output:
-            return self._out_node
+        port = self._ports[port_type]
+        if port is not None:
+            return port.node
 
     @property
     def nodes(self):
         # TODO namedtuple; TODO order
-        return (self._in_node, self._out_node)
+        return (self.get_node(PortType.input), self.get_node(PortType.output))
+
+    @property
+    def ports(self):
+        # TODO namedtuple; TODO order
+        return (self._ports[PortType.input], self._ports[PortType.output])
 
     def get_port_index(self, port_type: PortType) -> PortIndex:
         """
@@ -295,11 +262,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : PortIndex
         """
-        if port_type == PortType.input:
-            return self._in_port_index
-        elif port_type == PortType.output:
-            return self._out_port_index
-        return INVALID
+        return self._ports[port_type].index
 
     def clear_node(self, port_type: PortType):
         """
@@ -312,12 +275,16 @@ class Connection(QObject, Serializable, ConnectionBase):
         if self.is_complete:
             self.connection_made_incomplete.emit(self)
 
-        if port_type == PortType.input:
-            self._in_port_index = INVALID
-            self._in_node = None
-        else:
-            self._out_port_index = INVALID
-            self._out_node = None
+        port = self._ports[port_type]
+        self._ports[port_type] = None
+        port.remove_connection(self)
+
+    @property
+    def valid_ports(self):
+        return {port_type: port
+                for port_type, port in self._ports.items()
+                if port is not None
+                }
 
     def data_type(self, port_type: PortType) -> NodeDataType:
         """
@@ -331,32 +298,15 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : NodeDataType
         """
-        if self._in_node and self._out_node:
-            model = (self._in_node.data
-                     if port_type == PortType.input
-                     else self._out_node.data
-                     )
-            index = (self._in_port_index
-                     if port_type == PortType.input
-                     else self._out_port_index
-                     )
-            return model.data_type(port_type, index)
+        ports = self.valid_ports
+        if not ports:
+            raise ValueError('No ports set')
 
-        index = INVALID
-        valid_node = None
-        if self._in_node:
-            index = self._in_port_index
-            port_type = PortType.input
-            valid_node = self._in_node
-        elif self._out_node:
-            index = self._out_port_index
-            port_type = PortType.output
-            valid_node = self._out_node
-        else:
-            assert False, "Should not reach here"
-
-        model = valid_node.data
-        return model.data_type(port_type, index)
+        try:
+            return ports[port_type].data_type
+        except KeyError:
+            valid_type, = ports
+            return ports[valid_type].data_type
 
     @property
     def type_converter(self) -> TypeConverter:
@@ -382,23 +332,79 @@ class Connection(QObject, Serializable, ConnectionBase):
         -------
         value : bool
         """
-        return self._in_node is not None and self._out_node is not None
+        return all(self._ports.values())
 
     def propagate_data(self, node_data: NodeData):
         """
-        Propagate data
+        Propagate the given data from the output port -> input port.
 
         Parameters
         ----------
         node_data : NodeData
         """
-        if not self._in_node:
+        in_port, out_port = self.ports
+        if not in_port:
             return
 
         if self._converter:
             node_data = self._converter(node_data)
 
-        self._in_node.propagate_data(node_data, self._in_port_index)
+        in_port.node.propagate_data(node_data, in_port)
+
+    @property
+    def input_node(self) -> Node:
+        'Input node'
+        return self._ports[PortType.input].node
+
+    @property
+    def output(self) -> Node:
+        'Output node'
+        return self._ports[PortType.output].node
 
     def propagate_empty_data(self):
-        self.propagate_data(NodeData())
+        self.propagate_data(None)
+
+    @property
+    def last_hovered_node(self) -> Node:
+        """
+        Last hovered node
+
+        Returns
+        -------
+        value : Node
+        """
+        return self._last_hovered_node
+
+    @last_hovered_node.setter
+    def last_hovered_node(self, node: Node):
+        """
+        Set last hovered node
+
+        Parameters
+        ----------
+        node : Node
+        """
+        if node is None and self._last_hovered_node:
+            self._last_hovered_node.reset_reaction_to_connection()
+        self._last_hovered_node = node
+
+    def interact_with_node(self, node: Node):
+        """
+        Interact with node
+
+        Parameters
+        ----------
+        node : Node
+        """
+        self.last_hovered_node = node
+
+    @property
+    def requires_port(self) -> bool:
+        """
+        Requires port
+
+        Returns
+        -------
+        value : bool
+        """
+        return self._required_port != PortType.none

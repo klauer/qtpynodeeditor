@@ -132,11 +132,6 @@ ConnectionGraphicsObject
 .. autoclass:: ConnectionGraphicsObject
    :members:
 
-ConnectionState
-===============
-
-.. autoclass:: ConnectionState
-   :members:
 
 -----
 Ports

@@ -7,7 +7,6 @@ from .connection import Connection
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
 from .connection_painter import ConnectionPainter
-from .connection_state import ConnectionState
 from .data_model_registry import DataModelRegistry
 from .node import Node, NodeDataType
 from .node_connection_interaction import NodeConnectionInteraction
@@ -27,7 +26,6 @@ __all__ = [
     'ConnectionGraphicsObject',
     'ConnectionPainter',
     'ConnectionPolicy',
-    'ConnectionState',
     'ConnectionStyle',
     'ConnectionRequiresPortFailure',
     'ConnectionSelfFailure',

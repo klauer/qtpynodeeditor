@@ -67,8 +67,11 @@ def test_instantiation(view):
 
 def test_create_node(scene, model):
     node = scene.create_node(model)
-    assert node in scene.nodes().values()
-    assert node.id in scene.nodes()
+    assert node in scene.nodes.values()
+    assert node.id in scene.nodes
+
+    assert scene.allow_node_creation
+    assert scene.allow_node_deletion
 
 
 def test_selected_nodes(scene, model):
@@ -80,15 +83,13 @@ def test_selected_nodes(scene, model):
 def test_create_connection(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
-    scene.create_connection(
-        node_in=node1, port_index_in=1,
-        node_out=node2, port_index_out=2,
-        converter=None
-    )
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
 
     view.update()
 
-    assert len(scene.connections()) == 1
+    assert len(scene.connections) == 1
     all_c1 = node1.state.all_connections
     assert len(all_c1) == 1
     all_c2 = node1.state.all_connections
@@ -107,7 +108,7 @@ def test_create_connection(scene, view, model):
     assert out_port == 2
 
     scene.delete_connection(conn)
-    assert len(scene.connections()) == 0
+    assert len(scene.connections) == 0
     all_c1 = node1.state.all_connections
     assert len(all_c1) == 0
     all_c2 = node1.state.all_connections
@@ -117,16 +118,14 @@ def test_create_connection(scene, view, model):
 def test_clear_scene(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
-    scene.create_connection(
-        node_in=node1, port_index_in=1,
-        node_out=node2, port_index_out=2,
-        converter=None
-    )
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
 
     scene.clear_scene()
 
-    assert len(scene.nodes()) == 0
-    assert len(scene.connections()) == 0
+    assert len(scene.nodes) == 0
+    assert len(scene.connections) == 0
     all_c1 = node1.state.all_connections
     assert len(all_c1) == 0
     all_c2 = node1.state.all_connections
@@ -139,21 +138,21 @@ def test_save_load(tmp_path, scene, view, model):
 
     created_nodes = (node1, node2)
 
-    assert len(scene.nodes()) == len(created_nodes)
+    assert len(scene.nodes) == len(created_nodes)
 
     for node in created_nodes:
-        assert node in scene.nodes().values()
-        assert node.id in scene.nodes()
+        assert node in scene.nodes.values()
+        assert node.id in scene.nodes
 
     fname = tmp_path / 'temp.flow'
     scene.save(fname)
     scene.load(fname)
 
-    assert len(scene.nodes()) == len(created_nodes)
+    assert len(scene.nodes) == len(created_nodes)
 
     for node in created_nodes:
-        assert node not in scene.nodes().values()
-        assert node.id in scene.nodes()
+        assert node not in scene.nodes.values()
+        assert node.id in scene.nodes
 
 
 @pytest.mark.parametrize('reset, port_type',
@@ -181,7 +180,7 @@ def test_smoke_node_size_updated(scene, view, model):
 def test_smoke_connection_interaction(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
-    conn = scene.create_connection_node(node1, PortType.output, port_index=0)
+    conn = scene.create_connection(node1[PortType.output][0])
     interaction = nodeeditor.NodeConnectionInteraction(
         node=node2, connection=conn, scene=scene)
 
@@ -202,11 +201,16 @@ def test_smoke_connection_interaction(scene, view, model):
     assert interaction.connection_required_port == PortType.input
 
     # TODO node still not on it?
-    interaction.can_connect = lambda: (0, None)
+    interaction.can_connect = lambda: (node1.state[PortType.input][0], None)
 
     assert interaction.try_connect()
 
     interaction.disconnect(PortType.output)
     interaction.connection_end_scene_position(PortType.input)
     interaction.node_port_scene_position(PortType.input, 0)
-    interaction.node_port_index_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))
+    interaction.node_port_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))
+
+
+def test_locate_node(scene, view, model):
+    node = scene.create_node(model)
+    assert scene.locate_node_at(node.position, view.transform()) == node

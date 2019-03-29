@@ -65,7 +65,7 @@ class ImageLoaderModel(NodeDataModel):
     def resizable(self):
         return True
 
-    def data_type(self, port_type, port_index):
+    def data_type(self, port_type, port):
         return PixmapData.data_type
 
     def out_data(self, port):
@@ -112,17 +112,17 @@ class ImageShowModel(NodeDataModel):
     def data_type(self, port_type, port_index):
         return PixmapData.data_type
 
-    def set_in_data(self, node_data, port_index):
+    def set_in_data(self, node_data, port):
         self._node_data = node_data
         if (self._node_data and
                 self._node_data.data_type == PixmapData.data_type and
                 self._node_data.pixmap):
             w, h = self._label.width(), self._label.height()
-            self._label.setPixmap(node_data.pixmap.scaled(w, h,
-                                                          Qt.KeepAspectRatio))
+            pixmap = node_data.pixmap.scaled(w, h, Qt.KeepAspectRatio)
         else:
-            self._label.setPixmap(QtGui.QPixmap())
+            pixmap = QtGui.QPixmap()
 
+        self._label.setPixmap(pixmap)
         self.data_updated.emit(0)
 
     def out_data(self, port):
@@ -146,9 +146,8 @@ def main(app):
     node_show = scene.create_node(ImageShowModel)
 
     scene.create_connection(
-        node_out=node_loader, port_index_out=0,
-        node_in=node_show, port_index_in=0,
-        converter=None
+        node_loader[PortType.output][0],
+        node_show[PortType.input][0],
     )
 
     return scene, view, [node_loader, node_show]
