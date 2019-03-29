@@ -143,12 +143,6 @@ Port
 .. autoclass:: Port
    :members:
 
-PortIndex
-=========
-
-.. autoclass:: PortIndex
-   :members:
-
 PortType
 ========
 

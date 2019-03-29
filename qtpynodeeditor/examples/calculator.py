@@ -7,7 +7,7 @@ from qtpy.QtGui import QDoubleValidator
 
 import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
-                            NodeValidationState, PortIndex, Port)
+                            NodeValidationState, Port)
 
 
 class DecimalData(NodeData):
@@ -55,9 +55,12 @@ class IntegerData(NodeData):
 
 class MathOperationDataModel(NodeDataModel):
     caption_visible = True
-    num_ports = {PortType.input: 2,
-                 PortType.output: 1,
-                 }
+    num_ports = {
+        'input': 2,
+        'output': 1,
+    }
+    port_caption_visible = True
+    data_type = DecimalData.data_type
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -70,9 +73,6 @@ class MathOperationDataModel(NodeDataModel):
     @property
     def caption(self):
         return self.name
-
-    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
-        return True
 
     def _check_inputs(self):
         number1_ok = (self._number1 is not None and
@@ -102,16 +102,13 @@ class MathOperationDataModel(NodeDataModel):
 
         self.data_updated.emit(0)
 
-    def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        return DecimalData.data_type
-
-    def out_data(self, port: PortIndex) -> NodeData:
+    def out_data(self, port: int) -> NodeData:
         '''
         The output data as a result of this calculation
 
         Parameters
         ----------
-        port : PortIndex
+        port : int
 
         Returns
         -------
@@ -126,7 +123,7 @@ class MathOperationDataModel(NodeDataModel):
         Parameters
         ----------
         data : NodeData
-        port_index : PortIndex
+        port_index : int
         '''
         if port.index == 0:
             self._number1 = data
@@ -175,14 +172,12 @@ class DivisionModel(MathOperationDataModel):
 
 class ModuloModel(MathOperationDataModel):
     name = 'Modulo'
+    data_type = IntegerData.data_type
     port_caption = {'input': {0: 'Dividend',
                               1: 'Divisor',
                               },
                     'output': {0: 'Result'},
                     }
-
-    def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        return IntegerData.data_type
 
     def compute(self):
         if self._number2.number == 0.0:
@@ -212,6 +207,7 @@ class NumberSourceDataModel(NodeDataModel):
                  PortType.output: 1,
                  }
     port_caption = {'output': {0: 'Result'}}
+    data_type = DecimalData.data_type
 
     def __init__(self, style=None, parent=None):
         super().__init__(style=style, parent=parent)
@@ -243,16 +239,13 @@ class NumberSourceDataModel(NodeDataModel):
             self._number = DecimalData(value)
             self._line_edit.setText(self._number.number_as_text())
 
-    def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        return DecimalData.data_type
-
-    def out_data(self, port: PortIndex) -> NodeData:
+    def out_data(self, port: int) -> NodeData:
         '''
         The data output from this node
 
         Parameters
         ----------
-        port : PortIndex
+        port : int
 
         Returns
         -------
@@ -283,6 +276,7 @@ class NumberSourceDataModel(NodeDataModel):
 
 class NumberDisplayModel(NodeDataModel):
     name = "NumberDisplay"
+    data_type = DecimalData.data_type
     caption_visible = False
     num_ports = {PortType.input: 1,
                  PortType.output: 0,
@@ -296,9 +290,6 @@ class NumberDisplayModel(NodeDataModel):
         self._label.setMargin(3)
         self._validation_state = NodeValidationState.warning
         self._validation_message = 'Uninitialized'
-
-    def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
-        return DecimalData.data_type
 
     def set_in_data(self, data: NodeData, port: Port):
         '''
@@ -401,11 +392,11 @@ def main(app):
 
     for node_operation in (node_add, node_sub, node_mul, node_div, node_mod):
         node_a = scene.create_node(NumberSourceDataModel)
-        node_a.data.embedded_widget().setText('1.0')
+        node_a.model.embedded_widget().setText('1.0')
         inputs.append(node_a)
 
         node_b = scene.create_node(NumberSourceDataModel)
-        node_b.data.embedded_widget().setText('2.0')
+        node_b.model.embedded_widget().setText('2.0')
         inputs.append(node_b)
 
         scene.create_connection(node_a[PortType.output][0],

@@ -1,4 +1,5 @@
-from collections import defaultdict, namedtuple
+import inspect
+from collections import namedtuple
 
 from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
@@ -7,7 +8,7 @@ from qtpy.QtCore import Signal
 from . import style as style_module
 from .base import Serializable
 from .enums import NodeValidationState, PortType, ConnectionPolicy
-from .port import PortIndex, Port
+from .port import Port
 
 
 NodeDataType = namedtuple('NodeDataType', ('id', 'name'))
@@ -50,10 +51,6 @@ class NodeDataModel(QObject, Serializable):
                  PortType.output: 1,
                  }
 
-    port_caption = {PortType.input: defaultdict(str),
-                    PortType.output: defaultdict(str),
-                    }
-
     # data_updated and data_invalidated refer to the port index that has
     # changed:
     data_updated = Signal(int)
@@ -69,7 +66,7 @@ class NodeDataModel(QObject, Serializable):
             style = style_module.default_style
         self._style = style
 
-    def __init_subclass__(cls, **kwargs):
+    def __init_subclass__(cls, verify=True, **kwargs):
         super().__init_subclass__(**kwargs)
         # For all subclasses, if no name is defined, default to the class name
         if cls.name is None:
@@ -77,25 +74,125 @@ class NodeDataModel(QObject, Serializable):
         if cls.caption is None and cls.caption_visible:
             cls.caption = cls.name
 
+        num_ports = cls.num_ports
+        if isinstance(num_ports, property):
+            # Dynamically defined - that's OK, but we can't verify it.
+            return
+
+        if verify:
+            cls._verify()
+
+    @classmethod
+    def _verify(cls):
+        '''
+        Verify the data model won't crash in strange spots
+        Ensure valid dictionaries:
+            - num_ports
+            - data_type
+            - port_caption
+            - port_caption_visible
+        '''
+        num_ports = cls.num_ports
+        if isinstance(num_ports, property):
+            # Dynamically defined - that's OK, but we can't verify it.
+            return
+
+        assert set(num_ports.keys()) == {'input', 'output'}
+
+        # TODO while the end result is nicer, this is ugly; refactor away...
+
+        def new_dict(value):
+            return {
+                PortType.input: {i: value
+                                 for i in range(num_ports[PortType.input])
+                                 },
+                PortType.output: {i: value
+                                  for i in range(num_ports[PortType.output])
+                                  },
+            }
+
+        def get_default(attr, default, valid_type):
+            current = getattr(cls, attr, None)
+            if current is None:
+                # Unset - use the default
+                return default
+
+            if valid_type is not None:
+                if isinstance(current, valid_type):
+                    # Fill in the dictionary with the user-provided value
+                    return current
+
+            if attr == 'data_type' and inspect.isclass(current):
+                if issubclass(current, NodeData):
+                    return current.data_type
+
+            if inspect.ismethod(current) or inspect.isfunction(current):
+                raise ValueError('{} should not be a function; saw: {}\n'
+                                 'Did you forget a @property decorator?'
+                                 ''.format(attr, current))
+
+            try:
+                type(default)(current)
+            except TypeError:
+                raise ValueError('{} is of an unexpected type: {}'
+                                 ''.format(attr, current)) from None
+
+            # Fill in the dictionary with the given value
+            return current
+
+        def fill_defaults(attr, default, valid_type=None):
+            if isinstance(getattr(cls, attr, None), dict):
+                return
+
+            default = get_default(attr, default, valid_type)
+            if default is None:
+                raise ValueError('Cannot leave {} unspecified'.format(attr))
+
+            print('fill', cls, attr, default, new_dict(default))
+            setattr(cls, attr, new_dict(default))
+
+        fill_defaults('port_caption', '')
+        fill_defaults('port_caption_visible', False)
+        fill_defaults('data_type', None, valid_type=NodeDataType)
+
+        reasons = []
+        for attr in ('data_type', 'port_caption', 'port_caption_visible'):
+            try:
+                dct = getattr(cls, attr)
+            except AttributeError:
+                reasons.append('{} is missing dictionary: {}'
+                               ''.format(cls.__name__, attr))
+                continue
+
+            if isinstance(dct, property):
+                continue
+
+            for port_type in {'input', 'output'}:
+                if port_type not in dct:
+                    if num_ports[port_type] == 0:
+                        dct[port_type] = {}
+                    else:
+                        reasons.append('Port type key {}[{!r}] missing'
+                                       ''.format(attr, port_type))
+                        continue
+
+                for i in range(num_ports[port_type]):
+                    if i not in dct[port_type]:
+                        reasons.append('Port key {}[{!r}][{}] missing'
+                                       ''.format(attr, port_type, i))
+
+        if reasons:
+            reason_text = '\n'.join('* {}'.format(reason)
+                                    for reason in reasons)
+            raise ValueError(
+                'Verification of NodeDataModel class failed:\n{}'
+                ''.format(reason_text)
+            )
+
     @property
     def style(self):
         'Style collection for drawing this data model'
         return self._style
-
-    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
-        """
-        It is possible to hide port caption in GUI
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : bool
-        """
-        return False
 
     def save(self) -> dict:
         """
@@ -142,14 +239,15 @@ class NodeDataModel(QObject, Serializable):
         doc.update(**self.save())
         return doc
 
-    def data_type(self, port_type: PortType, port_index: PortIndex):
+    @property
+    def data_type(self):
         """
-        Data type
+        Data type placeholder - to be implemented by subclass.
 
         Parameters
         ----------
         port_type : PortType
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------
@@ -158,13 +256,13 @@ class NodeDataModel(QObject, Serializable):
         raise NotImplementedError(f'Subclass {self.__class__.__name__} must '
                                   f'implement `data_type`')
 
-    def port_out_connection_policy(self, port_index: PortIndex) -> ConnectionPolicy:
+    def port_out_connection_policy(self, port_index: int) -> ConnectionPolicy:
         """
         Port out connection policy
 
         Parameters
         ----------
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------
@@ -194,13 +292,13 @@ class NodeDataModel(QObject, Serializable):
         """
         ...
 
-    def out_data(self, port: PortIndex) -> NodeData:
+    def out_data(self, port: int) -> NodeData:
         """
         Out data
 
         Parameters
         ----------
-        port : PortIndex
+        port : int
 
         Returns
         -------

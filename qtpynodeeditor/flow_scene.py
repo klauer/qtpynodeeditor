@@ -11,7 +11,7 @@ from .data_model_registry import DataModelRegistry
 from .node import Node
 from .node_data import NodeDataType, NodeDataModel
 from .node_graphics_object import NodeGraphicsObject
-from .port import PortType, PortIndex, Port
+from .port import PortType, Port
 from .type_converter import TypeConverter, DefaultTypeConverter
 
 
@@ -183,12 +183,11 @@ class FlowSceneModel(QObject):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.output)
-        to = conn.get_node(PortType.input)
-        assert from_ is not None
-        assert to is not None
-        from_.data.output_connection_created(conn)
-        to.data.input_connection_created(conn)
+        input_node, output_node = conn.nodes
+        assert input_node is not None
+        assert output_node is not None
+        output_node.model.output_connection_created(conn)
+        input_node.model.input_connection_created(conn)
 
     def _send_connection_deleted_to_nodes(self, conn: Connection):
         """
@@ -198,12 +197,11 @@ class FlowSceneModel(QObject):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.output)
-        to = conn.get_node(PortType.input)
-        assert from_ is not None
-        assert to is not None
-        from_.data.output_connection_deleted(conn)
-        to.data.input_connection_deleted(conn)
+        input_node, output_node = conn.nodes
+        assert input_node is not None
+        assert output_node is not None
+        output_node.model.output_connection_deleted(conn)
+        input_node.model.input_connection_deleted(conn)
 
     def iterate_over_nodes(self):
         """
@@ -217,7 +215,7 @@ class FlowSceneModel(QObject):
         Generator: Iterate over node data
         """
         for node in self._nodes.values():
-            yield node.data
+            yield node.model
 
     def iterate_over_node_data_dependent_order(self):
         """
@@ -235,7 +233,7 @@ class FlowSceneModel(QObject):
 
         # Iterate over "leaf" nodes
         for node in self._nodes.values():
-            model = node.data
+            model = node.model
             if is_node_leaf(node, model):
                 yield model
                 visited_nodes.append(node)
@@ -254,7 +252,7 @@ class FlowSceneModel(QObject):
                 if node in visited_nodes and node is not visited_nodes[-1]:
                     continue
 
-                model = node.data
+                model = node.model
                 if are_node_inputs_visited_before(node, model):
                     yield model
                     visited_nodes.append(node)
@@ -479,8 +477,8 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         return connection
 
     def create_connection_by_index(
-            self, node_in: Node, port_index_in: PortIndex,
-            node_out: Node, port_index_out: PortIndex,
+            self, node_in: Node, port_index_in: int,
+            node_out: Node, port_index_out: int,
             converter: TypeConverter) -> Connection:
         """
         Create connection
@@ -488,9 +486,9 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         Parameters
         ----------
         node_in : Node
-        port_index_in : PortIndex
+        port_index_in : int
         node_out : Node
-        port_index_out : PortIndex
+        port_index_out : int
         converter : TypeConverter
 
         Returns

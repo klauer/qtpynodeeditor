@@ -21,10 +21,16 @@ class NaiveDataModel(NodeDataModel):
     num_ports = {PortType.input: 2,
                  PortType.output: 2,
                  }
-
-    def data_type(self, port_type, port_index):
-        return {0: MyNodeData.data_type,
-                1: SimpleNodeData.data_type}[port_index]
+    data_type = {
+        PortType.input: {
+            0: MyNodeData.data_type,
+            1: SimpleNodeData.data_type
+        },
+        PortType.output: {
+            0: MyNodeData.data_type,
+            1: SimpleNodeData.data_type
+        },
+    }
 
     def out_data(self, port_index):
         if port_index == 0:

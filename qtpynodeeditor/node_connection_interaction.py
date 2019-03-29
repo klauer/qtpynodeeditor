@@ -6,7 +6,7 @@ from .exceptions import (NodeConnectionFailure, ConnectionRequiresPortFailure,
                          ConnectionSelfFailure, ConnectionPointFailure,
                          ConnectionPortNotEmptyFailure)
 from .base import NodeBase, FlowSceneBase, ConnectionBase
-from .port import PortType, PortIndex, opposite_port
+from .port import PortType, opposite_port
 from .type_converter import DefaultTypeConverter
 
 
@@ -42,7 +42,7 @@ class NodeConnectionInteraction:
 
         Returns
         -------
-        (port_index, converter) : (PortIndex, TypeConverter)
+        (port_index, converter) : (int, TypeConverter)
             where port_index is the index of the port to be connected
 
         Raises
@@ -196,14 +196,14 @@ class NodeConnectionInteraction:
         end_point = geometry.get_end_point(port_type)
         return go.mapToScene(end_point)
 
-    def node_port_scene_position(self, port_type: PortType, port_index: PortIndex) -> QPointF:
+    def node_port_scene_position(self, port_type: PortType, port_index: int) -> QPointF:
         """
         Node port scene position
 
         Parameters
         ----------
         port_type : PortType
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------
@@ -224,20 +224,20 @@ class NodeConnectionInteraction:
 
         Returns
         -------
-        value : PortIndex
+        value : int
         """
         node_geom = self._node.geometry
         scene_transform = self._node.graphics_object.sceneTransform()
         return node_geom.check_hit_scene_point(port_type, scene_point, scene_transform)
 
-    def node_port_is_empty(self, port_type: PortType, port_index: PortIndex) -> bool:
+    def node_port_is_empty(self, port_type: PortType, port_index: int) -> bool:
         """
         Node port is empty
 
         Parameters
         ----------
         port_type : PortType
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------

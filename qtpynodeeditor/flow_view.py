@@ -1,8 +1,10 @@
 import logging
 import math
-from qtpy.QtCore import QLineF, QRectF, Qt
-from qtpy.QtGui import QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter, QPen, QShowEvent, QWheelEvent
-from qtpy.QtWidgets import QAction, QGraphicsView, QLineEdit, QMenu, QTreeWidget, QTreeWidgetItem, QWidgetAction
+from qtpy.QtCore import QLineF, QRectF, Qt, QPoint
+from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter,
+                        QPen, QShowEvent, QWheelEvent)
+from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
+                            QTreeWidget, QTreeWidgetItem, QWidgetAction)
 
 
 from .connection_graphics_object import ConnectionGraphicsObject
@@ -82,32 +84,31 @@ class FlowView(QGraphicsView):
         self._delete_selection_action = QAction("Delete Selection", self)
         self._delete_selection_action.setShortcut(Qt.Key_Delete)
         self._delete_selection_action.setShortcut(Qt.Key_Backspace)
-        self._delete_selection_action.triggered.connect(self.delete_selected_nodes)
+        self._delete_selection_action.triggered.connect(self.delete_selected)
         self.addAction(self._delete_selection_action)
 
     def scale_up(self):
         step = 1.2
         factor = step ** 1.0
         t = self.transform()
-        if t.m11() > 2.0:
-            return
-        self.scale(factor, factor)
+        if t.m11() <= 2.0:
+            self.scale(factor, factor)
 
     def scale_down(self):
         step = 1.2
         factor = step ** -1.0
         self.scale(factor, factor)
 
-    def delete_selected_nodes(self):
-        if not self._scene.allow_node_deletion:
-            return
-
+    def delete_selected(self):
         # Delete the selected connections first, ensuring that they won't be
         # automatically deleted when selected nodes are deleted (deleting a node
         # deletes some connections as well)
         for item in self._scene.selectedItems():
             if isinstance(item, ConnectionGraphicsObject):
                 self._scene.delete_connection(item.connection)
+
+        if not self._scene.allow_node_deletion:
+            return
 
         # Delete the nodes; self will delete many of the connections.
         # Selected connections were already deleted prior to self loop, otherwise
@@ -117,20 +118,15 @@ class FlowView(QGraphicsView):
             if isinstance(item, NodeGraphicsObject):
                 self._scene.remove_node(item.node)
 
-    def contextMenuEvent(self, event: QContextMenuEvent):
+    def generate_context_menu(self, pos: QPoint):
         """
-        contextMenuEvent
+        Generate a context menu for contextMenuEvent
 
         Parameters
         ----------
-        event : QContextMenuEvent
+        pos : QPoint
+            The point where the context menu was requested
         """
-        if self.itemAt(event.pos()):
-            super().contextMenuEvent(event)
-            return
-        elif not self._scene.allow_node_creation:
-            return
-
         model_menu = QMenu()
         skip_text = "skip me"
 
@@ -173,7 +169,7 @@ class FlowView(QGraphicsView):
             type_ = self._scene.registry.create(model_name)
             if type_:
                 node = self._scene.create_node(type_)
-                pos_view = self.mapToScene(event.pos())
+                pos_view = self.mapToScene(pos)
                 node.graphics_object.setPos(pos_view)
                 self._scene.node_placed.emit(node)
             else:
@@ -195,7 +191,24 @@ class FlowView(QGraphicsView):
 
         # make sure the text box gets focus so the user doesn't have to click on it
         txt_box.setFocus()
-        model_menu.exec_(event.globalPos())
+        return model_menu
+
+    def contextMenuEvent(self, event: QContextMenuEvent):
+        """
+        contextMenuEvent
+
+        Parameters
+        ----------
+        event : QContextMenuEvent
+        """
+        if self.itemAt(event.pos()):
+            super().contextMenuEvent(event)
+            return
+        elif not self._scene.allow_node_creation:
+            return
+
+        menu = self.generate_context_menu(event.pos())
+        menu.exec_(event.globalPos())
 
     def wheelEvent(self, event: QWheelEvent):
         """
@@ -262,7 +275,7 @@ class FlowView(QGraphicsView):
         event : QMouseEvent
         """
         super().mouseMoveEvent(event)
-        if self.scene().mouseGrabberItem() is None and event.buttons() == Qt.LeftButton:
+        if self._scene.mouseGrabberItem() is None and event.buttons() == Qt.LeftButton:
             # Make sure shift is not being pressed
             if not (event.modifiers() & Qt.ShiftModifier):
                 difference = self._click_pos - self.mapToScene(event.pos())
@@ -323,6 +336,7 @@ class FlowView(QGraphicsView):
         self._scene.setSceneRect(QRectF(self.rect()))
         super().showEvent(event)
 
+    @property
     def scene(self) -> FlowScene:
         """
         Scene

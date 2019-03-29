@@ -16,12 +16,10 @@ class BasicDataModel(nodeeditor.NodeDataModel):
     num_ports = {'input': 3,
                  'output': 3
                  }
+    data_type = MyNodeData.data_type
 
     def model(self):
         return 'MyDataModel'
-
-    def data_type(self, port_type, port_index):
-        return MyNodeData.data_type
 
     def out_data(self, port_index):
         return MyNodeData()
@@ -160,7 +158,7 @@ def test_save_load(tmp_path, scene, view, model):
                           (False, 'output')])
 def test_smoke_reacting(scene, view, model, reset, port_type):
     node = scene.create_node(model)
-    dtype = node.data.data_type(port_type, 0)
+    dtype = node.model.data_type[port_type][0]
     node.react_to_possible_connection(
         reacting_port_type=port_type,
         reacting_data_type=dtype,
@@ -214,3 +212,33 @@ def test_smoke_connection_interaction(scene, view, model):
 def test_locate_node(scene, view, model):
     node = scene.create_node(model)
     assert scene.locate_node_at(node.position, view.transform()) == node
+
+
+def test_view_scale(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
+
+    view.scale_up()
+    view.scale_down()
+
+
+def test_view_delete_selected(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    conn = scene.create_connection(node2[PortType.output][2],
+                                   node1[PortType.input][1])
+    node1.graphics_object.setSelected(True)
+    conn.graphics_object.setSelected(True)
+    node2.graphics_object.setSelected(True)
+    view.delete_selected()
+
+    assert node1 not in scene.nodes.values()
+    assert node2 not in scene.nodes.values()
+    assert conn not in scene.connections
+
+
+def test_smoke_view_context_menu(qtbot, view):
+    view.generate_context_menu(qtpy.QtCore.QPoint(0, 0))

@@ -58,9 +58,7 @@ class MyDataModel(NodeDataModel):
     num_ports = {PortType.input: 3,
                  PortType.output: 3,
                  }
-
-    def data_type(self, port_type, port_index):
-        return MyNodeData.data_type
+    data_type = MyNodeData.data_type
 
     def out_data(self, port):
         return MyNodeData()

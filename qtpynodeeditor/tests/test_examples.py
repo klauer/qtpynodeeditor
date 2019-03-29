@@ -50,7 +50,7 @@ def test_iterate(scene):
 
 def test_smoke_zero_inputs(scene, example):
     for node in scene.iterate_over_nodes():
-        widget = node.data.embedded_widget()
+        widget = node.model.embedded_widget()
         if widget is not None:
             if hasattr(widget, 'setText'):
                 widget.setText('0.0')
@@ -80,7 +80,7 @@ def test_smoke_mouse(qtbot, nodes):
                           QtCore.Qt.LeftButton, QtCore.Qt.LeftButton,
                           QtCore.Qt.NoModifier)
 
-        if node.data.num_ports['input']:
+        if node.model.num_ports['input']:
             pos = node.geometry.port_scene_position('input', 0)
         else:
             pos = node.geometry.port_scene_position('output', 0)
@@ -88,7 +88,7 @@ def test_smoke_mouse(qtbot, nodes):
         ev.scene_pos = QtCore.QPoint(pos.x(), pos.y())
         ev.last_pos = QtCore.QPoint(pos.x(), pos.y())
 
-        if node.data.resizable():
+        if node.model.resizable():
             # Other case will try to propagate to mouseMoveEvent
             node.state.resizing = True
             ngo.mouseMoveEvent(ev)

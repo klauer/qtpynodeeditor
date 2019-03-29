@@ -3,7 +3,7 @@ from collections import OrderedDict
 from .enums import ReactToConnectionState
 from .base import ConnectionBase
 from .node_data import NodeDataType
-from .port import PortType, PortIndex, Port
+from .port import PortType, Port
 
 
 class NodeState:
@@ -19,7 +19,7 @@ class NodeState:
                        PortType.output: OrderedDict()
                        }
 
-        model = node.data
+        model = node.model
         for port_type in self._ports:
             num_ports = model.num_ports[port_type]
             self._ports[port_type] = OrderedDict(
@@ -56,14 +56,14 @@ class NodeState:
                 for connection in port.connections
                 ]
 
-    def connections(self, port_type: PortType, port_index: PortIndex) -> list:
+    def connections(self, port_type: PortType, port_index: int) -> list:
         """
         Connections
 
         Parameters
         ----------
         port_type : PortType
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------
@@ -71,14 +71,14 @@ class NodeState:
         """
         return list(self._ports[port_type][port_index].connections)
 
-    def erase_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
+    def erase_connection(self, port_type: PortType, port_index: int, connection: ConnectionBase):
         """
         Erase connection
 
         Parameters
         ----------
         port_type : PortType
-        port_index : PortIndex
+        port_index : int
         connection : Connection
         """
         self._ports[port_type][port_index].remove_connection(connection)
