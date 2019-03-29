@@ -5,7 +5,6 @@ from qtpy.QtGui import QFont, QFontMetrics, QTransform
 
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
-from .node_data import NodeDataModel
 from .port import Port, PortIndex
 
 

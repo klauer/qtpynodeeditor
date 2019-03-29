@@ -150,17 +150,6 @@ class Node(QObject, Serializable, NodeBase):
         return self._geometry
 
     @property
-    def state(self) -> NodeState:
-        """
-        Node state
-
-        Returns
-        -------
-        value : NodeState
-        """
-        return self._state
-
-    @property
     def data(self) -> NodeDataModel:
         """
         Node data model
@@ -278,5 +267,11 @@ class Node(QObject, Serializable, NodeBase):
 
     @property
     def state(self) -> NodeState:
-        'Node state'
+        """
+        Node state
+
+        Returns
+        -------
+        value : NodeState
+        """
         return self._state

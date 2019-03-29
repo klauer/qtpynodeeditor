@@ -1,8 +1,7 @@
 import contextlib
 import os
 import json
-from qtpy.QtCore import (QDir, QPoint, QPointF, QSizeF, Qt, QObject, Signal,
-                         Slot)
+from qtpy.QtCore import QDir, QPoint, QPointF, Qt, QObject, Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
 from . import style as style_module
@@ -17,13 +16,11 @@ from .type_converter import TypeConverter, DefaultTypeConverter
 
 
 def locate_node_at(scene_point, scene, view_transform):
-    # items under cursor
     items = scene.items(scene_point, Qt.IntersectsItemShape,
                         Qt.DescendingOrder, view_transform)
     filtered_items = [item for item in items
                       if isinstance(item, NodeGraphicsObject)]
     return filtered_items[0].node if filtered_items else None
-
 
 
 class FlowSceneModel(QObject):
@@ -407,7 +404,6 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         self.allow_node_creation = allow_node_deletion
 
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
-
 
     def _cleanup(self):
         self.clear_scene()

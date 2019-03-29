@@ -2,7 +2,6 @@ import logging
 
 from qtpy.QtCore import QPointF
 
-from .enums import ConnectionPolicy
 from .exceptions import (NodeConnectionFailure, ConnectionRequiresPortFailure,
                          ConnectionSelfFailure, ConnectionPointFailure,
                          ConnectionPortNotEmptyFailure)

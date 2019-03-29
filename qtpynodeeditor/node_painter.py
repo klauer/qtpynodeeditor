@@ -4,7 +4,7 @@ from qtpy.QtGui import QFontMetrics, QLinearGradient, QPainter, QPen
 
 
 from .base import NodeBase, FlowSceneBase
-from .enums import NodeValidationState, PortType, ConnectionPolicy
+from .enums import NodeValidationState, PortType
 from .node_data import NodeDataModel
 from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
