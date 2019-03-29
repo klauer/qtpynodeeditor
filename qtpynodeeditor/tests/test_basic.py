@@ -212,3 +212,29 @@ def test_smoke_connection_interaction(scene, view, model):
 def test_locate_node(scene, view, model):
     node = scene.create_node(model)
     assert scene.locate_node_at(node.position, view.transform()) == node
+
+
+def test_view_scale(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
+
+    view.scale_up()
+    view.scale_down()
+
+
+def test_view_delete_selected(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    conn = scene.create_connection(node2[PortType.output][2],
+                                   node1[PortType.input][1])
+    node1.graphics_object.setSelected(True)
+    conn.graphics_object.setSelected(True)
+    node2.graphics_object.setSelected(True)
+    view.delete_selected()
+
+    assert node1 not in scene.nodes.values()
+    assert node2 not in scene.nodes.values()
+    assert conn not in scene.connections

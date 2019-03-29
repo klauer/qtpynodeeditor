@@ -82,32 +82,31 @@ class FlowView(QGraphicsView):
         self._delete_selection_action = QAction("Delete Selection", self)
         self._delete_selection_action.setShortcut(Qt.Key_Delete)
         self._delete_selection_action.setShortcut(Qt.Key_Backspace)
-        self._delete_selection_action.triggered.connect(self.delete_selected_nodes)
+        self._delete_selection_action.triggered.connect(self.delete_selected)
         self.addAction(self._delete_selection_action)
 
     def scale_up(self):
         step = 1.2
         factor = step ** 1.0
         t = self.transform()
-        if t.m11() > 2.0:
-            return
-        self.scale(factor, factor)
+        if t.m11() <= 2.0:
+            self.scale(factor, factor)
 
     def scale_down(self):
         step = 1.2
         factor = step ** -1.0
         self.scale(factor, factor)
 
-    def delete_selected_nodes(self):
-        if not self._scene.allow_node_deletion:
-            return
-
+    def delete_selected(self):
         # Delete the selected connections first, ensuring that they won't be
         # automatically deleted when selected nodes are deleted (deleting a node
         # deletes some connections as well)
         for item in self._scene.selectedItems():
             if isinstance(item, ConnectionGraphicsObject):
                 self._scene.delete_connection(item.connection)
+
+        if not self._scene.allow_node_deletion:
+            return
 
         # Delete the nodes; self will delete many of the connections.
         # Selected connections were already deleted prior to self loop, otherwise
