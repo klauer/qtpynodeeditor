@@ -39,11 +39,11 @@ class Port(QObject):
     @property
     def data(self):
         if self.port_type == PortType.input:
-            # return self.data_model.in_data(self.index)
+            # return self.model.in_data(self.index)
             # TODO
             return
         else:
-            return self.data_model.out_data(self.index)
+            return self.model.out_data(self.index)
 
     @property
     def can_connect(self):
@@ -52,15 +52,15 @@ class Port(QObject):
 
     @property
     def caption(self):
-        return self.data_model.port_caption[self.port_type][self.index]
+        return self.model.port_caption[self.port_type][self.index]
 
     @property
     def caption_visible(self):
-        return self.data_model.port_caption_visible(self.port_type, self.index)
+        return self.model.port_caption_visible[self.port_type][self.index]
 
     @property
     def data_type(self):
-        return self.data_model.data_type(self.port_type, self.index)
+        return self.model.data_type[self.port_type][self.index]
 
     @property
     def display_text(self):
@@ -73,7 +73,7 @@ class Port(QObject):
         if self.port_type == PortType.input:
             return ConnectionPolicy.one
         else:
-            return self.data_model.port_out_connection_policy(self.index)
+            return self.model.port_out_connection_policy(self.index)
 
     def add_connection(self, connection: ConnectionBase):
         if connection in self._connections:

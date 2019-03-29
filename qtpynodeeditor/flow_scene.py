@@ -183,12 +183,11 @@ class FlowSceneModel(QObject):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.output)
-        to = conn.get_node(PortType.input)
-        assert from_ is not None
-        assert to is not None
-        from_.data.output_connection_created(conn)
-        to.data.input_connection_created(conn)
+        input_node, output_node = conn.nodes
+        assert input_node is not None
+        assert output_node is not None
+        output_node.model.output_connection_created(conn)
+        input_node.model.input_connection_created(conn)
 
     def _send_connection_deleted_to_nodes(self, conn: Connection):
         """
@@ -198,12 +197,11 @@ class FlowSceneModel(QObject):
         ----------
         conn : Connection
         """
-        from_ = conn.get_node(PortType.output)
-        to = conn.get_node(PortType.input)
-        assert from_ is not None
-        assert to is not None
-        from_.data.output_connection_deleted(conn)
-        to.data.input_connection_deleted(conn)
+        input_node, output_node = conn.nodes
+        assert input_node is not None
+        assert output_node is not None
+        output_node.model.output_connection_deleted(conn)
+        input_node.model.input_connection_deleted(conn)
 
     def iterate_over_nodes(self):
         """

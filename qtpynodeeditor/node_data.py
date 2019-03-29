@@ -53,6 +53,9 @@ class NodeDataModel(QObject, Serializable):
     port_caption = {PortType.input: defaultdict(str),
                     PortType.output: defaultdict(str),
                     }
+    port_caption_visible = {PortType.input: defaultdict(lambda: False),
+                            PortType.output: defaultdict(lambda: False),
+                            }
 
     # data_updated and data_invalidated refer to the port index that has
     # changed:
@@ -81,21 +84,6 @@ class NodeDataModel(QObject, Serializable):
     def style(self):
         'Style collection for drawing this data model'
         return self._style
-
-    def port_caption_visible(self, port_type: PortType, port_index: PortIndex) -> bool:
-        """
-        It is possible to hide port caption in GUI
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-
-        Returns
-        -------
-        value : bool
-        """
-        return False
 
     def save(self) -> dict:
         """
@@ -142,9 +130,10 @@ class NodeDataModel(QObject, Serializable):
         doc.update(**self.save())
         return doc
 
-    def data_type(self, port_type: PortType, port_index: PortIndex):
+    @property
+    def data_type(self):
         """
-        Data type
+        Data type placeholder - to be implemented by subclass.
 
         Parameters
         ----------

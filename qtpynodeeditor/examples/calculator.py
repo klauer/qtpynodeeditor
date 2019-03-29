@@ -401,11 +401,11 @@ def main(app):
 
     for node_operation in (node_add, node_sub, node_mul, node_div, node_mod):
         node_a = scene.create_node(NumberSourceDataModel)
-        node_a.data.embedded_widget().setText('1.0')
+        node_a.model.embedded_widget().setText('1.0')
         inputs.append(node_a)
 
         node_b = scene.create_node(NumberSourceDataModel)
-        node_b.data.embedded_widget().setText('2.0')
+        node_b.model.embedded_widget().setText('2.0')
         inputs.append(node_b)
 
         scene.create_connection(node_a[PortType.output][0],

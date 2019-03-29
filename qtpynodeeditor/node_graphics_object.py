@@ -31,7 +31,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
         self.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
 
-        self._style = node.data.style
+        self._style = node.model.style
         node_style = self._style.node
 
         effect = QGraphicsDropShadowEffect()
@@ -194,7 +194,7 @@ class NodeGraphicsObject(QGraphicsObject):
         pos = QPoint(event.pos().x(), event.pos().y())
         geom = self._node.geometry
         state = self._node.state
-        if self._node.data.resizable() and geom.resize_rect.contains(pos):
+        if self._node.model.resizable() and geom.resize_rect.contains(pos):
             state.resizing = True
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent):
@@ -209,7 +209,7 @@ class NodeGraphicsObject(QGraphicsObject):
         state = self._node.state
         if state.resizing:
             diff = event.pos() - event.lastPos()
-            w = self._node.data.embedded_widget()
+            w = self._node.model.embedded_widget()
             if w:
                 self.prepareGeometryChange()
                 old_size = w.size() + QSize(diff.x(), diff.y())
@@ -293,7 +293,7 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         pos = event.pos()
         geom = self._node.geometry
-        if (self._node.data.resizable() and
+        if (self._node.model.resizable() and
                 geom.resize_rect.contains(QPoint(pos.x(), pos.y()))):
             self.setCursor(QCursor(Qt.SizeFDiagCursor))
         else:
@@ -325,7 +325,7 @@ class NodeGraphicsObject(QGraphicsObject):
 
     def embed_q_widget(self):
         geom = self._node.geometry
-        w = self._node.data.embedded_widget()
+        w = self._node.model.embedded_widget()
         if w is not None:
             self._proxy_widget = QGraphicsProxyWidget(self)
             self._proxy_widget.setWidget(w)

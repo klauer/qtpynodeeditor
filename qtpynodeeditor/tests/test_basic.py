@@ -160,7 +160,7 @@ def test_save_load(tmp_path, scene, view, model):
                           (False, 'output')])
 def test_smoke_reacting(scene, view, model, reset, port_type):
     node = scene.create_node(model)
-    dtype = node.data.data_type(port_type, 0)
+    dtype = node.model.data_type[port_type][0]
     node.react_to_possible_connection(
         reacting_port_type=port_type,
         reacting_data_type=dtype,

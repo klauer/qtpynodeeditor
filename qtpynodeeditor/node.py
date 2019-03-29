@@ -213,7 +213,7 @@ class Node(QObject, Serializable, NodeBase):
         """
         update the graphic part if the size of the embeddedwidget changes
         """
-        widget = self.data.embedded_widget()
+        widget = self.model.embedded_widget()
         if widget:
             widget.adjustSize()
 
