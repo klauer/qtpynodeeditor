@@ -152,12 +152,11 @@
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPointF</span>
 
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">ConnectionPolicy</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">,</span> <span class="n">ConnectionRequiresPortFailure</span><span class="p">,</span>
                          <span class="n">ConnectionSelfFailure</span><span class="p">,</span> <span class="n">ConnectionPointFailure</span><span class="p">,</span>
                          <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">ConnectionBase</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">INVALID</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">opposite_port</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">DefaultTypeConverter</span>
 
 
@@ -214,26 +213,25 @@
 
         <span class="c1"># 2) connection point is on top of the node port</span>
         <span class="n">connection_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_end_scene_position</span><span class="p">(</span><span class="n">required_port</span><span class="p">)</span>
-        <span class="n">port_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_port_index_under_scene_point</span><span class="p">(</span><span class="n">required_port</span><span class="p">,</span>
-                                                            <span class="n">connection_point</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">port_index</span> <span class="o">==</span> <span class="n">INVALID</span><span class="p">:</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_port_under_scene_point</span><span class="p">(</span><span class="n">required_port</span><span class="p">,</span>
+                                                <span class="n">connection_point</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConnectionPointFailure</span><span class="p">(</span>
                 <span class="n">f</span><span class="s1">&#39;Connection point </span><span class="si">{connection_point}</span><span class="s1"> is not on node </span><span class="si">{node}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># 3) Node port is vacant</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_port_is_empty</span><span class="p">(</span><span class="n">required_port</span><span class="p">,</span> <span class="n">port_index</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="o">.</span><span class="n">can_connect</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">(</span>
-                <span class="n">f</span><span class="s1">&#39;Port </span><span class="si">{required_port}</span><span class="s1"> </span><span class="si">{port_index}</span><span class="s1"> not empty&#39;</span>
+                <span class="n">f</span><span class="s1">&#39;Port </span><span class="si">{required_port}</span><span class="s1"> </span><span class="si">{port}</span><span class="s1"> cannot connect&#39;</span>
             <span class="p">)</span>
 
         <span class="c1"># 4) Connection type equals node port type, or there is a registered</span>
         <span class="c1">#    type conversion that can translate between the two</span>
         <span class="n">connection_data_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">opposite_port</span><span class="p">(</span><span class="n">required_port</span><span class="p">))</span>
-        <span class="n">model_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span>
 
-        <span class="n">candidate_node_data_type</span> <span class="o">=</span> <span class="n">model_target</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">required_port</span><span class="p">,</span> <span class="n">port_index</span><span class="p">)</span>
+        <span class="n">candidate_node_data_type</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">data_type</span>
         <span class="k">if</span> <span class="n">connection_data_type</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">candidate_node_data_type</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">port_index</span><span class="p">,</span> <span class="n">DefaultTypeConverter</span>
+            <span class="k">return</span> <span class="n">port</span><span class="p">,</span> <span class="n">DefaultTypeConverter</span>
 
         <span class="n">registry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span>
         <span class="k">if</span> <span class="n">required_port</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
@@ -242,7 +240,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">converter</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_type_converter</span><span class="p">(</span><span class="n">candidate_node_data_type</span><span class="p">,</span>
                                                     <span class="n">connection_data_type</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">port_index</span><span class="p">,</span> <span class="n">converter</span></div>
+        <span class="k">return</span> <span class="n">port</span><span class="p">,</span> <span class="n">converter</span></div>
 
 <div class="viewcode-block" id="NodeConnectionInteraction.try_connect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.try_connect">[docs]</a>    <span class="k">def</span> <span class="nf">try_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -262,7 +260,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># 1) Check conditions from &#39;can_connect&#39;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">port_index</span><span class="p">,</span> <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_connect</span><span class="p">()</span>
+            <span class="n">port</span><span class="p">,</span> <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_connect</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">NodeConnectionFailure</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cannot connect node&#39;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">ex</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Cannot connect node: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
@@ -274,22 +272,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">type_converter</span> <span class="o">=</span> <span class="n">converter</span>
 
         <span class="c1"># 2) Assign node to required port in Connection</span>
-        <span class="n">required_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_required_port</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">set_connection</span><span class="p">(</span><span class="n">required_port</span><span class="p">,</span> <span class="n">port_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">)</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">)</span>
 
         <span class="c1"># 3) Assign Connection to empty port in NodeState</span>
-
-        <span class="c1"># The port is not longer required after self function</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">set_node_to_port</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">required_port</span><span class="p">,</span> <span class="n">port_index</span><span class="p">)</span>
+        <span class="c1"># The port is not longer required after this function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">connect_to</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
 
         <span class="c1"># 4) Adjust Connection geometry</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">move_connections</span><span class="p">()</span>
 
         <span class="c1"># 5) Poke model to intiate data transfer</span>
-        <span class="n">out_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">out_node</span><span class="p">:</span>
-            <span class="n">out_port_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">get_port_index</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
-            <span class="n">out_node</span><span class="o">.</span><span class="n">on_data_updated</span><span class="p">(</span><span class="n">out_port_index</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">out_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">ports</span>
+        <span class="k">if</span> <span class="n">out_port</span><span class="p">:</span>
+            <span class="n">out_port</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">on_data_updated</span><span class="p">(</span><span class="n">out_port</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -332,7 +327,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : PortType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">required_port</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">required_port</span>
 
 <div class="viewcode-block" id="NodeConnectionInteraction.connection_end_scene_position"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.connection_end_scene_position">[docs]</a>    <span class="k">def</span> <span class="nf">connection_end_scene_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -364,14 +359,13 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : QPointF</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">port_scene_position</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">port_index</span><span class="p">)</span>
-        <span class="n">ngo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span>
-        <span class="k">return</span> <span class="n">ngo</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">p</span><span class="p">)</span></div>
+        <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">port_type</span><span class="p">][</span><span class="n">port_index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="n">get_mapped_scene_position</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="NodeConnectionInteraction.node_port_index_under_scene_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_index_under_scene_point">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_index_under_scene_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PortIndex</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeConnectionInteraction.node_port_under_scene_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_under_scene_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeBase</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Node port index under scene point</span>
+<span class="sd">        Node port under scene point</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -384,8 +378,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node_geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
         <span class="n">scene_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span>
-        <span class="n">port_index</span> <span class="o">=</span> <span class="n">node_geom</span><span class="o">.</span><span class="n">check_hit_scene_point</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">,</span> <span class="n">scene_transform</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">port_index</span></div>
+        <span class="k">return</span> <span class="n">node_geom</span><span class="o">.</span><span class="n">check_hit_scene_point</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">,</span> <span class="n">scene_transform</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodeConnectionInteraction.node_port_is_empty"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -400,12 +393,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">node_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span>
-        <span class="n">entries</span> <span class="o">=</span> <span class="n">node_state</span><span class="o">.</span><span class="n">get_entries</span><span class="p">(</span><span class="n">port_type</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">[</span><span class="n">port_index</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="n">out_policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">port_out_connection_policy</span><span class="p">(</span><span class="n">port_index</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span> <span class="ow">and</span> <span class="n">out_policy</span> <span class="o">==</span> <span class="n">ConnectionPolicy</span><span class="o">.</span><span class="n">many</span></div></div>
+        <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">port_type</span><span class="p">][</span><span class="n">port_index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="n">can_connect</span></div></div>
 </pre></div>
 
            </div>

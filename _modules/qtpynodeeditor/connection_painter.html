@@ -195,22 +195,22 @@
 
 
 <span class="k">def</span> <span class="nf">draw_sketch_line</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">state</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">connection</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
+        <span class="k">return</span>
 
-    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">setWidth</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_line_width</span><span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_color</span><span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">DashLine</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">QPen</span><span class="p">()</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">setWidth</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_line_width</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">construction_color</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">DashLine</span><span class="p">)</span>
 
-        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoBrush</span><span class="p">)</span>
 
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
 
-        <span class="n">cubic</span> <span class="o">=</span> <span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
-        <span class="c1"># cubic spline</span>
-        <span class="n">painter</span><span class="o">.</span><span class="n">drawPath</span><span class="p">(</span><span class="n">cubic</span><span class="p">)</span>
+    <span class="n">cubic</span> <span class="o">=</span> <span class="n">cubic_path</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
+    <span class="c1"># cubic spline</span>
+    <span class="n">painter</span><span class="o">.</span><span class="n">drawPath</span><span class="p">(</span><span class="n">cubic</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">draw_hovered_or_selected</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
@@ -240,9 +240,7 @@
 
 
 <span class="k">def</span> <span class="nf">draw_normal_line</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">state</span>
-
-    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">connection</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
         <span class="k">return</span>
 
     <span class="c1"># colors</span>

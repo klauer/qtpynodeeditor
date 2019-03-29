@@ -183,7 +183,6 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="n">scene</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">connection</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_geometry</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">geometry</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">connection</span>
 
@@ -207,7 +206,8 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="o">...</span>
 
-<div class="viewcode-block" id="ConnectionGraphicsObject.connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGraphicsObject.connection">[docs]</a>    <span class="k">def</span> <span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionBase</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionBase</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connection</span>
 
@@ -215,7 +215,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : Connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span>
 
 <div class="viewcode-block" id="ConnectionGraphicsObject.boundingRect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGraphicsObject.boundingRect">[docs]</a>    <span class="k">def</span> <span class="nf">boundingRect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QRectF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -323,8 +323,8 @@
         <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">views</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">locate_node_at</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">scenePos</span><span class="p">(),</span> <span class="n">view</span><span class="o">.</span><span class="n">transform</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">interact_with_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="n">state_required</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">required_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">interact_with_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="n">state_required</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">required_port</span>
         <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
             <span class="n">node</span><span class="o">.</span><span class="n">react_to_possible_connection</span><span class="p">(</span>
                 <span class="n">state_required</span><span class="p">,</span>
@@ -358,7 +358,7 @@
         <span class="k">if</span> <span class="n">node</span> <span class="ow">and</span> <span class="n">interaction</span><span class="o">.</span><span class="n">try_connect</span><span class="p">():</span>
             <span class="n">node</span><span class="o">.</span><span class="n">reset_reaction_to_connection</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">requires_port</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConnectionGraphicsObject.hoverEnterEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGraphicsObject.hoverEnterEvent">[docs]</a>    <span class="k">def</span> <span class="nf">hoverEnterEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">):</span>
@@ -371,8 +371,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_geometry</span><span class="o">.</span><span class="n">hovered</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">connection_hovered</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">(),</span>
-                                            <span class="n">event</span><span class="o">.</span><span class="n">screenPos</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">connection_hovered</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">screenPos</span><span class="p">())</span>
         <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ConnectionGraphicsObject.hoverLeaveEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGraphicsObject.hoverLeaveEvent">[docs]</a>    <span class="k">def</span> <span class="nf">hoverLeaveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">):</span>
@@ -385,7 +384,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_geometry</span><span class="o">.</span><span class="n">hovered</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">connection_hover_left</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">connection_hover_left</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
         <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">add_graphics_effect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

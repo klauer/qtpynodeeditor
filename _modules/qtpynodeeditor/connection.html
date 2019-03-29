@@ -154,14 +154,12 @@
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">Signal</span>
 
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">NodeBase</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">Serializable</span>
 <span class="kn">from</span> <span class="nn">.connection_geometry</span> <span class="k">import</span> <span class="n">ConnectionGeometry</span>
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="k">import</span> <span class="n">ConnectionGraphicsObject</span>
-<span class="kn">from</span> <span class="nn">.connection_state</span> <span class="k">import</span> <span class="n">ConnectionState</span>
-<span class="kn">from</span> <span class="nn">.node</span> <span class="k">import</span> <span class="n">NodeDataType</span>
+<span class="kn">from</span> <span class="nn">.node</span> <span class="k">import</span> <span class="n">NodeDataType</span><span class="p">,</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="k">import</span> <span class="n">NodeData</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">INVALID</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">PortIndex</span>
-<span class="kn">from</span> <span class="nn">.serializable</span> <span class="k">import</span> <span class="n">Serializable</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">Port</span>
 <span class="kn">from</span> <span class="nn">.style</span> <span class="k">import</span> <span class="n">StyleCollection</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">TypeConverter</span>
 
@@ -171,74 +169,56 @@
     <span class="n">connection_made_incomplete</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
     <span class="n">updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">out_node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                 <span class="n">style</span><span class="p">,</span> <span class="n">port_index_in</span><span class="o">=</span><span class="n">INVALID</span><span class="p">,</span> <span class="n">port_index_out</span><span class="o">=</span><span class="n">INVALID</span><span class="p">,</span>
-                 <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_a</span><span class="p">:</span> <span class="n">Port</span><span class="p">,</span> <span class="n">port_b</span><span class="p">:</span> <span class="n">Port</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">style</span><span class="p">:</span> <span class="n">StyleCollection</span><span class="p">,</span> <span class="n">converter</span><span class="p">:</span> <span class="n">TypeConverter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_uid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="o">=</span> <span class="n">in_node</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span> <span class="o">=</span> <span class="n">port_index_in</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span> <span class="o">=</span> <span class="n">out_node</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span> <span class="o">=</span> <span class="n">port_index_out</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_connection_state</span> <span class="o">=</span> <span class="n">ConnectionState</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">port_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;port_a is required&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">port_a</span> <span class="ow">is</span> <span class="n">port_b</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot connect a port to itself&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">port_a</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="n">in_port</span> <span class="o">=</span> <span class="n">port_a</span>
+            <span class="n">out_port</span> <span class="o">=</span> <span class="n">port_b</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">in_port</span> <span class="o">=</span> <span class="n">port_b</span>
+            <span class="n">out_port</span> <span class="o">=</span> <span class="n">port_a</span>
+
+        <span class="k">if</span> <span class="n">in_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">in_port</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">out_port</span><span class="o">.</span><span class="n">port_type</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot connect two ports of the same type&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span> <span class="n">in_port</span><span class="p">,</span>
+            <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="n">out_port</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">in_port</span> <span class="ow">and</span> <span class="n">out_port</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span>
+        <span class="k">elif</span> <span class="n">in_port</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_hovered_node</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="n">style</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_connection_geometry</span> <span class="o">=</span> <span class="n">ConnectionGeometry</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_graphics_object</span> <span class="o">=</span> <span class="kc">None</span>
-
-<div class="viewcode-block" id="Connection.from_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.from_node">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">,</span>
-                  <span class="n">style</span><span class="p">:</span> <span class="n">StyleCollection</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        New Connection is attached to the port of the given Node. The port has</span>
-<span class="sd">        parameters (port_type, port_index). The opposite connection end will</span>
-<span class="sd">        require another port.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        port_type : PortType</span>
-<span class="sd">        node : Node</span>
-<span class="sd">        port_index : PortIndex</span>
-<span class="sd">        style : StyleCollection</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">inst</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">)</span>
-        <span class="n">inst</span><span class="o">.</span><span class="n">set_node_to_port</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">port_type</span><span class="p">,</span> <span class="n">port_index</span><span class="p">)</span>
-        <span class="n">inst</span><span class="o">.</span><span class="n">required_port</span> <span class="o">=</span> <span class="n">opposite_port</span><span class="p">(</span><span class="n">port_type</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">inst</span></div>
-
-<div class="viewcode-block" id="Connection.from_nodes"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.from_nodes">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_nodes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">node_in</span><span class="p">,</span> <span class="n">port_index_in</span><span class="p">,</span> <span class="n">node_out</span><span class="p">,</span> <span class="n">port_index_out</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                   <span class="n">converter</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Create connection</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        node_in : Node</span>
-<span class="sd">        port_index_in : PortIndex</span>
-<span class="sd">        node_out : Node</span>
-<span class="sd">        port_index_out : PortIndex</span>
-<span class="sd">        converter : TypeConverter</span>
-<span class="sd">        style : StyleCollection</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">inst</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">node_in</span><span class="p">,</span> <span class="n">node_out</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">port_index_in</span><span class="o">=</span><span class="n">port_index_in</span><span class="p">,</span>
-                   <span class="n">port_index_out</span><span class="o">=</span><span class="n">port_index_out</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">)</span>
-        <span class="n">inst</span><span class="o">.</span><span class="n">set_node_to_port</span><span class="p">(</span><span class="n">node_in</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">port_index_in</span><span class="p">)</span>
-        <span class="n">inst</span><span class="o">.</span><span class="n">set_node_to_port</span><span class="p">(</span><span class="n">node_out</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">port_index_out</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">inst</span></div>
 
     <span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection_made_incomplete</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">propagate_empty_data</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_hovered_node</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">port_type</span><span class="p">,</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_ports</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">port</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">port</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graphics_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_graphics_object</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
@@ -251,7 +231,7 @@
             <span class="o">...</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">style</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleCollection</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -262,14 +242,15 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="p">):</span>
+        <span class="n">in_port</span><span class="p">,</span> <span class="n">out_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ports</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_port</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">out_port</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{}</span>
 
         <span class="n">connection_json</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">in_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">in_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span><span class="p">,</span>
-            <span class="n">out_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">out_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span><span class="p">,</span>
+            <span class="n">in_id</span><span class="o">=</span><span class="n">in_port</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">in_index</span><span class="o">=</span><span class="n">in_port</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">out_id</span><span class="o">=</span><span class="n">out_port</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">out_index</span><span class="o">=</span><span class="n">out_port</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="p">:</span>
@@ -287,7 +268,8 @@
 
         <span class="k">return</span> <span class="n">connection_json</span>
 
-<div class="viewcode-block" id="Connection.id"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.id">[docs]</a>    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unique identifier (uuid)</span>
 
@@ -295,7 +277,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        uuid : str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uid</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uid</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">required_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PortType</span><span class="p">:</span>
@@ -306,7 +288,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : PortType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_state</span><span class="o">.</span><span class="n">required_port</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span>
 
     <span class="nd">@required_port</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">required_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dragging</span><span class="p">:</span> <span class="n">PortType</span><span class="p">):</span>
@@ -317,13 +299,13 @@
 <span class="sd">        ----------</span>
 <span class="sd">        dragging : PortType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_connection_state</span><span class="o">.</span><span class="n">required_port</span> <span class="o">=</span> <span class="n">dragging</span>
-        <span class="k">if</span> <span class="n">dragging</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span> <span class="o">=</span> <span class="n">INVALID</span>
-        <span class="k">elif</span> <span class="n">dragging</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span> <span class="o">=</span> <span class="n">INVALID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">=</span> <span class="n">dragging</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_ports</span><span class="p">[</span><span class="n">dragging</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="o">...</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">port</span><span class="o">.</span><span class="n">remove_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">graphics_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionGraphicsObject</span><span class="p">:</span>
@@ -358,47 +340,28 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_graphics_object</span><span class="o">.</span><span class="n">move</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Connection.set_node_to_port"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.set_node_to_port">[docs]</a>    <span class="k">def</span> <span class="nf">set_node_to_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">):</span>
+<div class="viewcode-block" id="Connection.connect_to"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.connect_to">[docs]</a>    <span class="k">def</span> <span class="nf">connect_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="n">Port</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Assigns a node to the required port. It is assumed that there is a required port, no extra checks</span>
+<span class="sd">        Assigns a node to the required port.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        node : Node</span>
-<span class="sd">        port_type : PortType</span>
-<span class="sd">        port_index : PortIndex</span>
+<span class="sd">        port : Port</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">was_incomplete</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span>
-        <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span> <span class="o">=</span> <span class="n">node</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span> <span class="o">=</span> <span class="n">port_index</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="o">=</span> <span class="n">node</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span> <span class="o">=</span> <span class="n">port_index</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port</span><span class="o">.</span><span class="n">port_type</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Port already specified&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_connection_state</span><span class="o">.</span><span class="n">required_port</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span>
+        <span class="n">was_incomplete</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port</span><span class="o">.</span><span class="n">port_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_port</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span> <span class="ow">and</span> <span class="n">was_incomplete</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection_completed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">remove_from_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">erase_connection</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">,</span>
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">erase_connection</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Connection state</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        value : ConnectionState</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_state</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">port</span><span class="o">.</span><span class="n">remove_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionGeometry</span><span class="p">:</span>
@@ -411,7 +374,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_geometry</span>
 
-<div class="viewcode-block" id="Connection.get_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeBase</span><span class="p">:</span>
+<div class="viewcode-block" id="Connection.get_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get node</span>
 
@@ -423,15 +386,19 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : Node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span>
-        <span class="k">elif</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span></div>
+        <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="n">node</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO namedtuple; TODO order</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ports</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO namedtuple; TODO order</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">])</span>
 
 <div class="viewcode-block" id="Connection.get_port_index"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_port_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PortIndex</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -445,11 +412,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : PortIndex</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span>
-        <span class="k">elif</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span>
-        <span class="k">return</span> <span class="n">INVALID</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span><span class="o">.</span><span class="n">index</span></div>
 
 <div class="viewcode-block" id="Connection.clear_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.clear_node">[docs]</a>    <span class="k">def</span> <span class="nf">clear_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -462,12 +425,16 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connection_made_incomplete</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span> <span class="o">=</span> <span class="n">INVALID</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span> <span class="o">=</span> <span class="n">INVALID</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">port</span><span class="o">.</span><span class="n">remove_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">valid_ports</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">port_type</span><span class="p">:</span> <span class="n">port</span>
+                <span class="k">for</span> <span class="n">port_type</span><span class="p">,</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="p">}</span>
 
 <div class="viewcode-block" id="Connection.data_type"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.data_type">[docs]</a>    <span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeDataType</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -481,32 +448,15 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : NodeDataType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="o">.</span><span class="n">data</span>
-                     <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span>
-                     <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="o">.</span><span class="n">data</span>
-                     <span class="p">)</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span>
-                     <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span>
-                     <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span>
-                     <span class="p">)</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="n">ports</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_ports</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ports</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No ports set&#39;</span><span class="p">)</span>
 
-        <span class="n">index</span> <span class="o">=</span> <span class="n">INVALID</span>
-        <span class="n">valid_node</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="p">:</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span>
-            <span class="n">port_type</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span>
-            <span class="n">valid_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span><span class="p">:</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_port_index</span>
-            <span class="n">port_type</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span>
-            <span class="n">valid_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Should not reach here&quot;</span>
-
-        <span class="n">model</span> <span class="o">=</span> <span class="n">valid_node</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">valid_type</span><span class="p">,</span> <span class="o">=</span> <span class="n">ports</span>
+            <span class="k">return</span> <span class="n">ports</span><span class="p">[</span><span class="n">valid_type</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">type_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeConverter</span><span class="p">:</span>
@@ -532,26 +482,82 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="Connection.propagate_data"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.propagate_data">[docs]</a>    <span class="k">def</span> <span class="nf">propagate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">:</span> <span class="n">NodeData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Propagate data</span>
+<span class="sd">        Propagate the given data from the output port -&gt; input port.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        node_data : NodeData</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="p">:</span>
+        <span class="n">in_port</span><span class="p">,</span> <span class="n">out_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ports</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_port</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="p">:</span>
             <span class="n">node_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="p">(</span><span class="n">node_data</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_in_node</span><span class="o">.</span><span class="n">propagate_data</span><span class="p">(</span><span class="n">node_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_port_index</span><span class="p">)</span></div>
+        <span class="n">in_port</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">propagate_data</span><span class="p">(</span><span class="n">node_data</span><span class="p">,</span> <span class="n">in_port</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+        <span class="s1">&#39;Input node&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">]</span><span class="o">.</span><span class="n">node</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+        <span class="s1">&#39;Output node&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">]</span><span class="o">.</span><span class="n">node</span>
 
     <span class="k">def</span> <span class="nf">propagate_empty_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_data</span><span class="p">(</span><span class="n">NodeData</span><span class="p">())</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_data</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">last_hovered_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Last hovered node</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : Node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_hovered_node</span>
+
+    <span class="nd">@last_hovered_node</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">last_hovered_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set last hovered node</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : Node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_hovered_node</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_hovered_node</span><span class="o">.</span><span class="n">reset_reaction_to_connection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_hovered_node</span> <span class="o">=</span> <span class="n">node</span>
+
+<div class="viewcode-block" id="Connection.interact_with_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.interact_with_node">[docs]</a>    <span class="k">def</span> <span class="nf">interact_with_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interact with node</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : Node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_hovered_node</span> <span class="o">=</span> <span class="n">node</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">requires_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Requires port</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span></div>
 </pre></div>
 
            </div>

@@ -155,9 +155,9 @@
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">Signal</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">style</span> <span class="k">as</span> <span class="n">style_module</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Serializable</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">ConnectionPolicy</span>
-<span class="kn">from</span> <span class="nn">.serializable</span> <span class="k">import</span> <span class="n">Serializable</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortIndex</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">Port</span>
 
 
 <span class="n">NodeDataType</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;NodeDataType&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">))</span>
@@ -204,8 +204,11 @@
                     <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span>
                     <span class="p">}</span>
 
-    <span class="n">data_updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">PortIndex</span><span class="p">)</span>
-    <span class="n">data_invalidated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">PortIndex</span><span class="p">)</span>
+    <span class="c1"># data_updated and data_invalidated refer to the port index that has</span>
+    <span class="c1"># changed:</span>
+    <span class="n">data_updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">data_invalidated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
     <span class="n">computing_started</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">()</span>
     <span class="n">computing_finished</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">()</span>
     <span class="n">embedded_widget_size_updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">()</span>
@@ -330,14 +333,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">node</span>
 
-<div class="viewcode-block" id="NodeDataModel.set_in_data"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeDataModel.set_in_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_in_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">:</span> <span class="n">NodeData</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeDataModel.set_in_data"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeDataModel.set_in_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_in_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">:</span> <span class="n">NodeData</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="n">Port</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Triggers the algorithm; to be overridden by subclasses</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        node_data : NodeData</span>
-<span class="sd">        port : PortIndex</span>
+<span class="sd">        port : Port</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="o">...</span></div>
 

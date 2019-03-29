@@ -110,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#connection">Connection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#connectiongeometry">ConnectionGeometry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#connectiongraphicsobject">ConnectionGraphicsObject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#connectionstate">ConnectionState</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ports">Ports</a><ul>
@@ -222,21 +221,31 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="qtpynodeeditor.FlowScene.connections">
-<code class="descname">connections</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.connections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connections</p>
+<dt id="qtpynodeeditor.FlowScene.create_connection">
+<code class="descname">create_connection</code><span class="sig-paren">(</span><em>port_a: qtpynodeeditor.port.Port</em>, <em>port_b: qtpynodeeditor.port.Port = None</em>, <em>*</em>, <em>converter: qtpynodeeditor.type_converter.TypeConverter = None</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a connection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>conn</strong><span class="classifier">list of Connection</span></dt><dd></dd>
+<dt><strong>port_a</strong><span class="classifier">Port</span></dt><dd><p>The first port, either input or output</p>
+</dd>
+<dt><strong>port_b</strong><span class="classifier">Port, optional</span></dt><dd><p>The second port, opposite of the type of port_a</p>
+</dd>
+<dt><strong>converter</strong><span class="classifier">TypeConverter, optional</span></dt><dd><p>The type converter to use for data propagation</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">Connection</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="qtpynodeeditor.FlowScene.create_connection">
-<code class="descname">create_connection</code><span class="sig-paren">(</span><em>node_in: qtpynodeeditor.node.Node</em>, <em>port_index_in: int</em>, <em>node_out: qtpynodeeditor.node.Node</em>, <em>port_index_out: int</em>, <em>converter: qtpynodeeditor.type_converter.TypeConverter</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection" title="Permalink to this definition">¶</a></dt>
+<dt id="qtpynodeeditor.FlowScene.create_connection_by_index">
+<code class="descname">create_connection_by_index</code><span class="sig-paren">(</span><em>node_in: qtpynodeeditor.node.Node</em>, <em>port_index_in: int</em>, <em>node_out: qtpynodeeditor.node.Node</em>, <em>port_index_out: int</em>, <em>converter: qtpynodeeditor.type_converter.TypeConverter</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection_by_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -257,29 +266,9 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="qtpynodeeditor.FlowScene.create_connection_node">
-<code class="descname">create_connection_node</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em>, <em>connected_port: qtpynodeeditor.enums.PortType</em>, <em>port_index: int</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create connection</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-<dt><strong>connected_port</strong><span class="classifier">PortType</span></dt><dd></dd>
-<dt><strong>port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="qtpynodeeditor.FlowScene.create_node">
 <code class="descname">create_node</code><span class="sig-paren">(</span><em>data_model: qtpynodeeditor.node_data.NodeDataModel</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create node</p>
+<dd><p>Create a node in the scene</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -289,114 +278,6 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>value</strong><span class="classifier">Node</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.delete_connection">
-<code class="descname">delete_connection</code><span class="sig-paren">(</span><em>connection: qtpynodeeditor.connection.Connection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.delete_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.delete_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete connection</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>connection</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.get_node_position">
-<code class="descname">get_node_position</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.get_node_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.get_node_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get node position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">QPointF</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.get_node_size">
-<code class="descname">get_node_size</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QSizeF<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.get_node_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.get_node_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get node size</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">QSizeF</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.iterate_over_node_data">
-<code class="descname">iterate_over_node_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.iterate_over_node_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.iterate_over_node_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator: Iterate over node data</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.iterate_over_node_data_dependent_order">
-<code class="descname">iterate_over_node_data_dependent_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.iterate_over_node_data_dependent_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.iterate_over_node_data_dependent_order" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator: Iterate over node data dependent order</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.iterate_over_nodes">
-<code class="descname">iterate_over_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.iterate_over_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.iterate_over_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator: Iterate over nodes</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.nodes">
-<code class="descname">nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nodes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">dict</span></dt><dd><p>Key: uuid
-Value: Node</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="qtpynodeeditor.FlowScene.registry">
-<code class="descname">registry</code><a class="headerlink" href="#qtpynodeeditor.FlowScene.registry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Registry</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">DataModelRegistry</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.remove_node">
-<code class="descname">remove_node</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.remove_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.remove_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove node</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -423,7 +304,7 @@ Value: Node</p>
 <dl class="method">
 <dt id="qtpynodeeditor.FlowScene.restore_node">
 <code class="descname">restore_node</code><span class="sig-paren">(</span><em>node_json: dict</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.restore_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.restore_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Restore node</p>
+<dd><p>Restore a node from a state dictinoary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -451,83 +332,10 @@ Value: Node</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.send_connection_created_to_nodes">
-<code class="descname">send_connection_created_to_nodes</code><span class="sig-paren">(</span><em>conn: qtpynodeeditor.connection.Connection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.send_connection_created_to_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.send_connection_created_to_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send connection created to nodes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>conn</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.send_connection_deleted_to_nodes">
-<code class="descname">send_connection_deleted_to_nodes</code><span class="sig-paren">(</span><em>conn: qtpynodeeditor.connection.Connection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.send_connection_deleted_to_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.send_connection_deleted_to_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send connection deleted to nodes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>conn</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.set_node_position">
-<code class="descname">set_node_position</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em>, <em>pos: PyQt5.QtCore.QPointF</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.set_node_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.set_node_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set node position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-<dt><strong>pos</strong><span class="classifier">QPointF</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.setup_connection_signals">
-<code class="descname">setup_connection_signals</code><span class="sig-paren">(</span><em>conn: qtpynodeeditor.connection.Connection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.setup_connection_signals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.setup_connection_signals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setup connection signals</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>conn</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="qtpynodeeditor.FlowScene.style_collection">
 <code class="descname">style_collection</code><a class="headerlink" href="#qtpynodeeditor.FlowScene.style_collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>The style collection for the scene</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.FlowScene.to_digraph">
-<code class="descname">to_digraph</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.to_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.to_digraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a networkx digraph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>digraph</strong><span class="classifier">networkx.DiGraph</span></dt><dd><p>The generated DiGraph</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>ImportError</strong></dt><dd><p>If networkx is unavailable</p>
-</dd>
-</dl>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -881,12 +689,13 @@ Value: Node</p>
 
 <dl class="method">
 <dt id="qtpynodeeditor.Node.on_data_updated">
-<code class="descname">on_data_updated</code><span class="sig-paren">(</span><em>index: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.on_data_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.on_data_updated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches data from model’s OUT #index port and propagates it to the connection</p>
+<code class="descname">on_data_updated</code><span class="sig-paren">(</span><em>port: qtpynodeeditor.port.Port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.on_data_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.on_data_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches data from model’s output port and propagates it along the
+connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
+<dt><strong>port</strong><span class="classifier">Port</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -898,15 +707,33 @@ Value: Node</p>
 <dd><p>update the graphic part if the size of the embeddedwidget changes</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="qtpynodeeditor.Node.position">
+<code class="descname">position</code><a class="headerlink" href="#qtpynodeeditor.Node.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the node position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">QPointF</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="qtpynodeeditor.Node.propagate_data">
-<code class="descname">propagate_data</code><span class="sig-paren">(</span><em>node_data: qtpynodeeditor.node_data.NodeData</em>, <em>in_port_index: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.propagate_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">propagate_data</code><span class="sig-paren">(</span><em>node_data: qtpynodeeditor.node_data.NodeData</em>, <em>input_port: qtpynodeeditor.port.Port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.propagate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Propagates incoming data to the underlying model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>node_data</strong><span class="classifier">NodeData</span></dt><dd></dd>
-<dt><strong>in_port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
+<dt><strong>input_port</strong><span class="classifier">PortIndex</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -928,6 +755,24 @@ Value: Node</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="qtpynodeeditor.Node.size">
+<code class="descname">size</code><a class="headerlink" href="#qtpynodeeditor.Node.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the node size</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">QSizeF</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="qtpynodeeditor.Node.state">
 <code class="descname">state</code><a class="headerlink" href="#qtpynodeeditor.Node.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node state</p>
@@ -938,6 +783,12 @@ Value: Node</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="qtpynodeeditor.Node.style">
+<code class="descname">style</code><a class="headerlink" href="#qtpynodeeditor.Node.style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node style</p>
 </dd></dl>
 
 </dd></dl>
@@ -1184,13 +1035,13 @@ pickling/saving to JSON.</p>
 
 <dl class="method">
 <dt id="qtpynodeeditor.NodeDataModel.set_in_data">
-<code class="descname">set_in_data</code><span class="sig-paren">(</span><em>node_data: qtpynodeeditor.node_data.NodeData</em>, <em>port: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.set_in_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.set_in_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_in_data</code><span class="sig-paren">(</span><em>node_data: qtpynodeeditor.node_data.NodeData</em>, <em>port: qtpynodeeditor.port.Port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.set_in_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.set_in_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Triggers the algorithm; to be overridden by subclasses</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>node_data</strong><span class="classifier">NodeData</span></dt><dd></dd>
-<dt><strong>port</strong><span class="classifier">PortIndex</span></dt><dd></dd>
+<dt><strong>port</strong><span class="classifier">Port</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -1235,7 +1086,7 @@ pickling/saving to JSON.</p>
 <h3>NodeState<a class="headerlink" href="#nodestate" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="qtpynodeeditor.NodeState">
-<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">NodeState</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">NodeState</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="qtpynodeeditor.NodeState.connections">
 <code class="descname">connections</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>port_index: int</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.connections" title="Permalink to this definition">¶</a></dt>
@@ -1265,25 +1116,6 @@ pickling/saving to JSON.</p>
 <dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
 <dt><strong>port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
 <dt><strong>connection</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.NodeState.get_entries">
-<code class="descname">get_entries</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.get_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.get_entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns vector of connections.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">list</span></dt><dd><p>List of Connection lists</p>
-</dd>
 </dl>
 </dd>
 </dl>
@@ -1355,21 +1187,6 @@ pickling/saving to JSON.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="qtpynodeeditor.NodeState.set_connection">
-<code class="descname">set_connection</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>port_index: int</em>, <em>connection: qtpynodeeditor.base.ConnectionBase</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.set_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.set_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set connection</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
-<dt><strong>port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-<dt><strong>connection</strong><span class="classifier">Connection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="qtpynodeeditor.NodeState.set_reaction">
 <code class="descname">set_reaction</code><span class="sig-paren">(</span><em>reaction: qtpynodeeditor.enums.ReactToConnectionState</em>, <em>reacting_port_type: qtpynodeeditor.enums.PortType = &lt;PortType.none: 'none'&gt;</em>, <em>reacting_data_type: qtpynodeeditor.node_data.NodeDataType = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.set_reaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.set_reaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set reaction</p>
@@ -1411,7 +1228,7 @@ pickling/saving to JSON.</p>
 <h3>NodeGeometry<a class="headerlink" href="#nodegeometry" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="qtpynodeeditor.NodeGeometry">
-<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">NodeGeometry</code><span class="sig-paren">(</span><em>data_model: qtpynodeeditor.node_data.NodeDataModel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">NodeGeometry</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.base.NodeBase</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="qtpynodeeditor.NodeGeometry.bounding_rect">
 <code class="descname">bounding_rect</code><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.bounding_rect" title="Permalink to this definition">¶</a></dt>
@@ -1484,7 +1301,7 @@ upper left corner.</p>
 
 <dl class="method">
 <dt id="qtpynodeeditor.NodeGeometry.check_hit_scene_point">
-<code class="descname">check_hit_scene_point</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>scene_point: PyQt5.QtCore.QPointF</em>, <em>scene_transform: PyQt5.QtGui.QTransform</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.check_hit_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.check_hit_scene_point" title="Permalink to this definition">¶</a></dt>
+<code class="descname">check_hit_scene_point</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>scene_point: PyQt5.QtCore.QPointF</em>, <em>scene_transform: PyQt5.QtGui.QTransform</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.port.Port<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.check_hit_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.check_hit_scene_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check hit scene point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1496,7 +1313,7 @@ upper left corner.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">PortIndex</span></dt><dd></dd>
+<dt><strong>value</strong><span class="classifier">Port</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -1676,6 +1493,24 @@ upper left corner.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>value</strong><span class="classifier">QRect</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="qtpynodeeditor.NodeGeometry.size">
+<code class="descname">size</code><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the node size</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">QSizeF</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -1899,9 +1734,9 @@ upper left corner.</p>
 <dd><p>Visits all attached connections and corrects their corresponding end points.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="attribute">
 <dt id="qtpynodeeditor.NodeGraphicsObject.node">
-<code class="descname">node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">node</code><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -2055,6 +1890,19 @@ upper left corner.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="qtpynodeeditor.Connection.connect_to">
+<code class="descname">connect_to</code><span class="sig-paren">(</span><em>port: qtpynodeeditor.port.Port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.connect_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.connect_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assigns a node to the required port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>port</strong><span class="classifier">Port</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="qtpynodeeditor.Connection.data_type">
 <code class="descname">data_type</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeDataType<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.data_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.data_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data type</p>
@@ -2067,42 +1915,6 @@ upper left corner.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>value</strong><span class="classifier">NodeDataType</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="qtpynodeeditor.Connection.from_node">
-<em class="property">classmethod </em><code class="descname">from_node</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>node: qtpynodeeditor.base.NodeBase</em>, <em>port_index: int</em>, <em>style: qtpynodeeditor.style.StyleCollection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.from_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.from_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>New Connection is attached to the port of the given Node. The port has
-parameters (port_type, port_index). The opposite connection end will
-require another port.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-<dt><strong>port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-<dt><strong>style</strong><span class="classifier">StyleCollection</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="qtpynodeeditor.Connection.from_nodes">
-<em class="property">classmethod </em><code class="descname">from_nodes</code><span class="sig-paren">(</span><em>node_in</em>, <em>port_index_in</em>, <em>node_out</em>, <em>port_index_out</em>, <em>*</em>, <em>converter</em>, <em>style</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.from_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.from_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create connection</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node_in</strong><span class="classifier">Node</span></dt><dd></dd>
-<dt><strong>port_index_in</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-<dt><strong>node_out</strong><span class="classifier">Node</span></dt><dd></dd>
-<dt><strong>port_index_out</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-<dt><strong>converter</strong><span class="classifier">TypeConverter</span></dt><dd></dd>
-<dt><strong>style</strong><span class="classifier">StyleCollection</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -2123,7 +1935,7 @@ require another port.</p>
 
 <dl class="method">
 <dt id="qtpynodeeditor.Connection.get_node">
-<code class="descname">get_node</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.base.NodeBase<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.get_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.get_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_node</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.get_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.get_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get node</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2170,14 +1982,33 @@ require another port.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="attribute">
 <dt id="qtpynodeeditor.Connection.id">
-<code class="descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">id</code><a class="headerlink" href="#qtpynodeeditor.Connection.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unique identifier (uuid)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>uuid</strong><span class="classifier">str</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="qtpynodeeditor.Connection.input_node">
+<code class="descname">input_node</code><a class="headerlink" href="#qtpynodeeditor.Connection.input_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="qtpynodeeditor.Connection.interact_with_node">
+<code class="descname">interact_with_node</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.interact_with_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.interact_with_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interact with node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -2196,10 +2027,29 @@ require another port.</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="qtpynodeeditor.Connection.last_hovered_node">
+<code class="descname">last_hovered_node</code><a class="headerlink" href="#qtpynodeeditor.Connection.last_hovered_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last hovered node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">Node</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="qtpynodeeditor.Connection.output">
+<code class="descname">output</code><a class="headerlink" href="#qtpynodeeditor.Connection.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output node</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="qtpynodeeditor.Connection.propagate_data">
 <code class="descname">propagate_data</code><span class="sig-paren">(</span><em>node_data: qtpynodeeditor.node_data.NodeData</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.propagate_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Propagate data</p>
+<dd><p>Propagate the given data from the output port -&gt; input port.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2222,29 +2072,14 @@ require another port.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="qtpynodeeditor.Connection.set_node_to_port">
-<code class="descname">set_node_to_port</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.base.NodeBase</em>, <em>port_type: qtpynodeeditor.enums.PortType</em>, <em>port_index: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.set_node_to_port"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.set_node_to_port" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assigns a node to the required port. It is assumed that there is a required port, no extra checks</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
-<dt><strong>port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
-<dt id="qtpynodeeditor.Connection.state">
-<code class="descname">state</code><a class="headerlink" href="#qtpynodeeditor.Connection.state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connection state</p>
+<dt id="qtpynodeeditor.Connection.requires_port">
+<code class="descname">requires_port</code><a class="headerlink" href="#qtpynodeeditor.Connection.requires_port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requires port</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">ConnectionState</span></dt><dd></dd>
+<dt><strong>value</strong><span class="classifier">bool</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -2414,9 +2249,9 @@ require another port.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="attribute">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.connection">
-<code class="descname">connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.base.ConnectionBase<a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.connection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">connection</code><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -2537,79 +2372,6 @@ require another port.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="connectionstate">
-<h3>ConnectionState<a class="headerlink" href="#connectionstate" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt id="qtpynodeeditor.ConnectionState">
-<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">ConnectionState</code><span class="sig-paren">(</span><em>port: qtpynodeeditor.enums.PortType = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_state.html#ConnectionState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionState" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="qtpynodeeditor.ConnectionState.interact_with_node">
-<code class="descname">interact_with_node</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_state.html#ConnectionState.interact_with_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionState.interact_with_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interact with node</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.ConnectionState.last_hovered_node">
-<code class="descname">last_hovered_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/connection_state.html#ConnectionState.last_hovered_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionState.last_hovered_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Last hovered node</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">Node</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="qtpynodeeditor.ConnectionState.required_port">
-<code class="descname">required_port</code><a class="headerlink" href="#qtpynodeeditor.ConnectionState.required_port" title="Permalink to this definition">¶</a></dt>
-<dd><p>Required port</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">PortType</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="qtpynodeeditor.ConnectionState.requires_port">
-<code class="descname">requires_port</code><a class="headerlink" href="#qtpynodeeditor.ConnectionState.requires_port" title="Permalink to this definition">¶</a></dt>
-<dd><p>Requires port</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">bool</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="qtpynodeeditor.ConnectionState.set_last_hovered_node">
-<code class="descname">set_last_hovered_node</code><span class="sig-paren">(</span><em>node: qtpynodeeditor.node.Node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_state.html#ConnectionState.set_last_hovered_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionState.set_last_hovered_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set last hovered node</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>node</strong><span class="classifier">Node</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 </div>
 <div class="section" id="ports">
 <h2>Ports<a class="headerlink" href="#ports" title="Permalink to this headline">¶</a></h2>
@@ -2617,8 +2379,27 @@ require another port.</p>
 <h3>Port<a class="headerlink" href="#port" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="qtpynodeeditor.Port">
-<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">Port</code><span class="sig-paren">(</span><em>type_</em>, <em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">class </em><code class="descclassname">qtpynodeeditor.</code><code class="descname">Port</code><span class="sig-paren">(</span><em>parent: QObject = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="qtpynodeeditor.Port.get_mapped_scene_position">
+<code class="descname">get_mapped_scene_position</code><span class="sig-paren">(</span><em>transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.get_mapped_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.get_mapped_scene_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node port scene position after a transform</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
+<dt><strong>port_index</strong><span class="classifier">PortIndex</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">QPointF</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 <div class="section" id="portindex">
@@ -2780,25 +2561,6 @@ type conversion that can translate between the two</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="qtpynodeeditor.NodeConnectionInteraction.node_port_index_under_scene_point">
-<code class="descname">node_port_index_under_scene_point</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>scene_point: PyQt5.QtCore.QPointF</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_index_under_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_index_under_scene_point" title="Permalink to this definition">¶</a></dt>
-<dd><p>Node port index under scene point</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
-<dt><strong>p</strong><span class="classifier">QPointF</span></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">PortIndex</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty">
 <code class="descname">node_port_is_empty</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>port_index: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node port is empty</p>
@@ -2831,6 +2593,25 @@ type conversion that can translate between the two</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>value</strong><span class="classifier">QPointF</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point">
+<code class="descname">node_port_under_scene_point</code><span class="sig-paren">(</span><em>port_type: qtpynodeeditor.enums.PortType</em>, <em>scene_point: PyQt5.QtCore.QPointF</em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.base.NodeBase<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_under_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node port under scene point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>port_type</strong><span class="classifier">PortType</span></dt><dd></dd>
+<dt><strong>p</strong><span class="classifier">QPointF</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>value</strong><span class="classifier">PortIndex</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>

@@ -154,7 +154,7 @@
 
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span>
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">ConnectionPolicy</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="k">import</span> <span class="n">NodeDataModel</span>
 <span class="kn">from</span> <span class="nn">.node_geometry</span> <span class="k">import</span> <span class="n">NodeGeometry</span>
 <span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="k">import</span> <span class="n">NodeGraphicsObject</span>
@@ -300,27 +300,23 @@
 <span class="sd">        node_style : NodeStyle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">metrics</span> <span class="o">=</span> <span class="n">painter</span><span class="o">.</span><span class="n">fontMetrics</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">port_type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entries</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_entries</span><span class="p">(</span><span class="n">port_type</span><span class="p">)):</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">port_scene_position</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">:</span>
-                    <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">node_style</span><span class="o">.</span><span class="n">font_color_faded</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">node_style</span><span class="o">.</span><span class="n">font_color</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">port_caption_visible</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">port_caption</span><span class="p">[</span><span class="n">port_type</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">ports</span><span class="p">:</span>
+            <span class="n">scene_pos</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">scene_position</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
+                <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">node_style</span><span class="o">.</span><span class="n">font_color_faded</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">node_style</span><span class="o">.</span><span class="n">font_color</span><span class="p">)</span>
 
-                <span class="n">rect</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">setY</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-                    <span class="n">p</span><span class="o">.</span><span class="n">setX</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-                    <span class="n">p</span><span class="o">.</span><span class="n">setX</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mf">5.0</span> <span class="o">-</span> <span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
+            <span class="n">display_text</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">display_text</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">(</span><span class="n">display_text</span><span class="p">)</span>
+            <span class="n">scene_pos</span><span class="o">.</span><span class="n">setY</span><span class="p">(</span><span class="n">scene_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">port</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+                <span class="n">scene_pos</span><span class="o">.</span><span class="n">setX</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">port</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                <span class="n">scene_pos</span><span class="o">.</span><span class="n">setX</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mf">5.0</span> <span class="o">-</span> <span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">())</span>
 
-                <span class="n">painter</span><span class="o">.</span><span class="n">drawText</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+            <span class="n">painter</span><span class="o">.</span><span class="n">drawText</span><span class="p">(</span><span class="n">scene_pos</span><span class="p">,</span> <span class="n">display_text</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodePainter.draw_connection_points"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainter.draw_connection_points">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">draw_connection_points</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="n">NodeGeometry</span><span class="p">,</span>
@@ -342,46 +338,41 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">diameter</span> <span class="o">=</span> <span class="n">node_style</span><span class="o">.</span><span class="n">connection_point_diameter</span>
         <span class="n">reduced_diameter</span> <span class="o">=</span> <span class="n">diameter</span> <span class="o">*</span> <span class="mf">0.6</span>
-        <span class="k">for</span> <span class="n">port_type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entries</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_entries</span><span class="p">(</span><span class="n">port_type</span><span class="p">)):</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">port_scene_position</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                <span class="n">data_type</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                <span class="n">can_connect</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="ow">not</span> <span class="n">entries</span> <span class="ow">or</span>
-                    <span class="p">(</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span> <span class="ow">and</span>
-                     <span class="n">model</span><span class="o">.</span><span class="n">port_out_connection_policy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">ConnectionPolicy</span><span class="o">.</span><span class="n">many</span>
-                     <span class="p">)</span>
-                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">ports</span><span class="p">:</span>
+            <span class="n">scene_pos</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">scene_position</span>
+            <span class="n">can_connect</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">can_connect</span>
+            <span class="n">port_type</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">port_type</span>
+            <span class="n">data_type</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">data_type</span>
 
-                <span class="n">r</span> <span class="o">=</span> <span class="mf">1.0</span>
-                <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">is_reacting</span> <span class="ow">and</span> <span class="n">can_connect</span> <span class="ow">and</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">state</span><span class="o">.</span><span class="n">reacting_port_type</span><span class="p">:</span>
-                    <span class="n">diff</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">dragging_pos</span> <span class="o">-</span> <span class="n">p</span>
-                    <span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">QPointF</span><span class="o">.</span><span class="n">dotProduct</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">diff</span><span class="p">))</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">is_reacting</span> <span class="ow">and</span> <span class="n">can_connect</span> <span class="ow">and</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">state</span><span class="o">.</span><span class="n">reacting_port_type</span><span class="p">:</span>
+                <span class="n">diff</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">dragging_pos</span> <span class="o">-</span> <span class="n">scene_pos</span>
+                <span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">QPointF</span><span class="o">.</span><span class="n">dotProduct</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">diff</span><span class="p">))</span>
 
-                    <span class="n">registry</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">registry</span>
-                    <span class="n">dtype1</span><span class="p">,</span> <span class="n">dtype2</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">reacting_data_type</span><span class="p">,</span> <span class="n">data_type</span>
-                    <span class="k">if</span> <span class="n">port_type</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-                        <span class="n">dtype2</span><span class="p">,</span> <span class="n">dtype1</span> <span class="o">=</span> <span class="n">dtype1</span><span class="p">,</span> <span class="n">dtype2</span>
+                <span class="n">registry</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">registry</span>
+                <span class="n">dtype1</span><span class="p">,</span> <span class="n">dtype2</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">reacting_data_type</span><span class="p">,</span> <span class="n">data_type</span>
+                <span class="k">if</span> <span class="n">port_type</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+                    <span class="n">dtype2</span><span class="p">,</span> <span class="n">dtype1</span> <span class="o">=</span> <span class="n">dtype1</span><span class="p">,</span> <span class="n">dtype2</span>
 
-                    <span class="n">type_convertable</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_type_converter</span><span class="p">(</span><span class="n">dtype1</span><span class="p">,</span> <span class="n">dtype2</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="k">if</span> <span class="n">dtype1</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">dtype2</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="n">type_convertable</span><span class="p">:</span>
-                        <span class="n">thres</span> <span class="o">=</span> <span class="mf">40.0</span>
-                        <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="mf">2.0</span> <span class="o">-</span> <span class="n">dist</span> <span class="o">/</span> <span class="n">thres</span><span class="p">)</span>
-                             <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">thres</span>
-                             <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">thres</span> <span class="o">=</span> <span class="mf">80.0</span>
-                        <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">dist</span> <span class="o">/</span> <span class="n">thres</span><span class="p">)</span>
-                             <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">thres</span>
-                             <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">use_data_defined_colors</span><span class="p">:</span>
-                    <span class="n">brush</span> <span class="o">=</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">(</span><span class="n">data_type</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">type_convertable</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_type_converter</span><span class="p">(</span><span class="n">dtype1</span><span class="p">,</span> <span class="n">dtype2</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">dtype1</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">dtype2</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="n">type_convertable</span><span class="p">:</span>
+                    <span class="n">thres</span> <span class="o">=</span> <span class="mf">40.0</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="mf">2.0</span> <span class="o">-</span> <span class="n">dist</span> <span class="o">/</span> <span class="n">thres</span><span class="p">)</span>
+                         <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">thres</span>
+                         <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">brush</span> <span class="o">=</span> <span class="n">node_style</span><span class="o">.</span><span class="n">connection_point_color</span>
+                    <span class="n">thres</span> <span class="o">=</span> <span class="mf">80.0</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">dist</span> <span class="o">/</span> <span class="n">thres</span><span class="p">)</span>
+                         <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">thres</span>
+                         <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
 
-                <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">brush</span><span class="p">)</span>
-                <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">reduced_diameter</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">reduced_diameter</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">use_data_defined_colors</span><span class="p">:</span>
+                <span class="n">brush</span> <span class="o">=</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">(</span><span class="n">data_type</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">brush</span> <span class="o">=</span> <span class="n">node_style</span><span class="o">.</span><span class="n">connection_point_color</span>
+
+            <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">brush</span><span class="p">)</span>
+            <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">scene_pos</span><span class="p">,</span> <span class="n">reduced_diameter</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">reduced_diameter</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodePainter.draw_filled_connection_points"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainter.draw_filled_connection_points">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">draw_filled_connection_points</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="n">NodeGeometry</span><span class="p">,</span>
@@ -403,20 +394,18 @@
 <span class="sd">        connection_style : ConnectionStyle</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">diameter</span> <span class="o">=</span> <span class="n">node_style</span><span class="o">.</span><span class="n">connection_point_diameter</span>
-        <span class="k">for</span> <span class="n">port_type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entries</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_entries</span><span class="p">(</span><span class="n">port_type</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">:</span>
-                    <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">ports</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
+                <span class="k">continue</span>
 
-                <span class="n">p</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">port_scene_position</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                <span class="n">data_type</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">use_data_defined_colors</span><span class="p">:</span>
-                    <span class="n">c</span> <span class="o">=</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">(</span><span class="n">data_type</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">c</span> <span class="o">=</span> <span class="n">node_style</span><span class="o">.</span><span class="n">filled_connection_point_color</span>
-                <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-                <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-                <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">diameter</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">diameter</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">)</span></div>
+            <span class="n">scene_pos</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">scene_position</span>
+            <span class="k">if</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">use_data_defined_colors</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">connection_style</span><span class="o">.</span><span class="n">get_normal_color</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">node_style</span><span class="o">.</span><span class="n">filled_connection_point_color</span>
+            <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">scene_pos</span><span class="p">,</span> <span class="n">diameter</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">diameter</span> <span class="o">*</span> <span class="mf">0.4</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodePainter.draw_resize_rect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainter.draw_resize_rect">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">draw_resize_rect</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="n">NodeGeometry</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">NodeDataModel</span><span class="p">):</span>

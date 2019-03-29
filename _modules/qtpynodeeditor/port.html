@@ -148,33 +148,119 @@
            <div itemprop="articleBody">
             
   <h1>Source code for qtpynodeeditor.port</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">PortType</span>
+<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">Signal</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">ConnectionPolicy</span>
 
 
 <span class="c1"># TODO</span>
 <span class="n">PortIndex</span> <span class="o">=</span> <span class="nb">int</span>
 
 
-<span class="n">INVALID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-
-<div class="viewcode-block" id="Port"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Port">[docs]</a><span class="k">class</span> <span class="nc">Port</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">type_</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">index_is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">!=</span> <span class="n">INVALID</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">port_type_is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span></div>
-
-
 <span class="k">def</span> <span class="nf">opposite_port</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="n">PortType</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
             <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Port"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Port">[docs]</a><span class="k">class</span> <span class="nc">Port</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
+    <span class="n">connection_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">ConnectionBase</span><span class="p">)</span>
+    <span class="n">connection_deleted</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">ConnectionBase</span><span class="p">)</span>
+    <span class="n">data_updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
+    <span class="n">data_invalidated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">node</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port_type</span> <span class="o">=</span> <span class="n">port_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opposite_port</span> <span class="o">=</span> <span class="p">{</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+                              <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">port_type</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">connections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="c1"># return self.data_model.in_data(self.index)</span>
+            <span class="c1"># TODO</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_model</span><span class="o">.</span><span class="n">out_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">can_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span> <span class="ow">or</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection_policy</span> <span class="o">==</span> <span class="n">ConnectionPolicy</span><span class="o">.</span><span class="n">many</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">caption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_model</span><span class="o">.</span><span class="n">port_caption</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">port_type</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">caption_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_model</span><span class="o">.</span><span class="n">port_caption_visible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_model</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">display_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">caption</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_visible</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">connection_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConnectionPolicy</span><span class="o">.</span><span class="n">one</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_model</span><span class="o">.</span><span class="n">port_out_connection_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Connection already in list&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_created</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">remove_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># TODO: should not be reaching this</span>
+            <span class="o">...</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection_deleted</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scene_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">port_scene_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port_type</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Port.get_mapped_scene_position"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Port.get_mapped_scene_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_mapped_scene_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Node port scene position after a transform</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        port_type : PortType</span>
+<span class="sd">        port_index : PortIndex</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : QPointF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ngo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span>
+        <span class="k">return</span> <span class="n">ngo</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene_position</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

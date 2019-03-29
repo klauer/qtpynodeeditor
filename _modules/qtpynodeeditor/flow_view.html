@@ -257,7 +257,7 @@
         <span class="c1"># deletes some connections as well)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ConnectionGraphicsObject</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">connection</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
 
         <span class="c1"># Delete the nodes; self will delete many of the connections.</span>
         <span class="c1"># Selected connections were already deleted prior to self loop, otherwise</span>
@@ -265,7 +265,7 @@
         <span class="c1"># when a selected connection is deleted by deleting the node.</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">NodeGraphicsObject</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">node</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowView.contextMenuEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.contextMenuEvent">[docs]</a>    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QContextMenuEvent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
