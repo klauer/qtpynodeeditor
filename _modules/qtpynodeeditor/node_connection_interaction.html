@@ -156,7 +156,7 @@
                          <span class="n">ConnectionSelfFailure</span><span class="p">,</span> <span class="n">ConnectionPointFailure</span><span class="p">,</span>
                          <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">ConnectionBase</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">opposite_port</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">DefaultTypeConverter</span>
 
 
@@ -192,7 +192,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        (port_index, converter) : (PortIndex, TypeConverter)</span>
+<span class="sd">        (port_index, converter) : (int, TypeConverter)</span>
 <span class="sd">            where port_index is the index of the port to be connected</span>
 
 <span class="sd">        Raises</span>
@@ -346,14 +346,14 @@
         <span class="n">end_point</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">get_end_point</span><span class="p">(</span><span class="n">port_type</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">go</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">end_point</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NodeConnectionInteraction.node_port_scene_position"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_scene_position">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_scene_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeConnectionInteraction.node_port_scene_position"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_scene_position">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_scene_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Node port scene position</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        port_type : PortType</span>
-<span class="sd">        port_index : PortIndex</span>
+<span class="sd">        port_index : int</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -374,20 +374,20 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : PortIndex</span>
+<span class="sd">        value : int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node_geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
         <span class="n">scene_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">node_geom</span><span class="o">.</span><span class="n">check_hit_scene_point</span><span class="p">(</span><span class="n">port_type</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">,</span> <span class="n">scene_transform</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NodeConnectionInteraction.node_port_is_empty"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeConnectionInteraction.node_port_is_empty"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Node port is empty</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        port_type : PortType</span>
-<span class="sd">        port_index : PortIndex</span>
+<span class="sd">        port_index : int</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

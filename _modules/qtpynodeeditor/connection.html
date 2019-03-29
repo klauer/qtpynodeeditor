@@ -159,7 +159,7 @@
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="k">import</span> <span class="n">ConnectionGraphicsObject</span>
 <span class="kn">from</span> <span class="nn">.node</span> <span class="k">import</span> <span class="n">NodeDataType</span><span class="p">,</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="k">import</span> <span class="n">NodeData</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">Port</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">Port</span>
 <span class="kn">from</span> <span class="nn">.style</span> <span class="k">import</span> <span class="n">StyleCollection</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">TypeConverter</span>
 
@@ -400,7 +400,7 @@
         <span class="c1"># TODO namedtuple; TODO order</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">])</span>
 
-<div class="viewcode-block" id="Connection.get_port_index"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_port_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PortIndex</span><span class="p">:</span>
+<div class="viewcode-block" id="Connection.get_port_index"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_port_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get port index</span>
 
@@ -410,7 +410,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : PortIndex</span>
+<span class="sd">        index : int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span><span class="o">.</span><span class="n">index</span></div>
 

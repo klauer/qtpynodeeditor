@@ -150,9 +150,11 @@
   <h1>Source code for qtpynodeeditor.flow_view</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QLineF</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QContextMenuEvent</span><span class="p">,</span> <span class="n">QKeyEvent</span><span class="p">,</span> <span class="n">QMouseEvent</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPen</span><span class="p">,</span> <span class="n">QShowEvent</span><span class="p">,</span> <span class="n">QWheelEvent</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QGraphicsView</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span> <span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span> <span class="n">QWidgetAction</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QLineF</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QPoint</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="p">(</span><span class="n">QContextMenuEvent</span><span class="p">,</span> <span class="n">QKeyEvent</span><span class="p">,</span> <span class="n">QMouseEvent</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span>
+                        <span class="n">QPen</span><span class="p">,</span> <span class="n">QShowEvent</span><span class="p">,</span> <span class="n">QWheelEvent</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QAction</span><span class="p">,</span> <span class="n">QGraphicsView</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMenu</span><span class="p">,</span>
+                            <span class="n">QTreeWidget</span><span class="p">,</span> <span class="n">QTreeWidgetItem</span><span class="p">,</span> <span class="n">QWidgetAction</span><span class="p">)</span>
 
 
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="k">import</span> <span class="n">ConnectionGraphicsObject</span>
@@ -232,32 +234,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Delete Selection&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key_Delete</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key_Backspace</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delete_selected_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delete_selected</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_delete_selection_action</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">scale_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">step</span> <span class="o">=</span> <span class="mf">1.2</span>
         <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span> <span class="o">**</span> <span class="mf">1.0</span>
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">m11</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">m11</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">2.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">scale_down</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">step</span> <span class="o">=</span> <span class="mf">1.2</span>
         <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span> <span class="o">**</span> <span class="o">-</span><span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">delete_selected_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">allow_node_deletion</span><span class="p">:</span>
-            <span class="k">return</span>
-
+    <span class="k">def</span> <span class="nf">delete_selected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Delete the selected connections first, ensuring that they won&#39;t be</span>
         <span class="c1"># automatically deleted when selected nodes are deleted (deleting a node</span>
         <span class="c1"># deletes some connections as well)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ConnectionGraphicsObject</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">delete_connection</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">allow_node_deletion</span><span class="p">:</span>
+            <span class="k">return</span>
 
         <span class="c1"># Delete the nodes; self will delete many of the connections.</span>
         <span class="c1"># Selected connections were already deleted prior to self loop, otherwise</span>
@@ -267,20 +268,15 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">NodeGraphicsObject</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">node</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FlowView.contextMenuEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.contextMenuEvent">[docs]</a>    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QContextMenuEvent</span><span class="p">):</span>
+<div class="viewcode-block" id="FlowView.generate_context_menu"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.generate_context_menu">[docs]</a>    <span class="k">def</span> <span class="nf">generate_context_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="n">QPoint</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        contextMenuEvent</span>
+<span class="sd">        Generate a context menu for contextMenuEvent</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        event : QContextMenuEvent</span>
+<span class="sd">        pos : QPoint</span>
+<span class="sd">            The point where the context menu was requested</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()):</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">contextMenuEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-            <span class="k">return</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">allow_node_creation</span><span class="p">:</span>
-            <span class="k">return</span>
-
         <span class="n">model_menu</span> <span class="o">=</span> <span class="n">QMenu</span><span class="p">()</span>
         <span class="n">skip_text</span> <span class="o">=</span> <span class="s2">&quot;skip me&quot;</span>
 
@@ -323,7 +319,7 @@
             <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">type_</span><span class="p">:</span>
                 <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
-                <span class="n">pos_view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+                <span class="n">pos_view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos_view</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_placed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -345,7 +341,24 @@
 
         <span class="c1"># make sure the text box gets focus so the user doesn&#39;t have to click on it</span>
         <span class="n">txt_box</span><span class="o">.</span><span class="n">setFocus</span><span class="p">()</span>
-        <span class="n">model_menu</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">globalPos</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">model_menu</span></div>
+
+<div class="viewcode-block" id="FlowView.contextMenuEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.contextMenuEvent">[docs]</a>    <span class="k">def</span> <span class="nf">contextMenuEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QContextMenuEvent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        contextMenuEvent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QContextMenuEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">contextMenuEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">allow_node_creation</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">menu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_context_menu</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+        <span class="n">menu</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">globalPos</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="FlowView.wheelEvent"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.wheelEvent">[docs]</a>    <span class="k">def</span> <span class="nf">wheelEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QWheelEvent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -412,7 +425,7 @@
 <span class="sd">        event : QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseMoveEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">()</span><span class="o">.</span><span class="n">mouseGrabberItem</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">buttons</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">mouseGrabberItem</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">buttons</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
             <span class="c1"># Make sure shift is not being pressed</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">modifiers</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ShiftModifier</span><span class="p">):</span>
                 <span class="n">difference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_click_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
@@ -473,7 +486,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">setSceneRect</span><span class="p">(</span><span class="n">QRectF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">()))</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">showEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlowView.scene"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowView.scene">[docs]</a>    <span class="k">def</span> <span class="nf">scene</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlowScene</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scene</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlowScene</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scene</span>
 
@@ -481,7 +495,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : FlowScene</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span></div>
 </pre></div>
 
            </div>

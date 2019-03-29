@@ -161,7 +161,7 @@
 <span class="kn">from</span> <span class="nn">.node</span> <span class="k">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="k">import</span> <span class="n">NodeDataType</span><span class="p">,</span> <span class="n">NodeDataModel</span>
 <span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="k">import</span> <span class="n">NodeGraphicsObject</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">PortIndex</span><span class="p">,</span> <span class="n">Port</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">Port</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">TypeConverter</span><span class="p">,</span> <span class="n">DefaultTypeConverter</span>
 
 
@@ -333,12 +333,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        conn : Connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">from_</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
-        <span class="n">to</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">from_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">assert</span> <span class="n">to</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">from_</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">output_connection_created</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
-        <span class="n">to</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">input_connection_created</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        <span class="n">input_node</span><span class="p">,</span> <span class="n">output_node</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="k">assert</span> <span class="n">input_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">output_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">output_node</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">output_connection_created</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        <span class="n">input_node</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">input_connection_created</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_send_connection_deleted_to_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -348,12 +347,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        conn : Connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">from_</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
-        <span class="n">to</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">from_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">assert</span> <span class="n">to</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">from_</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">output_connection_deleted</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
-        <span class="n">to</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">input_connection_deleted</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        <span class="n">input_node</span><span class="p">,</span> <span class="n">output_node</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="k">assert</span> <span class="n">input_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">output_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">output_node</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">output_connection_deleted</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+        <span class="n">input_node</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">input_connection_deleted</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">iterate_over_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -367,7 +365,7 @@
 <span class="sd">        Generator: Iterate over node data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">node</span><span class="o">.</span><span class="n">data</span>
+            <span class="k">yield</span> <span class="n">node</span><span class="o">.</span><span class="n">model</span>
 
     <span class="k">def</span> <span class="nf">iterate_over_node_data_dependent_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -385,7 +383,7 @@
 
         <span class="c1"># Iterate over &quot;leaf&quot; nodes</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">model</span>
             <span class="k">if</span> <span class="n">is_node_leaf</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">model</span>
                 <span class="n">visited_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
@@ -404,7 +402,7 @@
                 <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">visited_nodes</span> <span class="ow">and</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">visited_nodes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">continue</span>
 
-                <span class="n">model</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">model</span>
                 <span class="k">if</span> <span class="n">are_node_inputs_visited_before</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
                     <span class="k">yield</span> <span class="n">model</span>
                     <span class="n">visited_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
@@ -629,8 +627,8 @@
         <span class="k">return</span> <span class="n">connection</span></div>
 
 <div class="viewcode-block" id="FlowScene.create_connection_by_index"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowScene.create_connection_by_index">[docs]</a>    <span class="k">def</span> <span class="nf">create_connection_by_index</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">node_in</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">port_index_in</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">,</span>
-            <span class="n">node_out</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">port_index_out</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">node_in</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">port_index_in</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">node_out</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">port_index_out</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="n">converter</span><span class="p">:</span> <span class="n">TypeConverter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create connection</span>
@@ -638,9 +636,9 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        node_in : Node</span>
-<span class="sd">        port_index_in : PortIndex</span>
+<span class="sd">        port_index_in : int</span>
 <span class="sd">        node_out : Node</span>
-<span class="sd">        port_index_out : PortIndex</span>
+<span class="sd">        port_index_out : int</span>
 <span class="sd">        converter : TypeConverter</span>
 
 <span class="sd">        Returns</span>
