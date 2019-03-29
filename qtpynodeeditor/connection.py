@@ -280,7 +280,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
     @property
     def nodes(self):
-        # TODO namedtuple
+        # TODO namedtuple; TODO order
         return (self._in_node, self._out_node)
 
     def get_port_index(self, port_type: PortType) -> PortIndex:

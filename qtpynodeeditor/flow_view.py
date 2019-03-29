@@ -99,6 +99,9 @@ class FlowView(QGraphicsView):
         self.scale(factor, factor)
 
     def delete_selected_nodes(self):
+        if not self._scene.allow_node_deletion:
+            return
+
         # Delete the selected connections first, ensuring that they won't be
         # automatically deleted when selected nodes are deleted (deleting a node
         # deletes some connections as well)
@@ -124,6 +127,8 @@ class FlowView(QGraphicsView):
         """
         if self.itemAt(event.pos()):
             super().contextMenuEvent(event)
+            return
+        elif not self._scene.allow_node_creation:
             return
 
         model_menu = QMenu()

@@ -152,7 +152,8 @@ class NodeDataModel(QObject, Serializable):
         -------
         value : NodeDataType
         """
-        ...
+        raise NotImplementedError(f'Subclass {self.__class__.__name__} must '
+                                  f'implement `data_type`')
 
     def port_out_connection_policy(self, port_index: PortIndex) -> ConnectionPolicy:
         """
