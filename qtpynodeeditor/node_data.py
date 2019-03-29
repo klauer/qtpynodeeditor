@@ -7,7 +7,7 @@ from qtpy.QtCore import Signal
 from . import style as style_module
 from .base import Serializable
 from .enums import NodeValidationState, PortType, ConnectionPolicy
-from .port import PortIndex
+from .port import PortIndex, Port
 
 
 NodeDataType = namedtuple('NodeDataType', ('id', 'name'))
@@ -54,8 +54,8 @@ class NodeDataModel(QObject, Serializable):
                     PortType.output: defaultdict(str),
                     }
 
-    data_updated = Signal(PortIndex)
-    data_invalidated = Signal(PortIndex)
+    data_updated = Signal(Port)
+    data_invalidated = Signal(Port)
     computing_started = Signal()
     computing_finished = Signal()
     embedded_widget_size_updated = Signal()

@@ -8,7 +8,7 @@ from .node_data import NodeData, NodeDataModel, NodeDataType
 from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_state import NodeState
-from .port import PortType, PortIndex
+from .port import PortType, PortIndex, Port
 from .style import NodeStyle
 
 
@@ -22,7 +22,7 @@ class Node(QObject, Serializable, NodeBase):
         data_model : NodeDataModel
         '''
         super().__init__()
-        self._node_data_model = data_model
+        self._data_model = data_model
         self._uid = str(uuid.uuid4())
         self._style = data_model.node_style
         self._state = NodeState(self)
@@ -31,8 +31,11 @@ class Node(QObject, Serializable, NodeBase):
         self._geometry.recalculate_size()
 
         # propagate data: model => node
-        self._node_data_model.data_updated.connect(self.on_data_updated)
-        self._node_data_model.embedded_widget_size_updated.connect(self.on_node_size_updated)
+        self._data_model.data_updated.connect(self.on_data_updated)
+        self._data_model.embedded_widget_size_updated.connect(self.on_node_size_updated)
+
+    def __getitem__(self, key):
+        return self._state[key]
 
     def _cleanup(self):
         if self._graphics_obj is not None:
@@ -56,7 +59,7 @@ class Node(QObject, Serializable, NodeBase):
         """
         return {
             "id": self._uid,
-            "model": self._node_data_model.__getstate__(),
+            "model": self._data_model.__getstate__(),
             "position": {"x": self._graphics_obj.pos().x(),
                          "y": self._graphics_obj.pos().y()}
         }
@@ -73,7 +76,7 @@ class Node(QObject, Serializable, NodeBase):
         if self._graphics_obj:
             pos = state["position"]
             self.position = (pos["x"], pos["y"])
-        self._node_data_model.__setstate__(state["model"])
+        self._data_model.__setstate__(state["model"])
 
     @property
     def id(self) -> str:
@@ -166,18 +169,23 @@ class Node(QObject, Serializable, NodeBase):
         -------
         value : NodeDataModel
         """
-        return self._node_data_model
+        return self._data_model
 
-    def propagate_data(self, node_data: NodeData, in_port_index: PortIndex):
+    def propagate_data(self, node_data: NodeData, input_port: Port):
         """
         Propagates incoming data to the underlying model.
 
         Parameters
         ----------
         node_data : NodeData
-        in_port_index : PortIndex
+        input_port : PortIndex
         """
-        self._node_data_model.set_in_data(node_data, in_port_index)
+        if input_port.node is not self:
+            raise ValueError('Port does not belong to this Node')
+        elif input_port.port_type != PortType.input:
+            raise ValueError('Port is not an input port')
+
+        self._data_model.set_in_data(node_data, input_port.index)
 
         # Recalculate the nodes visuals. A data change can result in the node
         # taking more space than before, so self forces a recalculate+repaint
@@ -187,7 +195,7 @@ class Node(QObject, Serializable, NodeBase):
         self._graphics_obj.update()
         self._graphics_obj.move_connections()
 
-    def on_data_updated(self, index: PortIndex):
+    def on_data_updated(self, port: Port):
         """
         Fetches data from model's OUT #index port and propagates it to the connection
 
@@ -195,10 +203,9 @@ class Node(QObject, Serializable, NodeBase):
         ----------
         index : PortIndex
         """
-        node_data = self._node_data_model.out_data(index)
-        connections = self._state.connections(PortType.output, index)
-        for c in connections:
-            c.propagate_data(node_data)
+        node_data = port.data
+        for conn in port.connections:
+            conn.propagate_data(node_data)
 
     def on_node_size_updated(self):
         """

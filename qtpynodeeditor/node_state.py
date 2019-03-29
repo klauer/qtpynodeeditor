@@ -3,7 +3,7 @@ from collections import OrderedDict
 from .enums import ReactToConnectionState
 from .base import ConnectionBase
 from .node_data import NodeDataType
-from .port import PortType, PortIndex, NodePort
+from .port import PortType, PortIndex, Port
 
 
 class NodeState:
@@ -23,7 +23,7 @@ class NodeState:
         for port_type in self._ports:
             num_ports = model.num_ports[port_type]
             self._ports[port_type] = OrderedDict(
-                (i, NodePort(node, port_type=port_type, index=i))
+                (i, Port(node, port_type=port_type, index=i))
                 for i in range(num_ports)
             )
 
@@ -70,18 +70,6 @@ class NodeState:
         value : list
         """
         return list(self._ports[port_type][port_index].connections)
-
-    def set_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
-        """
-        Set connection
-
-        Parameters
-        ----------
-        port_type : PortType
-        port_index : PortIndex
-        connection : Connection
-        """
-        self._ports[port_type][port_index].add_connection(connection)
 
     def erase_connection(self, port_type: PortType, port_index: PortIndex, connection: ConnectionBase):
         """

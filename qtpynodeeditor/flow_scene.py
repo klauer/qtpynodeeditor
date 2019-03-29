@@ -230,9 +230,8 @@ class FlowSceneModel(QObject):
 
         # A leaf node is a node with no input ports, or all possible input ports empty
         def is_node_leaf(node, model):
-            for i in range(model.num_ports[PortType.input]):
-                connections = node.state.connections(PortType.input, i)
-                if connections is None:
+            for port in node[PortType.input].values():
+                if not port.connections:
                     return False
 
             return True
@@ -245,9 +244,8 @@ class FlowSceneModel(QObject):
                 visited_nodes.append(node)
 
         def are_node_inputs_visited_before(node, model):
-            for i in range(model.num_ports[PortType.input]):
-                connections = node.state.connections(PortType.input, i)
-                for conn in connections:
+            for port in node[PortType.input].values():
+                for conn in port.connections:
                     other = conn.get_node(PortType.output)
                     if visited_nodes and other == visited_nodes[-1]:
                         return False
@@ -459,8 +457,8 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         -------
         value : Connection
         """
-        connection = Connection.from_node(connected_port, node, port_index,
-                                          style=self._style)
+        port = node[connected_port][port_index]
+        connection = Connection(port_a=port, style=self._style)
         cgo = ConnectionGraphicsObject(self, connection)
 
         # after self function connection points are set to node port
@@ -491,19 +489,21 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         -------
         value : Connection
         """
-        connection = Connection.from_nodes(node_in, port_index_in,
-                                           node_out, port_index_out,
-                                           converter=converter,
-                                           style=self._style)
+        port_in = node_in[PortType.input][port_index_in]
+        port_out = node_out[PortType.output][port_index_out]
+        connection = Connection(port_a=port_out,
+                                port_b=port_in, converter=converter,
+                                style=self._style)
+
         cgo = ConnectionGraphicsObject(self, connection)
-        node_in.state.set_connection(PortType.input, port_index_in, connection)
-        node_out.state.set_connection(PortType.output, port_index_out, connection)
+        port_in.add_connection(connection)
+        port_out.add_connection(connection)
 
         # after self function connection points are set to node port
         connection.graphics_object = cgo
 
         # trigger data propagation
-        node_out.on_data_updated(port_index_out)
+        node_out.on_data_updated(port_out)
         self._connections.append(connection)
         self.connection_created.emit(connection)
         return connection

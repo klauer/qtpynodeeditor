@@ -7,7 +7,7 @@ from qtpy.QtGui import QDoubleValidator
 
 import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
-                            NodeValidationState, PortIndex)
+                            NodeValidationState, PortIndex, Port)
 
 
 class DecimalData(NodeData):
@@ -119,7 +119,7 @@ class MathOperationDataModel(NodeDataModel):
         '''
         return self._result
 
-    def set_in_data(self, data: NodeData, port_index: PortIndex):
+    def set_in_data(self, data: NodeData, port: Port):
         '''
         New data at the input of the node
 
@@ -128,9 +128,9 @@ class MathOperationDataModel(NodeDataModel):
         data : NodeData
         port_index : PortIndex
         '''
-        if port_index == 0:
+        if port.index == 0:
             self._number1 = data
-        elif port_index == 1:
+        elif port.index == 1:
             self._number2 = data
 
         if self._check_inputs():
@@ -300,7 +300,7 @@ class NumberDisplayModel(NodeDataModel):
     def data_type(self, port_type: PortType, port_index: PortIndex) -> NodeDataType:
         return DecimalData.data_type
 
-    def set_in_data(self, data: NodeData, int: int):
+    def set_in_data(self, data: NodeData, port: Port):
         '''
         New data propagated to the input
 

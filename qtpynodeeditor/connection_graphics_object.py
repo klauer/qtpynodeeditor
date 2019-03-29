@@ -33,7 +33,6 @@ class ConnectionGraphicsObject(QGraphicsObject):
         super().__init__()
         self._scene = scene
         self._connection = connection
-        self._state = connection.state
         self._geometry = connection.geometry
         self._style = connection.style.connection
 
@@ -174,8 +173,8 @@ class ConnectionGraphicsObject(QGraphicsObject):
         view = self._scene.views()[0]
 
         node = self._scene.locate_node_at(event.scenePos(), view.transform())
-        self._state.interact_with_node(node)
-        state_required = self._state.required_port
+        self._connection.interact_with_node(node)
+        state_required = self._connection.required_port
         if node:
             node.react_to_possible_connection(
                 state_required,
@@ -209,7 +208,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         if node and interaction.try_connect():
             node.reset_reaction_to_connection()
 
-        if self._state.requires_port:
+        if self._connection.requires_port:
             self._scene.delete_connection(self._connection)
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent):

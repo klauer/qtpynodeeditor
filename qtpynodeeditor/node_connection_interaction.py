@@ -7,7 +7,7 @@ from .exceptions import (NodeConnectionFailure, ConnectionRequiresPortFailure,
                          ConnectionSelfFailure, ConnectionPointFailure,
                          ConnectionPortNotEmptyFailure)
 from .base import NodeBase, FlowSceneBase, ConnectionBase
-from .port import PortType, PortIndex, opposite_port, INVALID
+from .port import PortType, PortIndex, opposite_port
 from .type_converter import DefaultTypeConverter
 
 
@@ -123,22 +123,19 @@ class NodeConnectionInteraction:
             self._connection.type_converter = converter
 
         # 2) Assign node to required port in Connection
-        required_port = self.connection_required_port
-        self._node.state.set_connection(required_port, port.index, self._connection)
+        port.add_connection(self._connection)
 
         # 3) Assign Connection to empty port in NodeState
-
-        # The port is not longer required after self function
-        self._connection.set_node_to_port(self._node, required_port, port.index)
+        # The port is not longer required after this function
+        self._connection.connect_to(port)
 
         # 4) Adjust Connection geometry
         self._node.graphics_object.move_connections()
 
         # 5) Poke model to intiate data transfer
-        out_node = self._connection.get_node(PortType.output)
-        if out_node:
-            out_port_index = self._connection.get_port_index(PortType.output)
-            out_node.on_data_updated(out_port_index)
+        _, out_port = self._connection.ports
+        if out_port:
+            out_port.node.on_data_updated(out_port)
 
         return True
 
@@ -181,7 +178,7 @@ class NodeConnectionInteraction:
         -------
         value : PortType
         """
-        return self._connection.state.required_port
+        return self._connection.required_port
 
     def connection_end_scene_position(self, port_type: PortType) -> QPointF:
         """

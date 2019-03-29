@@ -6,7 +6,7 @@ from qtpy.QtGui import QFont, QFontMetrics, QTransform
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
 from .node_data import NodeDataModel
-from .port import NodePort, PortIndex
+from .port import Port, PortIndex
 
 
 class NodeGeometry:
@@ -298,7 +298,7 @@ class NodeGeometry:
         return t.map(result)
 
     def check_hit_scene_point(self, port_type: PortType, scene_point: QPointF,
-                              scene_transform: QTransform) -> NodePort:
+                              scene_transform: QTransform) -> Port:
         """
         Check hit scene point
 
@@ -310,7 +310,7 @@ class NodeGeometry:
 
         Returns
         -------
-        value : NodePort
+        value : Port
         """
         if port_type == PortType.none:
             return None

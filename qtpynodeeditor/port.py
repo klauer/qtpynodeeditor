@@ -8,40 +8,29 @@ from .enums import PortType, ConnectionPolicy
 PortIndex = int
 
 
-INVALID = -1
-
-
-class Port:
-    def __init__(self, type_, index):
-        self.type = type_
-        self.index = index
-
-    @property
-    def index_is_valid(self):
-        return self.index != INVALID
-
-    @property
-    def port_type_is_valid(self):
-        return self.type != PortType.none
-
-
 def opposite_port(port: PortType):
     return {PortType.input: PortType.output,
             PortType.output: PortType.input}.get(port, PortType.none)
 
 
-class NodePort(QObject):
+class Port(QObject):
     connection_created = Signal(ConnectionBase)
     connection_deleted = Signal(ConnectionBase)
+    data_updated = Signal(QObject)
+    data_invalidated = Signal(QObject)
 
     def __init__(self, node, *, port_type: PortType, index: PortIndex):
         super().__init__(parent=node)
         self.node = node
         self.port_type = port_type
         self.index = index
-        self.connections = []
+        self._connections = []
         self.opposite_port = {PortType.input: PortType.output,
                               PortType.output: PortType.input}[self.port_type]
+
+    @property
+    def connections(self):
+        return list(self._connections)
 
     @property
     def data_model(self):
@@ -58,7 +47,7 @@ class NodePort(QObject):
 
     @property
     def can_connect(self):
-        return (not self.connections or
+        return (not self._connections or
                 self.connection_policy == ConnectionPolicy.many)
 
     @property
@@ -87,15 +76,15 @@ class NodePort(QObject):
             return self.data_model.port_out_connection_policy(self.index)
 
     def add_connection(self, connection: ConnectionBase):
-        if connection in self.connections:
+        if connection in self._connections:
             raise ValueError('Connection already in list')
 
-        self.connections.append(connection)
+        self._connections.append(connection)
         self.connection_created.emit(connection)
 
     def remove_connection(self, connection: ConnectionBase):
         try:
-            self.connections.remove(connection)
+            self._connections.remove(connection)
         except ValueError:
             # TODO: should not be reaching this
             ...

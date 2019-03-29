@@ -45,22 +45,22 @@ def debug_drawing(painter, connection):
 
 
 def draw_sketch_line(painter, connection, style):
-    state = connection.state
+    if not connection.requires_port:
+        return
 
-    if state.requires_port:
-        p = QPen()
-        p.setWidth(style.construction_line_width)
-        p.setColor(style.construction_color)
-        p.setStyle(Qt.DashLine)
+    p = QPen()
+    p.setWidth(style.construction_line_width)
+    p.setColor(style.construction_color)
+    p.setStyle(Qt.DashLine)
 
-        painter.setPen(p)
-        painter.setBrush(Qt.NoBrush)
+    painter.setPen(p)
+    painter.setBrush(Qt.NoBrush)
 
-        geom = connection.geometry
+    geom = connection.geometry
 
-        cubic = cubic_path(geom)
-        # cubic spline
-        painter.drawPath(cubic)
+    cubic = cubic_path(geom)
+    # cubic spline
+    painter.drawPath(cubic)
 
 
 def draw_hovered_or_selected(painter, connection, style):
@@ -90,9 +90,7 @@ def draw_hovered_or_selected(painter, connection, style):
 
 
 def draw_normal_line(painter, connection, style):
-    state = connection.state
-
-    if state.requires_port:
+    if connection.requires_port:
         return
 
     # colors

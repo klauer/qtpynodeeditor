@@ -10,7 +10,7 @@ from qtpy.QtWidgets import (QGraphicsItem, QGraphicsObject,
 
 from .enums import ConnectionPolicy
 from .node_connection_interaction import NodeConnectionInteraction
-from .port import PortType, INVALID
+from .port import PortType
 
 
 class NodeGraphicsObject(QGraphicsObject):
@@ -190,8 +190,7 @@ class NodeGraphicsObject(QGraphicsObject):
                 # TODO_UPSTREAM: add to FlowScene
                 connection = self._scene.create_connection_node(
                     self._node, port_to_check, port.index)
-                self._node.state.set_connection(
-                    port_to_check, port.index, connection)
+                port.add_connection(connection)
                 connection.graphics_object.grabMouse()
 
         pos = QPoint(event.pos().x(), event.pos().y())
