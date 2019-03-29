@@ -1,8 +1,6 @@
 import pytest
 import qtpy.QtCore
 
-from qtpy.QtCore import Qt
-
 import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import PortType
 

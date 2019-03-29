@@ -1,5 +1,5 @@
 import inspect
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 
 from qtpy.QtCore import QObject
 from qtpy.QtWidgets import QWidget
