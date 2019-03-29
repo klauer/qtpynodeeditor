@@ -1,6 +1,8 @@
 import pytest
 import qtpy.QtCore
 
+from qtpy.QtCore import Qt
+
 import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import PortType
 
@@ -238,3 +240,7 @@ def test_view_delete_selected(scene, view, model):
     assert node1 not in scene.nodes.values()
     assert node2 not in scene.nodes.values()
     assert conn not in scene.connections
+
+
+def test_smoke_view_context_menu(qtbot, view):
+    view.generate_context_menu(qtpy.QtCore.QPoint(0, 0))

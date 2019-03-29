@@ -1,8 +1,10 @@
 import logging
 import math
-from qtpy.QtCore import QLineF, QRectF, Qt
-from qtpy.QtGui import QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter, QPen, QShowEvent, QWheelEvent
-from qtpy.QtWidgets import QAction, QGraphicsView, QLineEdit, QMenu, QTreeWidget, QTreeWidgetItem, QWidgetAction
+from qtpy.QtCore import QLineF, QRectF, Qt, QPoint
+from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter,
+                        QPen, QShowEvent, QWheelEvent)
+from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
+                            QTreeWidget, QTreeWidgetItem, QWidgetAction)
 
 
 from .connection_graphics_object import ConnectionGraphicsObject
@@ -116,20 +118,15 @@ class FlowView(QGraphicsView):
             if isinstance(item, NodeGraphicsObject):
                 self._scene.remove_node(item.node)
 
-    def contextMenuEvent(self, event: QContextMenuEvent):
+    def generate_context_menu(self, pos: QPoint):
         """
-        contextMenuEvent
+        Generate a context menu for contextMenuEvent
 
         Parameters
         ----------
-        event : QContextMenuEvent
+        pos : QPoint
+            The point where the context menu was requested
         """
-        if self.itemAt(event.pos()):
-            super().contextMenuEvent(event)
-            return
-        elif not self._scene.allow_node_creation:
-            return
-
         model_menu = QMenu()
         skip_text = "skip me"
 
@@ -172,7 +169,7 @@ class FlowView(QGraphicsView):
             type_ = self._scene.registry.create(model_name)
             if type_:
                 node = self._scene.create_node(type_)
-                pos_view = self.mapToScene(event.pos())
+                pos_view = self.mapToScene(pos)
                 node.graphics_object.setPos(pos_view)
                 self._scene.node_placed.emit(node)
             else:
@@ -194,7 +191,24 @@ class FlowView(QGraphicsView):
 
         # make sure the text box gets focus so the user doesn't have to click on it
         txt_box.setFocus()
-        model_menu.exec_(event.globalPos())
+        return model_menu
+
+    def contextMenuEvent(self, event: QContextMenuEvent):
+        """
+        contextMenuEvent
+
+        Parameters
+        ----------
+        event : QContextMenuEvent
+        """
+        if self.itemAt(event.pos()):
+            super().contextMenuEvent(event)
+            return
+        elif not self._scene.allow_node_creation:
+            return
+
+        menu = self.generate_context_menu(event.pos())
+        menu.exec_(event.globalPos())
 
     def wheelEvent(self, event: QWheelEvent):
         """
@@ -261,7 +275,7 @@ class FlowView(QGraphicsView):
         event : QMouseEvent
         """
         super().mouseMoveEvent(event)
-        if self.scene().mouseGrabberItem() is None and event.buttons() == Qt.LeftButton:
+        if self._scene.mouseGrabberItem() is None and event.buttons() == Qt.LeftButton:
             # Make sure shift is not being pressed
             if not (event.modifiers() & Qt.ShiftModifier):
                 difference = self._click_pos - self.mapToScene(event.pos())
@@ -322,6 +336,7 @@ class FlowView(QGraphicsView):
         self._scene.setSceneRect(QRectF(self.rect()))
         super().showEvent(event)
 
+    @property
     def scene(self) -> FlowScene:
         """
         Scene
