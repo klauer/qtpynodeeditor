@@ -8,7 +8,7 @@ from .node_data import NodeData, NodeDataModel, NodeDataType
 from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_state import NodeState
-from .port import PortType, PortIndex, Port
+from .port import PortType, Port
 from .style import NodeStyle
 
 
@@ -167,7 +167,7 @@ class Node(QObject, Serializable, NodeBase):
         Parameters
         ----------
         node_data : NodeData
-        input_port : PortIndex
+        input_port : int
         """
         if input_port.node is not self:
             raise ValueError('Port does not belong to this Node')
@@ -184,14 +184,14 @@ class Node(QObject, Serializable, NodeBase):
         self._graphics_obj.update()
         self._graphics_obj.move_connections()
 
-    def _on_port_index_data_updated(self, port_index: PortIndex):
+    def _on_port_index_data_updated(self, port_index: int):
         """
         Data has been updated on this Node's output port port_index;
         propagate it to any connections.
 
         Parameters
         ----------
-        index : PortIndex
+        index : int
         """
         port = self[PortType.output][port_index]
         self.on_data_updated(port)

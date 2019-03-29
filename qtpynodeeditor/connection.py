@@ -9,7 +9,7 @@ from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
 from .node import NodeDataType, Node
 from .node_data import NodeData
-from .port import PortType, opposite_port, PortIndex, Port
+from .port import PortType, opposite_port, Port
 from .style import StyleCollection
 from .type_converter import TypeConverter
 
@@ -250,7 +250,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         # TODO namedtuple; TODO order
         return (self._ports[PortType.input], self._ports[PortType.output])
 
-    def get_port_index(self, port_type: PortType) -> PortIndex:
+    def get_port_index(self, port_type: PortType) -> int:
         """
         Get port index
 
@@ -260,7 +260,7 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         Returns
         -------
-        value : PortIndex
+        index : int
         """
         return self._ports[port_type].index
 

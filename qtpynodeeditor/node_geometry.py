@@ -5,7 +5,7 @@ from qtpy.QtGui import QFont, QFontMetrics, QTransform
 
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
-from .port import Port, PortIndex
+from .port import Port
 
 
 class NodeGeometry:
@@ -262,7 +262,7 @@ class NodeGeometry:
         self._width = width
         self._height = height
 
-    def port_scene_position(self, port_type: PortType, index: PortIndex,
+    def port_scene_position(self, port_type: PortType, index: int,
                             t: QTransform = None) -> QPointF:
         """
         Port scene position
@@ -270,7 +270,7 @@ class NodeGeometry:
         Parameters
         ----------
         port_type : PortType
-        index : PortIndex
+        index : int
         t : QTransform
 
         Returns
@@ -387,8 +387,8 @@ class NodeGeometry:
 
     @staticmethod
     def calculate_node_position_between_node_ports(
-            target_port_index: PortIndex, target_port: PortType, target_node:
-            NodeBase, source_port_index: PortIndex, source_port: PortType,
+            target_port_index: int, target_port: PortType, target_node:
+            NodeBase, source_port_index: int, source_port: PortType,
             source_node: NodeBase, new_node: NodeBase) -> QPointF:
         """
         calculate node position between node ports
@@ -403,10 +403,10 @@ class NodeGeometry:
 
         Parameters
         ----------
-        target_port_index : PortIndex
+        target_port_index : int
         target_port : PortType
         target_node : Node
-        source_port_index : PortIndex
+        source_port_index : int
         source_port : PortType
         source_node : Node
         new_node : Node

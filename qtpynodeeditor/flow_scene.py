@@ -11,7 +11,7 @@ from .data_model_registry import DataModelRegistry
 from .node import Node
 from .node_data import NodeDataType, NodeDataModel
 from .node_graphics_object import NodeGraphicsObject
-from .port import PortType, PortIndex, Port
+from .port import PortType, Port
 from .type_converter import TypeConverter, DefaultTypeConverter
 
 
@@ -477,8 +477,8 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         return connection
 
     def create_connection_by_index(
-            self, node_in: Node, port_index_in: PortIndex,
-            node_out: Node, port_index_out: PortIndex,
+            self, node_in: Node, port_index_in: int,
+            node_out: Node, port_index_out: int,
             converter: TypeConverter) -> Connection:
         """
         Create connection
@@ -486,9 +486,9 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         Parameters
         ----------
         node_in : Node
-        port_index_in : PortIndex
+        port_index_in : int
         node_out : Node
-        port_index_out : PortIndex
+        port_index_out : int
         converter : TypeConverter
 
         Returns

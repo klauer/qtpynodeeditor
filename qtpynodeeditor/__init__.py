@@ -15,7 +15,7 @@ from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_painter import NodePainter, NodePainterDelegate
 from .node_state import NodeState
-from .port import PortIndex, Port, opposite_port
+from .port import Port, opposite_port
 from .flow_view import FlowView
 from .flow_scene import FlowScene
 
@@ -49,7 +49,6 @@ __all__ = [
     'NodeStyle',
     'NodeValidationState',
     'Port',
-    'PortIndex',
     'PortType',
     'Style',
     'StyleCollection',

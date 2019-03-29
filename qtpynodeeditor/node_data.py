@@ -8,7 +8,7 @@ from qtpy.QtCore import Signal
 from . import style as style_module
 from .base import Serializable
 from .enums import NodeValidationState, PortType, ConnectionPolicy
-from .port import PortIndex, Port
+from .port import Port
 
 
 NodeDataType = namedtuple('NodeDataType', ('id', 'name'))
@@ -247,7 +247,7 @@ class NodeDataModel(QObject, Serializable):
         Parameters
         ----------
         port_type : PortType
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------
@@ -256,13 +256,13 @@ class NodeDataModel(QObject, Serializable):
         raise NotImplementedError(f'Subclass {self.__class__.__name__} must '
                                   f'implement `data_type`')
 
-    def port_out_connection_policy(self, port_index: PortIndex) -> ConnectionPolicy:
+    def port_out_connection_policy(self, port_index: int) -> ConnectionPolicy:
         """
         Port out connection policy
 
         Parameters
         ----------
-        port_index : PortIndex
+        port_index : int
 
         Returns
         -------
@@ -292,13 +292,13 @@ class NodeDataModel(QObject, Serializable):
         """
         ...
 
-    def out_data(self, port: PortIndex) -> NodeData:
+    def out_data(self, port: int) -> NodeData:
         """
         Out data
 
         Parameters
         ----------
-        port : PortIndex
+        port : int
 
         Returns
         -------
