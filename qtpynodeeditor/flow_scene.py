@@ -12,7 +12,7 @@ from .data_model_registry import DataModelRegistry
 from .node import Node
 from .node_data import NodeDataType, NodeDataModel
 from .node_graphics_object import NodeGraphicsObject
-from .port import PortType, PortIndex
+from .port import PortType, PortIndex, Port
 from .type_converter import TypeConverter, DefaultTypeConverter
 
 
@@ -442,38 +442,50 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
     def locate_node_at(self, point, transform):
         return locate_node_at(point, self, transform)
 
-    def create_connection_node(self, node: Node, connected_port: PortType,
-                               port_index: PortIndex) -> Connection:
+    def create_connection(self, port_a: Port, port_b: Port = None, *,
+                          converter: TypeConverter = None) -> Connection:
         """
         Create a connection
 
         Parameters
         ----------
-        node : Node
-        connected_port : PortType
-        port_index : PortIndex
+        port_a : Port
+            The first port, either input or output
+        port_b : Port, optional
+            The second port, opposite of the type of port_a
+        converter : TypeConverter, optional
+            The type converter to use for data propagation
 
         Returns
         -------
         value : Connection
         """
-        port = node[connected_port][port_index]
-        connection = Connection(port_a=port, style=self._style)
-        cgo = ConnectionGraphicsObject(self, connection)
+        connection = Connection(port_a=port_a, port_b=port_b, style=self._style)
+        if port_a is not None:
+            port_a.add_connection(connection)
+        if port_b is not None:
+            port_b.add_connection(connection)
 
+        cgo = ConnectionGraphicsObject(self, connection)
         # after self function connection points are set to node port
         connection.graphics_object = cgo
         self._connections.append(connection)
 
-        # Note: self connection isn't truly created yet. It's only partially created.
-        # Thus, don't send the connection_created(...) signal.
-        connection.connection_completed.connect(self.connection_created.emit)
+        if not port_a or not port_b:
+            # This connection isn't truly created yet. It's only partially
+            # created.  Thus, don't send the connection_created(...) signal.
+            connection.connection_completed.connect(self.connection_created.emit)
+        else:
+            in_port, out_port = connection.ports
+            out_port.node.on_data_updated(out_port)
+            self.connection_created.emit(connection)
+
         return connection
 
-    def create_connection(self,
-                          node_in: Node, port_index_in: PortIndex,
-                          node_out: Node, port_index_out: PortIndex,
-                          converter: TypeConverter) -> Connection:
+    def create_connection_by_index(
+            self, node_in: Node, port_index_in: PortIndex,
+            node_out: Node, port_index_out: PortIndex,
+            converter: TypeConverter) -> Connection:
         """
         Create connection
 
@@ -491,22 +503,7 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         """
         port_in = node_in[PortType.input][port_index_in]
         port_out = node_out[PortType.output][port_index_out]
-        connection = Connection(port_a=port_out,
-                                port_b=port_in, converter=converter,
-                                style=self._style)
-
-        cgo = ConnectionGraphicsObject(self, connection)
-        port_in.add_connection(connection)
-        port_out.add_connection(connection)
-
-        # after self function connection points are set to node port
-        connection.graphics_object = cgo
-
-        # trigger data propagation
-        node_out.on_data_updated(port_out)
-        self._connections.append(connection)
-        self.connection_created.emit(connection)
-        return connection
+        return self.create_connection(port_out, port_in, converter=converter)
 
     def restore_connection(self, connection_json: dict) -> Connection:
         """
@@ -545,7 +542,7 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
 
             return self._registry.get_type_converter(out_type, in_type)
 
-        connection = self.create_connection(
+        connection = self.create_connection_by_index(
             node_in, port_index_in,
             node_out, port_index_out,
             converter=get_converter())

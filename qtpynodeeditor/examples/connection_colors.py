@@ -56,17 +56,13 @@ def main(app):
     node_a = scene.create_node(NaiveDataModel)
     node_b = scene.create_node(NaiveDataModel)
 
-    scene.create_connection(
-        node_out=node_a, port_index_out=0,
-        node_in=node_b, port_index_in=0,
-        converter=None
-    )
+    scene.create_connection(node_a[PortType.output][0],
+                            node_b[PortType.input][0],
+                            )
 
-    scene.create_connection(
-        node_out=node_a, port_index_out=1,
-        node_in=node_b, port_index_in=1,
-        converter=None
-    )
+    scene.create_connection(node_a[PortType.output][1],
+                            node_b[PortType.input][1],
+                            )
 
     return scene, view, [node_a, node_b]
 

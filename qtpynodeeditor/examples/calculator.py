@@ -408,25 +408,19 @@ def main(app):
         node_b.data.embedded_widget().setText('2.0')
         inputs.append(node_b)
 
-        scene.create_connection(
-            node_out=node_a, port_index_out=0,
-            node_in=node_operation, port_index_in=0,
-            converter=None
-        )
+        scene.create_connection(node_a[PortType.output][0],
+                                node_operation[PortType.input][0],
+                                )
 
-        scene.create_connection(
-            node_out=node_b, port_index_out=0,
-            node_in=node_operation, port_index_in=1,
-            converter=None
-        )
+        scene.create_connection(node_a[PortType.output][0],
+                                node_operation[PortType.input][1],
+                                )
 
         node_display = scene.create_node(NumberDisplayModel)
 
-        scene.create_connection(
-            node_out=node_operation, port_index_out=0,
-            node_in=node_display, port_index_in=0,
-            converter=None
-        )
+        scene.create_connection(node_operation[PortType.output][0],
+                                node_display[PortType.input][0],
+                                )
 
     try:
         scene.auto_arrange(nodes=inputs, layout='bipartite')

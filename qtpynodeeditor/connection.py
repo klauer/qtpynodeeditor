@@ -26,6 +26,8 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         if port_a is None:
             raise ValueError('port_a is required')
+        elif port_a is port_b:
+            raise ValueError('Cannot connect a port to itself')
 
         if port_a.port_type == PortType.input:
             in_port = port_a

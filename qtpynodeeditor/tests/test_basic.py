@@ -70,6 +70,9 @@ def test_create_node(scene, model):
     assert node in scene.nodes.values()
     assert node.id in scene.nodes
 
+    assert scene.allow_node_creation
+    assert scene.allow_node_deletion
+
 
 def test_selected_nodes(scene, model):
     node = scene.create_node(model)
@@ -80,11 +83,9 @@ def test_selected_nodes(scene, model):
 def test_create_connection(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
-    scene.create_connection(
-        node_in=node1, port_index_in=1,
-        node_out=node2, port_index_out=2,
-        converter=None
-    )
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
 
     view.update()
 
@@ -117,11 +118,9 @@ def test_create_connection(scene, view, model):
 def test_clear_scene(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
-    scene.create_connection(
-        node_in=node1, port_index_in=1,
-        node_out=node2, port_index_out=2,
-        converter=None
-    )
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
 
     scene.clear_scene()
 
@@ -181,7 +180,7 @@ def test_smoke_node_size_updated(scene, view, model):
 def test_smoke_connection_interaction(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
-    conn = scene.create_connection_node(node1, PortType.output, port_index=0)
+    conn = scene.create_connection(node1[PortType.output][0])
     interaction = nodeeditor.NodeConnectionInteraction(
         node=node2, connection=conn, scene=scene)
 

@@ -146,9 +146,8 @@ def main(app):
     node_show = scene.create_node(ImageShowModel)
 
     scene.create_connection(
-        node_out=node_loader, port_index_out=0,
-        node_in=node_show, port_index_in=0,
-        converter=None
+        node_loader[PortType.output][0],
+        node_show[PortType.input][0],
     )
 
     return scene, view, [node_loader, node_show]
