@@ -209,3 +209,8 @@ def test_smoke_connection_interaction(scene, view, model):
     interaction.connection_end_scene_position(PortType.input)
     interaction.node_port_scene_position(PortType.input, 0)
     interaction.node_port_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))
+
+
+def test_locate_node(scene, view, model):
+    node = scene.create_node(model)
+    assert scene.locate_node_at(node.position, view.transform()) == node
