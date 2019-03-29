@@ -302,7 +302,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : NodeDataType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="o">...</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Subclass </span><span class="si">{self.__class__.__name__}</span><span class="s1"> must &#39;</span>
+                                  <span class="n">f</span><span class="s1">&#39;implement `data_type`&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodeDataModel.port_out_connection_policy"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeDataModel.port_out_connection_policy">[docs]</a>    <span class="k">def</span> <span class="nf">port_out_connection_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_index</span><span class="p">:</span> <span class="n">PortIndex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionPolicy</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
