@@ -84,32 +84,36 @@ class ConnectionGeometry:
 
     def points_c1_c2(self) -> tuple:
         """
-        points_c1_c2
+        Connection points (c1, c2)
 
         Returns
         -------
-        value : pair<QPointF, QPointF
+        c1: QPointF
+            The first point
+        c2: QPointF
+            The second point
         """
         x_distance = self._in.x() - self._out.x()
 
-        # double yDistance = _in.y() - _out.y() - 100;
-        default_offset = 200
-        minimum = min((default_offset, abs(x_distance)))
-        vertical_offset = 0
-        ratio1 = 0.5
+        default_offset = 200.0
+        x_offset = min((default_offset, abs(x_distance)))
+        y_offset = 0
+
+        x_ratio = 0.5
         if x_distance <= 0:
-            vertical_offset = -minimum
-            ratio1 = 1.0
+            y_distance = self._in.y() - self._out.y() + 20
+            y_direction = (-1.0 if y_distance < 0 else 1.0)
+            y_offset = y_direction * min((default_offset, abs(y_distance)))
+            x_ratio = 1.0
 
-        # double verticalOffset2 = vertical_offset;
-        # if (x_distance <= 0)
-        # verticalOffset2 = qMin(default_offset, std::abs(yDistance));
-        # auto sign = [](double d) { return d > 0.0 ? +1.0 : -1.0; };
+        x_offset *= x_ratio
+        return (
+            QPointF(self._out.x() + x_offset,
+                    self._out.y() + y_offset),
 
-        # verticalOffset2 = 0.0;
-        c1 = QPointF(self._out.x() + minimum * ratio1, self._out.y() + vertical_offset)
-        c2 = QPointF(self._in.x() - minimum * ratio1, self._in.y() + vertical_offset)
-        return c1, c2
+            QPointF(self._in.x() - x_offset,
+                    self._in.y() - y_offset)
+        )
 
     @property
     def source(self) -> QPointF:
