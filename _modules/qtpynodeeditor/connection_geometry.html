@@ -234,32 +234,36 @@
 
 <div class="viewcode-block" id="ConnectionGeometry.points_c1_c2"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionGeometry.points_c1_c2">[docs]</a>    <span class="k">def</span> <span class="nf">points_c1_c2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        points_c1_c2</span>
+<span class="sd">        Connection points (c1, c2)</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : pair&lt;QPointF, QPointF</span>
+<span class="sd">        c1: QPointF</span>
+<span class="sd">            The first point</span>
+<span class="sd">        c2: QPointF</span>
+<span class="sd">            The second point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
 
-        <span class="c1"># double yDistance = _in.y() - _out.y() - 100;</span>
-        <span class="n">default_offset</span> <span class="o">=</span> <span class="mi">200</span>
-        <span class="n">minimum</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">default_offset</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_distance</span><span class="p">)))</span>
-        <span class="n">vertical_offset</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">ratio1</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="n">default_offset</span> <span class="o">=</span> <span class="mf">200.0</span>
+        <span class="n">x_offset</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">default_offset</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_distance</span><span class="p">)))</span>
+        <span class="n">y_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">x_ratio</span> <span class="o">=</span> <span class="mf">0.5</span>
         <span class="k">if</span> <span class="n">x_distance</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">vertical_offset</span> <span class="o">=</span> <span class="o">-</span><span class="n">minimum</span>
-            <span class="n">ratio1</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">y_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mi">20</span>
+            <span class="n">y_direction</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">y_distance</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">y_offset</span> <span class="o">=</span> <span class="n">y_direction</span> <span class="o">*</span> <span class="nb">min</span><span class="p">((</span><span class="n">default_offset</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y_distance</span><span class="p">)))</span>
+            <span class="n">x_ratio</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-        <span class="c1"># double verticalOffset2 = vertical_offset;</span>
-        <span class="c1"># if (x_distance &lt;= 0)</span>
-        <span class="c1"># verticalOffset2 = qMin(default_offset, std::abs(yDistance));</span>
-        <span class="c1"># auto sign = [](double d) { return d &gt; 0.0 ? +1.0 : -1.0; };</span>
+        <span class="n">x_offset</span> <span class="o">*=</span> <span class="n">x_ratio</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="n">x_offset</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">y_offset</span><span class="p">),</span>
 
-        <span class="c1"># verticalOffset2 = 0.0;</span>
-        <span class="n">c1</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="n">minimum</span> <span class="o">*</span> <span class="n">ratio1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">vertical_offset</span><span class="p">)</span>
-        <span class="n">c2</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="n">minimum</span> <span class="o">*</span> <span class="n">ratio1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="n">vertical_offset</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span></div>
+            <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_in</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="n">y_offset</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
