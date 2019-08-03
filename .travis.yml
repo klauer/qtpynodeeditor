@@ -23,13 +23,29 @@ cache:
     - $HOME/.ccache  # https://github.com/travis-ci/travis-ci/issues/5853
 
 matrix:
+  fast_finish: true
   include:
     - python: 3.6
       env:
         - CONDA_UPLOAD=1
         - BUILD_DOCS=1
+        - QT_API=pyqt5
     - python: 3.7
-
+      env:
+        - QT_API=pyqt5
+    - python: 3.6
+      env:
+        - QT_API=PySide2
+    - python: 3.7
+      env:
+        - QT_API=PySide2
+  allow_failures:
+  - python: 3.6
+    env:
+      - QT_API=PySide2
+  - python: 3.7
+    env:
+      - QT_API=PySide2
 
 install:
   # Install and configure miniconda
@@ -58,6 +74,8 @@ install:
   - pip install -Ur dev-requirements.txt
   # Install the package
   - pip install -e .
+  # Install the specific binding we're testing against
+  - pip install "${QT_API}"
 
 
 before_script:
@@ -68,6 +86,7 @@ before_script:
 
 script:
   - flake8 qtpynodeeditor
+  - export PYTEST_QT_API="${QT_API}"
   - coverage run run_tests.py
   - set -e
   
