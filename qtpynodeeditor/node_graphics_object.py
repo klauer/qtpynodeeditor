@@ -1,4 +1,6 @@
-from qtpy.QtCore import QPoint, QRectF, QSize, QSizeF, Qt, QVariant
+import typing
+
+from qtpy.QtCore import QPoint, QRectF, QSize, QSizeF, Qt
 from qtpy.QtGui import QCursor, QPainter
 from qtpy.QtWidgets import (QGraphicsDropShadowEffect, QGraphicsItem,
                             QGraphicsObject, QGraphicsProxyWidget,
@@ -128,18 +130,18 @@ class NodeGraphicsObject(QGraphicsObject):
                           connection_style=self._style.connection,
                           )
 
-    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant) -> QVariant:
+    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: typing.Any) -> typing.Any:
         """
         itemChange
 
         Parameters
         ----------
         change : QGraphicsItem.GraphicsItemChange
-        value : QVariant
+        value : any
 
         Returns
         -------
-        value : QVariant
+        value : any
         """
         if change == self.ItemPositionChange and self.scene():
             self.move_connections()
