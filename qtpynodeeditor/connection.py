@@ -408,3 +408,6 @@ class Connection(QObject, Serializable, ConnectionBase):
         value : bool
         """
         return self._required_port != PortType.none
+
+    def __repr__(self):
+        return (f'<{self.__class__.__name__} ports={self._ports}>')
