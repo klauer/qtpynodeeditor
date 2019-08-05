@@ -315,7 +315,7 @@ class FlowSceneModel(QObject):
         return node
 
     @contextlib.contextmanager
-    def _new_node_context(self, data_model_name):
+    def _new_node_context(self, data_model_name, *, emit_placed=False):
         'Context manager: creates Node/yields it, handling necessary Signals'
         data_model = self._registry.create(data_model_name)
         if not data_model:
@@ -325,6 +325,8 @@ class FlowSceneModel(QObject):
         node = Node(data_model)
         yield node
         self._nodes[node.id] = node
+        if emit_placed:
+            self.node_placed.emit(node)
         self.node_created.emit(node)
 
     def restore_node(self, node_json: dict) -> Node:
@@ -339,7 +341,8 @@ class FlowSceneModel(QObject):
         -------
         value : Node
         """
-        with self._new_node_context(node_json["model"]["name"]) as node:
+        name = node_json["model"]["name"]
+        with self._new_node_context(name, emit_placed=True) as node:
             node.__setstate__(node_json)
 
         return node
