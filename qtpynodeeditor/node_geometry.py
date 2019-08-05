@@ -2,6 +2,7 @@ import math
 
 from qtpy.QtCore import QPointF, QRect, QRectF, QSizeF
 from qtpy.QtGui import QFont, QFontMetrics, QTransform
+from qtpy.QtWidgets import QSizePolicy
 
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
@@ -349,6 +350,12 @@ class NodeGeometry:
         if not widget:
             return QPointF()
 
+        if widget.sizePolicy().verticalPolicy() & QSizePolicy.ExpandFlag:
+            # If the widget wants to use as much vertical space as possible,
+            # place it immediately after the caption.
+            return QPointF(self._spacing + self.port_width(PortType.input),
+                           self.caption_height())
+
         if self._model.validation_state() != NodeValidationState.valid:
             return QPointF(
                 self._spacing + self.port_width(PortType.input),
@@ -360,6 +367,21 @@ class NodeGeometry:
             self._spacing + self.port_width(PortType.input),
             (self.caption_height + self._height - widget.height()) / 2.0
         )
+
+    def equivalent_widget_height(self) -> int:
+        '''
+        The maximum height a widget can be without causing the node to grow.
+
+        Returns
+        -------
+        value : int
+        '''
+        base_height = self.height() - self.caption_height()
+
+        if self._model.validation_state() != NodeValidationState.valid:
+            return (base_height + self.validation_height())
+
+        return base_height
 
     @property
     def validation_height(self) -> int:
