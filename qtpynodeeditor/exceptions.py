@@ -20,3 +20,15 @@ class ConnectionPointFailure(NodeConnectionFailure):
 class ConnectionPortNotEmptyFailure(NodeConnectionFailure):
     'Port should be empty'
     ...
+
+
+class PortsOfSameTypeError(NodeConnectionFailure):
+    ...
+
+
+class PortsAlreadyConnectedError(NodeConnectionFailure):
+    ...
+
+
+class MultipleInputConnectionError(NodeConnectionFailure):
+    ...
