@@ -12,6 +12,7 @@ from .node_data import NodeData
 from .port import PortType, opposite_port, Port
 from .style import StyleCollection
 from .type_converter import TypeConverter
+from . import exceptions
 
 
 class Connection(QObject, Serializable, ConnectionBase):
@@ -38,12 +39,24 @@ class Connection(QObject, Serializable, ConnectionBase):
 
         if in_port is not None and out_port is not None:
             if in_port.port_type == out_port.port_type:
-                raise ValueError('Cannot connect two ports of the same type')
+                raise exceptions.PortsOfSameTypeError(
+                    'Cannot connect two ports of the same type')
 
         self._ports = {
             PortType.input: in_port,
             PortType.output: out_port
         }
+
+        if in_port is not None:
+            if in_port.connections:
+                conn, = in_port.connections
+                existing_in, existing_out = conn.ports
+                if existing_in == in_port and existing_out == out_port:
+                    raise exceptions.PortsAlreadyConnectedError(
+                        'Specified ports already connected')
+                raise exceptions.MultipleInputConnectionError(
+                    f'Maximum one connection per input port '
+                    f'(existing: {conn})')
 
         if in_port and out_port:
             self._required_port = PortType.none
