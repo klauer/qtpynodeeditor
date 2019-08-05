@@ -155,7 +155,7 @@
                             <span class="n">QGraphicsSceneContextMenuEvent</span><span class="p">,</span>
                             <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span>
                             <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span>
-                            <span class="n">QGraphicsDropShadowEffect</span><span class="p">)</span>
+                            <span class="n">QGraphicsDropShadowEffect</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="p">)</span>
 
 
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">ConnectionPolicy</span>
@@ -475,16 +475,24 @@
 
     <span class="k">def</span> <span class="nf">embed_q_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span> <span class="o">=</span> <span class="n">QGraphicsProxyWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setWidget</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPreferredWidth</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-            <span class="n">geom</span><span class="o">.</span><span class="n">recalculate_size</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">widget_position</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setOpacity</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIgnoresParentOpacity</span><span class="p">)</span></div>
+        <span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">widget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span> <span class="o">=</span> <span class="n">QGraphicsProxyWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setWidget</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPreferredWidth</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">recalculate_size</span><span class="p">()</span>
+
+        <span class="c1"># If the widget wants to use as much vertical space as possible, set it</span>
+        <span class="c1"># to have the geomtry&#39;s equivalent_widget_height.</span>
+        <span class="k">if</span> <span class="n">widget</span><span class="o">.</span><span class="n">sizePolicy</span><span class="p">()</span><span class="o">.</span><span class="n">verticalPolicy</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">QSizePolicy</span><span class="o">.</span><span class="n">ExpandFlag</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">equivalent_widget_height</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">widget_position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setOpacity</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_widget</span><span class="o">.</span><span class="n">setFlag</span><span class="p">(</span><span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">ItemIgnoresParentOpacity</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

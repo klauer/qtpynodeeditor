@@ -152,6 +152,7 @@
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QRect</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSizeF</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QFontMetrics</span><span class="p">,</span> <span class="n">QTransform</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="n">QSizePolicy</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">NodeBase</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
@@ -206,15 +207,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span>
 
     <span class="nd">@width</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set width</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        w : int</span>
+<span class="sd">        width : int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">entry_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -250,15 +251,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entry_width</span>
 
     <span class="nd">@entry_width</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">entry_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">entry_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set entry width</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        w : int</span>
+<span class="sd">        width : int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_entry_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entry_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -390,18 +391,18 @@
         <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entry_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span>
         <span class="n">height</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="n">max_num_of_entries</span>
 
-        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">height</span><span class="p">()))</span>
+        <span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">widget</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span><span class="p">()))</span>
 
         <span class="n">height</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_input_port_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_width</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output_port_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_width</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
         <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_port_width</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_port_width</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span>
 
-        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">width</span> <span class="o">+=</span> <span class="n">w</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
+        <span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">widget</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
 
         <span class="n">width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_width</span><span class="p">))</span>
 
@@ -495,21 +496,42 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : QPointF</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">embedded_widget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">widget</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">QPointF</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">widget</span><span class="o">.</span><span class="n">sizePolicy</span><span class="p">()</span><span class="o">.</span><span class="n">verticalPolicy</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">QSizePolicy</span><span class="o">.</span><span class="n">ExpandFlag</span><span class="p">:</span>
+            <span class="c1"># If the widget wants to use as much vertical space as possible,</span>
+            <span class="c1"># place it immediately after the caption.</span>
+            <span class="k">return</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_width</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">),</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span><span class="p">())</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">validation_state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">NodeValidationState</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">QPointF</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_width</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">),</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_height</span> <span class="o">-</span>
-                 <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">-</span> <span class="n">w</span><span class="o">.</span><span class="n">height</span><span class="p">())</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">-</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span><span class="p">())</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">QPointF</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_width</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">),</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">-</span> <span class="n">w</span><span class="o">.</span><span class="n">height</span><span class="p">())</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">-</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span><span class="p">())</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="p">)</span>
+
+<div class="viewcode-block" id="NodeGeometry.equivalent_widget_height"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGeometry.equivalent_widget_height">[docs]</a>    <span class="k">def</span> <span class="nf">equivalent_widget_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        The maximum height a widget can be without causing the node to grow.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : int</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">base_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">validation_state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">NodeValidationState</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">base_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_height</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">base_height</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">validation_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
