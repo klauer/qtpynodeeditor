@@ -162,6 +162,7 @@
 <span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">Port</span>
 <span class="kn">from</span> <span class="nn">.style</span> <span class="k">import</span> <span class="n">StyleCollection</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">TypeConverter</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span>
 
 
 <div class="viewcode-block" id="Connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection">[docs]</a><span class="k">class</span> <span class="nc">Connection</span><span class="p">(</span><span class="n">QObject</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">,</span> <span class="n">ConnectionBase</span><span class="p">):</span>
@@ -188,12 +189,24 @@
 
         <span class="k">if</span> <span class="n">in_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">in_port</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">out_port</span><span class="o">.</span><span class="n">port_type</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot connect two ports of the same type&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PortsOfSameTypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Cannot connect two ports of the same type&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span> <span class="n">in_port</span><span class="p">,</span>
             <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="n">out_port</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">in_port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">in_port</span><span class="o">.</span><span class="n">connections</span><span class="p">:</span>
+                <span class="n">conn</span><span class="p">,</span> <span class="o">=</span> <span class="n">in_port</span><span class="o">.</span><span class="n">connections</span>
+                <span class="n">existing_in</span><span class="p">,</span> <span class="n">existing_out</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">ports</span>
+                <span class="k">if</span> <span class="n">existing_in</span> <span class="o">==</span> <span class="n">in_port</span> <span class="ow">and</span> <span class="n">existing_out</span> <span class="o">==</span> <span class="n">out_port</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PortsAlreadyConnectedError</span><span class="p">(</span>
+                        <span class="s1">&#39;Specified ports already connected&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MultipleInputConnectionError</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s1">&#39;Maximum one connection per input port &#39;</span>
+                    <span class="n">f</span><span class="s1">&#39;(existing: </span><span class="si">{conn}</span><span class="s1">)&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">in_port</span> <span class="ow">and</span> <span class="n">out_port</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span>
@@ -557,7 +570,10 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_required_port</span> <span class="o">!=</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__class__.__name__}</span><span class="s1"> ports=</span><span class="si">{self._ports}</span><span class="s1">&gt;&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

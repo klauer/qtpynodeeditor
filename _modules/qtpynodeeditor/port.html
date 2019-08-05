@@ -277,7 +277,11 @@
 <span class="sd">        value : QPointF</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ngo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span>
-        <span class="k">return</span> <span class="n">ngo</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene_position</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">ngo</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene_position</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="s1">&#39;&lt;</span><span class="si">{self.__class__.__name__}</span><span class="s1"> port_type=</span><span class="si">{self.port_type}</span><span class="s1"> &#39;</span>
+                <span class="n">f</span><span class="s1">&#39;index=</span><span class="si">{self.index}</span><span class="s1"> connections={len(self._connections)}&gt;&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
