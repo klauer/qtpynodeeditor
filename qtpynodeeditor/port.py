@@ -128,3 +128,7 @@ class Port(QObject):
         """
         ngo = self.node.graphics_object
         return ngo.sceneTransform().map(self.scene_position)
+
+    def __repr__(self):
+        return (f'<{self.__class__.__name__} port_type={self.port_type} '
+                f'index={self.index} connections={len(self._connections)}>')

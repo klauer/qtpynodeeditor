@@ -242,3 +242,17 @@ def test_view_delete_selected(scene, view, model):
 
 def test_smoke_view_context_menu(qtbot, view):
     view.generate_context_menu(qtpy.QtCore.QPoint(0, 0))
+
+
+def test_smoke_repr(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    print()
+    print('node1', node1)
+    print('node2', node2)
+    ports = (node2[PortType.output][2], node1[PortType.input][1])
+    print()
+    print('ports', ports)
+    conn = scene.create_connection(*ports)
+    print()
+    print('connection', conn)

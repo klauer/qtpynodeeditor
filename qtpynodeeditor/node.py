@@ -275,3 +275,7 @@ class Node(QObject, Serializable, NodeBase):
         value : NodeState
         """
         return self._state
+
+    def __repr__(self):
+        return (f'<{self.__class__.__name__} model={self._model} '
+                f'uid={self._uid!r}>')
