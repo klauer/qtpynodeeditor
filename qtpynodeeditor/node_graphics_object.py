@@ -5,7 +5,7 @@ from qtpy.QtWidgets import (QGraphicsItem, QGraphicsObject,
                             QGraphicsSceneContextMenuEvent,
                             QGraphicsSceneHoverEvent, QGraphicsSceneMouseEvent,
                             QStyleOptionGraphicsItem, QWidget,
-                            QGraphicsDropShadowEffect)
+                            QGraphicsDropShadowEffect, QSizePolicy)
 
 
 from .enums import ConnectionPolicy
@@ -325,13 +325,21 @@ class NodeGraphicsObject(QGraphicsObject):
 
     def embed_q_widget(self):
         geom = self._node.geometry
-        w = self._node.model.embedded_widget()
-        if w is not None:
-            self._proxy_widget = QGraphicsProxyWidget(self)
-            self._proxy_widget.setWidget(w)
-            self._proxy_widget.setPreferredWidth(5)
-            geom.recalculate_size()
-            self._proxy_widget.setPos(geom.widget_position)
-            self.update()
-            self._proxy_widget.setOpacity(1.0)
-            self._proxy_widget.setFlag(QGraphicsItem.ItemIgnoresParentOpacity)
+        widget = self._node.model.embedded_widget()
+        if widget is None:
+            return
+
+        self._proxy_widget = QGraphicsProxyWidget(self)
+        self._proxy_widget.setWidget(widget)
+        self._proxy_widget.setPreferredWidth(5)
+        geom.recalculate_size()
+
+        # If the widget wants to use as much vertical space as possible, set it
+        # to have the geomtry's equivalent_widget_height.
+        if widget.sizePolicy().verticalPolicy() & QSizePolicy.ExpandFlag:
+            self._proxy_widget.setMinimumHeight(geom.equivalent_widget_height())
+
+        self._proxy_widget.setPos(geom.widget_position)
+        self.update()
+        self._proxy_widget.setOpacity(1.0)
+        self._proxy_widget.setFlag(QGraphicsItem.ItemIgnoresParentOpacity)

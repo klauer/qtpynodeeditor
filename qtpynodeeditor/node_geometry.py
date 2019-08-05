@@ -2,6 +2,7 @@ import math
 
 from qtpy.QtCore import QPointF, QRect, QRectF, QSizeF
 from qtpy.QtGui import QFont, QFontMetrics, QTransform
+from qtpy.QtWidgets import QSizePolicy
 
 from .base import NodeBase
 from .enums import NodeValidationState, PortType
@@ -56,15 +57,15 @@ class NodeGeometry:
         return self._width
 
     @width.setter
-    def width(self, w: int):
+    def width(self, width: int):
         """
         Set width
 
         Parameters
         ----------
-        w : int
+        width : int
         """
-        self._width = int(w)
+        self._width = int(width)
 
     @property
     def entry_height(self) -> int:
@@ -100,15 +101,15 @@ class NodeGeometry:
         return self._entry_width
 
     @entry_width.setter
-    def entry_width(self, w: int):
+    def entry_width(self, width: int):
         """
         Set entry width
 
         Parameters
         ----------
-        w : int
+        width : int
         """
-        self._entry_width = int(w)
+        self._entry_width = int(width)
 
     @property
     def spacing(self) -> int:
@@ -240,18 +241,18 @@ class NodeGeometry:
         step = self._entry_height + self._spacing
         height = step * max_num_of_entries
 
-        w = self._model.embedded_widget()
-        if w:
-            height = max((height, w.height()))
+        widget = self._model.embedded_widget()
+        if widget:
+            height = max((height, widget.height()))
 
         height += self.caption_height
         self._input_port_width = self.port_width(PortType.input)
         self._output_port_width = self.port_width(PortType.output)
         width = self._input_port_width + self._output_port_width + 2 * self._spacing
 
-        w = self._model.embedded_widget()
-        if w:
-            width += w.width()
+        widget = self._model.embedded_widget()
+        if widget:
+            width += widget.width()
 
         width = max((width, self.caption_width))
 
@@ -345,21 +346,42 @@ class NodeGeometry:
         -------
         value : QPointF
         """
-        w = self._model.embedded_widget()
-        if not w:
+        widget = self._model.embedded_widget()
+        if not widget:
             return QPointF()
+
+        if widget.sizePolicy().verticalPolicy() & QSizePolicy.ExpandFlag:
+            # If the widget wants to use as much vertical space as possible,
+            # place it immediately after the caption.
+            return QPointF(self._spacing + self.port_width(PortType.input),
+                           self.caption_height())
 
         if self._model.validation_state() != NodeValidationState.valid:
             return QPointF(
                 self._spacing + self.port_width(PortType.input),
                 (self.caption_height + self._height - self.validation_height -
-                 self._spacing - w.height()) / 2.0,
+                 self._spacing - widget.height()) / 2.0,
             )
 
         return QPointF(
             self._spacing + self.port_width(PortType.input),
-            (self.caption_height + self._height - w.height()) / 2.0
+            (self.caption_height + self._height - widget.height()) / 2.0
         )
+
+    def equivalent_widget_height(self) -> int:
+        '''
+        The maximum height a widget can be without causing the node to grow.
+
+        Returns
+        -------
+        value : int
+        '''
+        base_height = self.height() - self.caption_height()
+
+        if self._model.validation_state() != NodeValidationState.valid:
+            return (base_height + self.validation_height())
+
+        return base_height
 
     @property
     def validation_height(self) -> int:
