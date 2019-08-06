@@ -1,12 +1,10 @@
-from qtpy.QtCore import QPoint, QRectF, QSize, QSizeF, QVariant, Qt
+from qtpy.QtCore import QPoint, QRectF, QSize, QSizeF, Qt, QVariant
 from qtpy.QtGui import QCursor, QPainter
-from qtpy.QtWidgets import (QGraphicsItem, QGraphicsObject,
-                            QGraphicsProxyWidget,
+from qtpy.QtWidgets import (QGraphicsDropShadowEffect, QGraphicsItem,
+                            QGraphicsObject, QGraphicsProxyWidget,
                             QGraphicsSceneContextMenuEvent,
                             QGraphicsSceneHoverEvent, QGraphicsSceneMouseEvent,
-                            QStyleOptionGraphicsItem, QWidget,
-                            QGraphicsDropShadowEffect, QSizePolicy)
-
+                            QSizePolicy, QStyleOptionGraphicsItem, QWidget)
 
 from .enums import ConnectionPolicy
 from .node_connection_interaction import NodeConnectionInteraction

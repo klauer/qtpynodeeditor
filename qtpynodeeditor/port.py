@@ -1,7 +1,7 @@
 from qtpy.QtCore import QObject, Signal
 
 from .base import ConnectionBase
-from .enums import PortType, ConnectionPolicy
+from .enums import ConnectionPolicy, PortType
 
 
 def opposite_port(port: PortType):

@@ -1,6 +1,5 @@
 from qtpy.QtCore import QPointF, QRectF
 
-
 from .port import PortType
 
 

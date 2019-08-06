@@ -1,13 +1,13 @@
-import logging
 import contextlib
+import logging
 import threading
 
-from qtpy.QtWidgets import (QWidget, QLineEdit, QApplication, QLabel)
 from qtpy.QtGui import QDoubleValidator
+from qtpy.QtWidgets import QApplication, QLabel, QLineEdit, QWidget
 
 import qtpynodeeditor as nodeeditor
-from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
-                            NodeValidationState, Port)
+from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType,
+                            NodeValidationState, Port, PortType)
 
 
 class DecimalData(NodeData):

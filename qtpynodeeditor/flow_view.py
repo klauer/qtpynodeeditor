@@ -1,16 +1,15 @@
 import logging
 import math
-from qtpy.QtCore import QLineF, QRectF, Qt, QPoint
+
+from qtpy.QtCore import QLineF, QPoint, QRectF, Qt
 from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter,
                         QPen, QShowEvent, QWheelEvent)
 from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
                             QTreeWidget, QTreeWidgetItem, QWidgetAction)
 
-
 from .connection_graphics_object import ConnectionGraphicsObject
 from .flow_scene import FlowScene
 from .node_graphics_object import NodeGraphicsObject
-
 
 logger = logging.getLogger(__name__)
 

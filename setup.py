@@ -1,7 +1,8 @@
-import sys
 import pathlib
+import sys
 from os import path
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 import versioneer
 

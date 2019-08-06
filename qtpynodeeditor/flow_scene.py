@@ -1,7 +1,8 @@
 import contextlib
-import os
 import json
-from qtpy.QtCore import QDir, QPoint, QPointF, Qt, QObject, Signal
+import os
+
+from qtpy.QtCore import QDir, QObject, QPoint, QPointF, Qt, Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
 from . import style as style_module
@@ -9,10 +10,10 @@ from .connection import Connection
 from .connection_graphics_object import ConnectionGraphicsObject
 from .data_model_registry import DataModelRegistry
 from .node import Node
-from .node_data import NodeDataType, NodeDataModel
+from .node_data import NodeDataModel, NodeDataType
 from .node_graphics_object import NodeGraphicsObject
-from .port import PortType, Port
-from .type_converter import TypeConverter, DefaultTypeConverter
+from .port import Port, PortType
+from .type_converter import DefaultTypeConverter, TypeConverter
 
 
 def locate_node_at(scene_point, scene, view_transform):

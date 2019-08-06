@@ -1,21 +1,14 @@
 from qtpy.QtCore import QRectF
 from qtpy.QtGui import QPainter, QPainterPath
-from qtpy.QtWidgets import (
-    QGraphicsBlurEffect,
-    QGraphicsItem,
-    QGraphicsObject,
-    QGraphicsSceneHoverEvent,
-    QGraphicsSceneMouseEvent,
-    QStyleOptionGraphicsItem,
-    QWidget,
-)
-
+from qtpy.QtWidgets import (QGraphicsBlurEffect, QGraphicsItem,
+                            QGraphicsObject, QGraphicsSceneHoverEvent,
+                            QGraphicsSceneMouseEvent, QStyleOptionGraphicsItem,
+                            QWidget)
 
 from .base import ConnectionBase
 from .connection_painter import ConnectionPainter
 from .node_connection_interaction import NodeConnectionInteraction
 from .port import PortType, opposite_port
-
 
 debug_drawing = False
 

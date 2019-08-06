@@ -3,9 +3,8 @@ import logging
 from qtpy import QtWidgets
 
 import qtpynodeeditor
-from qtpynodeeditor import (NodeData, NodeDataType, NodeDataModel,
-                            StyleCollection, PortType)
-
+from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType, PortType,
+                            StyleCollection)
 
 style_json = '''
     {

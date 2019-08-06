@@ -1,5 +1,5 @@
 import pytest
-from qtpy import QtGui, QtCore
+from qtpy import QtCore, QtGui
 
 from qtpynodeeditor import examples
 

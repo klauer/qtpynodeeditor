@@ -1,9 +1,9 @@
 from collections import OrderedDict
 
-from .enums import ReactToConnectionState
 from .base import ConnectionBase
+from .enums import ReactToConnectionState
 from .node_data import NodeDataType
-from .port import PortType, Port
+from .port import Port, PortType
 
 
 class NodeState:

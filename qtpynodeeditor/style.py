@@ -4,7 +4,6 @@ import random
 
 from qtpy.QtGui import QColor
 
-
 logger = logging.getLogger(__name__)
 
 

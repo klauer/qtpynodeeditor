@@ -1,15 +1,13 @@
 import inspect
 from collections import namedtuple
 
-from qtpy.QtCore import QObject
+from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QWidget
-from qtpy.QtCore import Signal
 
 from . import style as style_module
 from .base import Serializable
-from .enums import NodeValidationState, PortType, ConnectionPolicy
+from .enums import ConnectionPolicy, NodeValidationState, PortType
 from .port import Port
-
 
 NodeDataType = namedtuple('NodeDataType', ('id', 'name'))
 

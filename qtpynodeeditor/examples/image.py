@@ -1,10 +1,10 @@
 import logging
 
-from qtpy import QtWidgets, QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
 from qtpy.QtCore import Qt
 
 import qtpynodeeditor
-from qtpynodeeditor import (NodeData, NodeDataType, NodeDataModel, PortType)
+from qtpynodeeditor import NodeData, NodeDataModel, NodeDataType, PortType
 
 
 class PixmapData(NodeData):

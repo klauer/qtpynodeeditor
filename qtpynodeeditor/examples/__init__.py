@@ -1,7 +1,3 @@
-from . import calculator
-from . import style
-from . import connection_colors
-from . import image
-
+from . import calculator, connection_colors, image, style
 
 __all__ = ['calculator', 'style', 'connection_colors', 'image']
