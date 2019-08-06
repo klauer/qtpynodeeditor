@@ -152,13 +152,12 @@
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPointF</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">,</span> <span class="n">ConnectionRequiresPortFailure</span><span class="p">,</span>
-                         <span class="n">ConnectionSelfFailure</span><span class="p">,</span> <span class="n">ConnectionPointFailure</span><span class="p">,</span>
-                         <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">ConnectionBase</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">ConnectionPointFailure</span><span class="p">,</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
+                         <span class="n">ConnectionRequiresPortFailure</span><span class="p">,</span> <span class="n">ConnectionSelfFailure</span><span class="p">,</span>
+                         <span class="n">NodeConnectionFailure</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">DefaultTypeConverter</span>
-
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 

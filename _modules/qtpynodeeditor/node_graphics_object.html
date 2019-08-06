@@ -148,15 +148,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for qtpynodeeditor.node_graphics_object</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">QVariant</span><span class="p">,</span> <span class="n">Qt</span>
+<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QVariant</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QPainter</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsItem</span><span class="p">,</span> <span class="n">QGraphicsObject</span><span class="p">,</span>
-                            <span class="n">QGraphicsProxyWidget</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsDropShadowEffect</span><span class="p">,</span> <span class="n">QGraphicsItem</span><span class="p">,</span>
+                            <span class="n">QGraphicsObject</span><span class="p">,</span> <span class="n">QGraphicsProxyWidget</span><span class="p">,</span>
                             <span class="n">QGraphicsSceneContextMenuEvent</span><span class="p">,</span>
                             <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span>
-                            <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span>
-                            <span class="n">QGraphicsDropShadowEffect</span><span class="p">,</span> <span class="n">QSizePolicy</span><span class="p">)</span>
-
+                            <span class="n">QSizePolicy</span><span class="p">,</span> <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">ConnectionPolicy</span>
 <span class="kn">from</span> <span class="nn">.node_connection_interaction</span> <span class="k">import</span> <span class="n">NodeConnectionInteraction</span>

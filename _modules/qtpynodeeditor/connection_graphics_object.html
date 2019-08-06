@@ -150,22 +150,15 @@
   <h1>Source code for qtpynodeeditor.connection_graphics_object</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QRectF</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPainterPath</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">QGraphicsBlurEffect</span><span class="p">,</span>
-    <span class="n">QGraphicsItem</span><span class="p">,</span>
-    <span class="n">QGraphicsObject</span><span class="p">,</span>
-    <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span>
-    <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span>
-    <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span>
-    <span class="n">QWidget</span><span class="p">,</span>
-<span class="p">)</span>
-
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsBlurEffect</span><span class="p">,</span> <span class="n">QGraphicsItem</span><span class="p">,</span>
+                            <span class="n">QGraphicsObject</span><span class="p">,</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span>
+                            <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span> <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span>
+                            <span class="n">QWidget</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span>
 <span class="kn">from</span> <span class="nn">.connection_painter</span> <span class="k">import</span> <span class="n">ConnectionPainter</span>
 <span class="kn">from</span> <span class="nn">.node_connection_interaction</span> <span class="k">import</span> <span class="n">NodeConnectionInteraction</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
-
 
 <span class="n">debug_drawing</span> <span class="o">=</span> <span class="kc">False</span>
 

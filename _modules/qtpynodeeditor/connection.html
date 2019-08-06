@@ -150,19 +150,17 @@
   <h1>Source code for qtpynodeeditor.connection</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">uuid</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QObject</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">Signal</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">Signal</span>
 
-
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">Serializable</span>
 <span class="kn">from</span> <span class="nn">.connection_geometry</span> <span class="k">import</span> <span class="n">ConnectionGeometry</span>
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="k">import</span> <span class="n">ConnectionGraphicsObject</span>
-<span class="kn">from</span> <span class="nn">.node</span> <span class="k">import</span> <span class="n">NodeDataType</span><span class="p">,</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">.node</span> <span class="k">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">NodeDataType</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="k">import</span> <span class="n">NodeData</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span><span class="p">,</span> <span class="n">Port</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">Port</span><span class="p">,</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
 <span class="kn">from</span> <span class="nn">.style</span> <span class="k">import</span> <span class="n">StyleCollection</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">TypeConverter</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">exceptions</span>
 
 
 <div class="viewcode-block" id="Connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection">[docs]</a><span class="k">class</span> <span class="nc">Connection</span><span class="p">(</span><span class="n">QObject</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">,</span> <span class="n">ConnectionBase</span><span class="p">):</span>

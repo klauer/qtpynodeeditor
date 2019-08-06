@@ -151,15 +151,13 @@
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QObject</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">Signal</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="n">QWidget</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">Signal</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">style</span> <span class="k">as</span> <span class="n">style_module</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Serializable</span>
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">ConnectionPolicy</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">ConnectionPolicy</span><span class="p">,</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">Port</span>
-
 
 <span class="n">NodeDataType</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;NodeDataType&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">))</span>
 
