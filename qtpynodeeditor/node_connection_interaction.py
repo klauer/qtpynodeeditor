@@ -2,13 +2,12 @@ import logging
 
 from qtpy.QtCore import QPointF
 
-from .exceptions import (NodeConnectionFailure, ConnectionRequiresPortFailure,
-                         ConnectionSelfFailure, ConnectionPointFailure,
-                         ConnectionPortNotEmptyFailure)
-from .base import NodeBase, FlowSceneBase, ConnectionBase
+from .base import ConnectionBase, FlowSceneBase, NodeBase
+from .exceptions import (ConnectionPointFailure, ConnectionPortNotEmptyFailure,
+                         ConnectionRequiresPortFailure, ConnectionSelfFailure,
+                         NodeConnectionFailure)
 from .port import PortType, opposite_port
 from .type_converter import DefaultTypeConverter
-
 
 logger = logging.getLogger(__name__)
 

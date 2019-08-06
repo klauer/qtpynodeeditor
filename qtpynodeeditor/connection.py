@@ -1,18 +1,16 @@
 import uuid
 
-from qtpy.QtCore import QObject
-from qtpy.QtCore import Signal
+from qtpy.QtCore import QObject, Signal
 
-
+from . import exceptions
 from .base import ConnectionBase, Serializable
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
-from .node import NodeDataType, Node
+from .node import Node, NodeDataType
 from .node_data import NodeData
-from .port import PortType, opposite_port, Port
+from .port import Port, PortType, opposite_port
 from .style import StyleCollection
 from .type_converter import TypeConverter
-from . import exceptions
 
 
 class Connection(QObject, Serializable, ConnectionBase):

@@ -1,14 +1,14 @@
 import uuid
 
-from qtpy.QtCore import QObject, QPointF, Property, QSizeF
+from qtpy.QtCore import Property, QObject, QPointF, QSizeF
 
-from .enums import ReactToConnectionState
 from .base import NodeBase, Serializable
+from .enums import ReactToConnectionState
 from .node_data import NodeData, NodeDataModel, NodeDataType
 from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_state import NodeState
-from .port import PortType, Port
+from .port import Port, PortType
 from .style import NodeStyle
 
 

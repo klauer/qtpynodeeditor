@@ -1,12 +1,10 @@
-from qtpy.QtCore import QPoint, Qt, QLineF, QSize
-from qtpy.QtGui import QPainter, QPainterPath, QPainterPathStroker, QIcon, QPen
+from qtpy.QtCore import QLineF, QPoint, QSize, Qt
+from qtpy.QtGui import QIcon, QPainter, QPainterPath, QPainterPathStroker, QPen
 
-
-from .enums import PortType
 from .base import ConnectionBase
 from .connection_geometry import ConnectionGeometry
+from .enums import PortType
 from .style import ConnectionStyle
-
 
 use_debug_drawing = False
 
