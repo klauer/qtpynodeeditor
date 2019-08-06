@@ -468,8 +468,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        event : QGraphicsSceneContextMenuEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_context_menu</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span>
-                                           <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_context_menu</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">scenePos</span><span class="p">(),</span> <span class="n">event</span><span class="o">.</span><span class="n">screenPos</span><span class="p">())</span></div>
 
     <span class="k">def</span> <span class="nf">embed_q_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>

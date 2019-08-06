@@ -529,7 +529,9 @@
     <span class="c1">#  Node has been added to the scene.</span>
     <span class="c1">#  Connect to self signal if need a correct position of node.</span>
     <span class="n">node_placed</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
-    <span class="n">node_context_menu</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">,</span> <span class="n">QPointF</span><span class="p">)</span>
+
+    <span class="c1"># node_context_menu(node, scene_position, screen_position)</span>
+    <span class="n">node_context_menu</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">,</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QPoint</span><span class="p">)</span>
     <span class="n">node_double_clicked</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
     <span class="n">node_hover_left</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
     <span class="n">node_hovered</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">,</span> <span class="n">QPoint</span><span class="p">)</span>
