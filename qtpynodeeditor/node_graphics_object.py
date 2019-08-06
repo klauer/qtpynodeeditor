@@ -318,8 +318,8 @@ class NodeGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneContextMenuEvent
         """
-        self._scene.node_context_menu.emit(self._node,
-                                           self.mapToScene(event.pos()))
+        self._scene.node_context_menu.emit(
+            self._node, event.scenePos(), event.screenPos())
 
     def embed_q_widget(self):
         geom = self._node.geometry

@@ -379,7 +379,9 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
     #  Node has been added to the scene.
     #  Connect to self signal if need a correct position of node.
     node_placed = Signal(Node)
-    node_context_menu = Signal(Node, QPointF)
+
+    # node_context_menu(node, scene_position, screen_position)
+    node_context_menu = Signal(Node, QPointF, QPoint)
     node_double_clicked = Signal(Node)
     node_hover_left = Signal(Node)
     node_hovered = Signal(Node, QPoint)
