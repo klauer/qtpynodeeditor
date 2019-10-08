@@ -44,10 +44,10 @@ Installation
 ::
 
    $ conda create -n node -c conda-forge python=3.6 pyqt5 qt qtpy
-   $ source activate node
+   $ conda activate node
    $ git clone https://github.com/klauer/qtpynodeeditor
    $ cd qtpynodeeditor
-   $ python setup.py install
+   $ pip install .
 
 Running the Tests
 -----------------
