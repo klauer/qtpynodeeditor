@@ -250,7 +250,6 @@ class NodeGeometry:
         self._output_port_width = self.port_width(PortType.output)
         width = self._input_port_width + self._output_port_width + 2 * self._spacing
 
-        widget = self._model.embedded_widget()
         if widget:
             width += widget.width()
 
