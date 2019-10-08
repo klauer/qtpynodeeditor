@@ -3,7 +3,7 @@ import math
 
 from qtpy.QtCore import QLineF, QPoint, QRectF, Qt
 from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter,
-                        QPen, QShowEvent, QWheelEvent)
+                        QPen, QShowEvent, QWheelEvent, QKeySequence)
 from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
                             QTreeWidget, QTreeWidgetItem, QWidgetAction)
 
@@ -75,14 +75,14 @@ class FlowView(QGraphicsView):
         # setup actions
         del self._clear_selection_action
         self._clear_selection_action = QAction("Clear Selection", self)
-        self._clear_selection_action.setShortcut(Qt.Key_Escape)
+        self._clear_selection_action.setShortcut(QKeySequence.Cancel)
         self._clear_selection_action.triggered.connect(self._scene.clearSelection)
 
         self.addAction(self._clear_selection_action)
         del self._delete_selection_action
         self._delete_selection_action = QAction("Delete Selection", self)
-        self._delete_selection_action.setShortcut(Qt.Key_Delete)
-        self._delete_selection_action.setShortcut(Qt.Key_Backspace)
+        self._delete_selection_action.setShortcut(QKeySequence.Backspace)
+        self._delete_selection_action.setShortcut(QKeySequence.Delete)
         self._delete_selection_action.triggered.connect(self.delete_selected)
         self.addAction(self._delete_selection_action)
 
