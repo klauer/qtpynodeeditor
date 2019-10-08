@@ -2,6 +2,7 @@ import contextlib
 import json
 import os
 
+import qtpy
 from qtpy.QtCore import QDir, QObject, QPoint, QPointF, Qt, Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
@@ -33,7 +34,13 @@ class FlowSceneModel(QObject):
     node_deleted = Signal(Node)
 
     def __init__(self, registry=None, parent=None):
-        super().__init__(parent=parent)
+        try:
+            super().__init__(parent=parent)
+        except RuntimeError as ex:
+            if (qtpy.API_NAME == 'PySide2' and
+                    'initialize an object' not in str(ex)):
+                raise
+
         self._connections = []
         self._nodes = {}
 
@@ -398,7 +405,11 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         style : StyleCollection, optional
         parent : QObject, optional
         '''
-        super().__init__(registry=registry, parent=parent)
+        # Note: PySide2 does not support a cooperative __init__, meaning we
+        # cannot use super().__init__ here.
+        # super().__init__(registry=registry, parent=parent)
+        QGraphicsScene.__init__(self, parent=parent)
+        FlowSceneModel.__init__(self, registry=registry)
 
         if style is None:
             style = style_module.default_style
