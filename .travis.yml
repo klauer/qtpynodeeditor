@@ -39,13 +39,6 @@ matrix:
     - python: 3.7
       env:
         - QT_API=PySide2
-  allow_failures:
-  - python: 3.6
-    env:
-      - QT_API=PySide2
-  - python: 3.7
-    env:
-      - QT_API=PySide2
 
 install:
   # Install and configure miniconda
