@@ -2,7 +2,6 @@ import contextlib
 import json
 import os
 
-import qtpy
 from qtpy.QtCore import QDir, QObject, QPoint, QPointF, Qt, Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
