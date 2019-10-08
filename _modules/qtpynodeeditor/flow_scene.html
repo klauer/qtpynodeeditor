@@ -174,16 +174,9 @@
     <span class="k">return</span> <span class="n">filtered_items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">node</span> <span class="k">if</span> <span class="n">filtered_items</span> <span class="k">else</span> <span class="kc">None</span>
 
 
-<span class="k">class</span> <span class="nc">FlowSceneModel</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
-    <span class="n">connection_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Connection</span><span class="p">)</span>
-    <span class="n">connection_deleted</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Connection</span><span class="p">)</span>
-
-    <span class="c1"># Node has been created but not on the scene yet. (see: node_placed())</span>
-    <span class="n">node_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
-    <span class="n">node_deleted</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">_FlowSceneModel</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -515,8 +508,26 @@
             <span class="n">connection</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="FlowScene"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowScene">[docs]</a><span class="k">class</span> <span class="nc">FlowScene</span><span class="p">(</span><span class="n">QGraphicsScene</span><span class="p">,</span> <span class="n">FlowSceneModel</span><span class="p">,</span> <span class="n">QObject</span><span class="p">):</span>
-    <span class="c1"># Re-implement Signals from FlowSceneModel due to limitations of PyQt:</span>
+<span class="k">class</span> <span class="nc">FlowSceneModel</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A model representing a flow scene</span>
+
+<span class="sd">    Emits the following signals upon connection/node creation/deletion::</span>
+
+<span class="sd">        connection_created : Signal(Connection)</span>
+<span class="sd">        connection_deleted : Signal(Connection)</span>
+<span class="sd">        node_created : Signal(Node)</span>
+<span class="sd">        node_deleted : Signal(Node)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">connection_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Connection</span><span class="p">)</span>
+    <span class="n">connection_deleted</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Connection</span><span class="p">)</span>
+
+    <span class="n">node_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
+    <span class="n">node_deleted</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FlowScene"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowScene">[docs]</a><span class="k">class</span> <span class="nc">FlowScene</span><span class="p">(</span><span class="n">QGraphicsScene</span><span class="p">,</span> <span class="n">_FlowSceneModel</span><span class="p">):</span>
+    <span class="c1"># Implement the FlowSceneModel signals:</span>
     <span class="n">connection_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Connection</span><span class="p">)</span>
     <span class="n">connection_deleted</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Connection</span><span class="p">)</span>
     <span class="n">node_created</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
@@ -548,7 +559,11 @@
 <span class="sd">        style : StyleCollection, optional</span>
 <span class="sd">        parent : QObject, optional</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">registry</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="c1"># Note: PySide2 does not support a cooperative __init__, meaning we</span>
+        <span class="c1"># cannot use super().__init__ here.</span>
+        <span class="c1"># super().__init__(registry=registry, parent=parent)</span>
+        <span class="n">QGraphicsScene</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">_FlowSceneModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="o">=</span><span class="n">registry</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">style</span> <span class="o">=</span> <span class="n">style_module</span><span class="o">.</span><span class="n">default_style</span>

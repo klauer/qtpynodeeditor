@@ -148,7 +148,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for qtpynodeeditor.node_graphics_object</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QVariant</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QPainter</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsDropShadowEffect</span><span class="p">,</span> <span class="n">QGraphicsItem</span><span class="p">,</span>
                             <span class="n">QGraphicsObject</span><span class="p">,</span> <span class="n">QGraphicsProxyWidget</span><span class="p">,</span>
@@ -278,18 +280,18 @@
                           <span class="n">connection_style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span>
                           <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NodeGraphicsObject.itemChange"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.itemChange">[docs]</a>    <span class="k">def</span> <span class="nf">itemChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">GraphicsItemChange</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">QVariant</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QVariant</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeGraphicsObject.itemChange"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.itemChange">[docs]</a>    <span class="k">def</span> <span class="nf">itemChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="n">QGraphicsItem</span><span class="o">.</span><span class="n">GraphicsItemChange</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        itemChange</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        change : QGraphicsItem.GraphicsItemChange</span>
-<span class="sd">        value : QVariant</span>
+<span class="sd">        value : any</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : QVariant</span>
+<span class="sd">        value : any</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ItemPositionChange</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">move_connections</span><span class="p">()</span>
