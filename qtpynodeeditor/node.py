@@ -1,6 +1,6 @@
 import uuid
 
-from qtpy.QtCore import Property, QObject, QPointF, QSizeF
+from qtpy.QtCore import QObject, QPointF, QSizeF
 
 from .base import NodeBase, Serializable
 from .enums import ReactToConnectionState
@@ -115,7 +115,7 @@ class Node(QObject, Serializable, NodeBase):
         self._state.set_reaction(ReactToConnectionState.not_reacting)
         self._graphics_obj.update()
 
-    @Property(NodeGraphicsObject)
+    @property
     def graphics_object(self) -> NodeGraphicsObject:
         """
         Node graphics object
