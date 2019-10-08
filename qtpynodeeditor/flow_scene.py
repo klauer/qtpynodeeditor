@@ -24,16 +24,9 @@ def locate_node_at(scene_point, scene, view_transform):
     return filtered_items[0].node if filtered_items else None
 
 
-class FlowSceneModel(QObject):
-    connection_created = Signal(Connection)
-    connection_deleted = Signal(Connection)
-
-    # Node has been created but not on the scene yet. (see: node_placed())
-    node_created = Signal(Node)
-    node_deleted = Signal(Node)
-
-    def __init__(self, registry=None, parent=None):
-        super().__init__(parent=parent)
+class _FlowSceneModel:
+    def __init__(self, registry=None):
+        super().__init__()
         self._connections = []
         self._nodes = {}
 
@@ -365,8 +358,26 @@ class FlowSceneModel(QObject):
             connection._cleanup()
 
 
-class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
-    # Re-implement Signals from FlowSceneModel due to limitations of PyQt:
+class FlowSceneModel(QObject):
+    '''
+    A model representing a flow scene
+
+    Emits the following signals upon connection/node creation/deletion::
+
+        connection_created : Signal(Connection)
+        connection_deleted : Signal(Connection)
+        node_created : Signal(Node)
+        node_deleted : Signal(Node)
+    '''
+    connection_created = Signal(Connection)
+    connection_deleted = Signal(Connection)
+
+    node_created = Signal(Node)
+    node_deleted = Signal(Node)
+
+
+class FlowScene(QGraphicsScene, _FlowSceneModel):
+    # Implement the FlowSceneModel signals:
     connection_created = Signal(Connection)
     connection_deleted = Signal(Connection)
     node_created = Signal(Node)
@@ -398,7 +409,11 @@ class FlowScene(QGraphicsScene, FlowSceneModel, QObject):
         style : StyleCollection, optional
         parent : QObject, optional
         '''
-        super().__init__(registry=registry, parent=parent)
+        # Note: PySide2 does not support a cooperative __init__, meaning we
+        # cannot use super().__init__ here.
+        # super().__init__(registry=registry, parent=parent)
+        QGraphicsScene.__init__(self, parent=parent)
+        _FlowSceneModel.__init__(self, registry=registry)
 
         if style is None:
             style = style_module.default_style
