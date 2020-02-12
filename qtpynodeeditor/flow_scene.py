@@ -94,7 +94,7 @@ class _FlowSceneModel:
         if file_name is None:
             file_name, _ = QFileDialog.getSaveFileName(
                 None, "Open Flow Scene", QDir.homePath(),
-                "Flow Scene Files (.flow)")
+                "Flow Scene Files (*.flow)")
 
         if file_name:
             file_name = str(file_name)
@@ -108,7 +108,7 @@ class _FlowSceneModel:
         if file_name is None:
             file_name, _ = QFileDialog.getOpenFileName(
                 None, "Open Flow Scene", QDir.homePath(),
-                "Flow Scene Files (.flow)")
+                "Flow Scene Files (*.flow)")
 
         if not os.path.exists(file_name):
             return
