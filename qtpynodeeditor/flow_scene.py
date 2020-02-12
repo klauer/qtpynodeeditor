@@ -93,7 +93,7 @@ class _FlowSceneModel:
     def save(self, file_name=None):
         if file_name is None:
             file_name, _ = QFileDialog.getSaveFileName(
-                None, "Open Flow Scene", QDir.homePath(),
+                None, "Save Flow Scene", QDir.homePath(),
                 "Flow Scene Files (*.flow)")
 
         if file_name:
