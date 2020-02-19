@@ -7,7 +7,7 @@ from .enums import ConnectionPolicy, NodeValidationState, PortType
 from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
                          ConnectionPortNotEmptyFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
-                         NodeConnectionFailure)
+                         ConnectionDataTypeFailure, NodeConnectionFailure)
 from .flow_scene import FlowScene
 from .flow_view import FlowView
 from .node import Node, NodeDataType
@@ -33,6 +33,7 @@ __all__ = [
     'ConnectionSelfFailure',
     'ConnectionPointFailure',
     'ConnectionPortNotEmptyFailure',
+    'ConnectionDataTypeFailure',
     'DataModelRegistry',
     'FlowScene',
     'FlowView',
