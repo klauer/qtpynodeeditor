@@ -135,6 +135,30 @@ def test_create_connection(scene, view, model):
     assert len(all_c2) == 0
 
 
+def test_create_connection_with_converter(scene, view, model, other_model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(other_model)
+
+    # Converter not registerd, must raise Exception
+    with pytest.raises(nodeeditor.ConnectionDataTypeFailure):
+        scene.create_connection(node1[PortType.output][0], node2[PortType.input][0])
+
+    # Wrong converter, must fail
+    converter = nodeeditor.type_converter.TypeConverter(MyOtherNodeData.data_type,
+                                                        MyNodeData.data_type,
+                                                        lambda x: None)
+    scene.registry.register_type_converter(MyNodeData.data_type, MyOtherNodeData.data_type, converter)
+    with pytest.raises(nodeeditor.ConnectionDataTypeFailure):
+        scene.create_connection(node1[PortType.output][0], node2[PortType.input][0])
+
+    # Correct converter registered, must pass
+    converter = nodeeditor.type_converter.TypeConverter(MyNodeData.data_type,
+                                                        MyOtherNodeData.data_type,
+                                                        lambda x: None)
+    scene.registry.register_type_converter(MyNodeData.data_type, MyOtherNodeData.data_type, converter)
+    scene.create_connection(node1[PortType.output][0], node2[PortType.input][0])
+
+
 def test_clear_scene(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
