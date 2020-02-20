@@ -10,6 +10,7 @@ from . import style as style_module
 from .connection import Connection
 from .connection_graphics_object import ConnectionGraphicsObject
 from .data_model_registry import DataModelRegistry
+from .exceptions import ConnectionDataTypeFailure
 from .node import Node
 from .node_data import NodeDataModel, NodeDataType
 from .node_graphics_object import NodeGraphicsObject
@@ -465,8 +466,24 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         ------
         NodeConnectionFailure
             If it is not possible to create the connection
+        ConnectionDataTypeFailure
+            If port data types are not compatible
         """
-        connection = Connection(port_a=port_a, port_b=port_b, style=self._style)
+        if port_a is not None and port_b is not None:
+            in_port = port_a if port_a.port_type == PortType.input else port_b
+            out_port = port_b if port_a.port_type == PortType.input else port_a
+            if in_port.data_type.id != out_port.data_type.id:
+                if not converter:
+                    # If not specified, try to get it from the registry
+                    converter = self.registry.get_type_converter(out_port.data_type,
+                                                                 in_port.data_type)
+                if (not converter or converter == DefaultTypeConverter
+                        or (converter.type_in != out_port.data_type
+                            or converter.type_out != in_port.data_type)):
+                    raise ConnectionDataTypeFailure(
+                        f'{in_port.data_type} and {out_port.data_type} are not compatible'
+                    )
+        connection = Connection(port_a=port_a, port_b=port_b, style=self._style, converter=converter)
         if port_a is not None:
             port_a.add_connection(connection)
 
