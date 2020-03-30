@@ -2,6 +2,7 @@ import contextlib
 import json
 import os
 
+import qtpy
 from qtpy.QtCore import QDir, QObject, QPoint, QPointF, Qt, Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
@@ -24,9 +25,26 @@ def locate_node_at(scene_point, scene, view_transform):
     return filtered_items[0].node if filtered_items else None
 
 
-class _FlowSceneModel:
-    def __init__(self, registry=None):
-        super().__init__()
+class FlowSceneModel:
+    '''
+    A model representing a flow scene
+
+    Emits the following signals upon connection/node creation/deletion::
+
+        connection_created : Signal(Connection)
+        connection_deleted : Signal(Connection)
+        node_created : Signal(Node)
+        node_deleted : Signal(Node)
+    '''
+    connection_created = Signal(Connection)
+    connection_deleted = Signal(Connection)
+
+    node_created = Signal(Node)
+    node_deleted = Signal(Node)
+
+    def __init__(self, registry=None, **kwargs):
+        super().__init__(**kwargs)
+        print('model init called')
         self._connections = []
         self._nodes = {}
 
@@ -166,6 +184,7 @@ class _FlowSceneModel:
         ----------
         conn : Connection
         """
+        print('setup conn signals', conn)
         conn.connection_made_incomplete.connect(
             self.connection_deleted.emit, Qt.UniqueConnection)
 
@@ -358,32 +377,7 @@ class _FlowSceneModel:
             connection._cleanup()
 
 
-class FlowSceneModel(QObject):
-    '''
-    A model representing a flow scene
-
-    Emits the following signals upon connection/node creation/deletion::
-
-        connection_created : Signal(Connection)
-        connection_deleted : Signal(Connection)
-        node_created : Signal(Node)
-        node_deleted : Signal(Node)
-    '''
-    connection_created = Signal(Connection)
-    connection_deleted = Signal(Connection)
-
-    node_created = Signal(Node)
-    node_deleted = Signal(Node)
-
-
-class FlowScene(QGraphicsScene, _FlowSceneModel):
-    # Implement the FlowSceneModel signals:
-    connection_created = Signal(Connection)
-    connection_deleted = Signal(Connection)
-    node_created = Signal(Node)
-    node_deleted = Signal(Node)
-    # End of re-implemented signals
-
+class FlowScene(FlowSceneModel, QGraphicsScene):
     connection_hover_left = Signal(Connection)
     connection_hovered = Signal(Connection, QPoint)
 
@@ -409,11 +403,8 @@ class FlowScene(QGraphicsScene, _FlowSceneModel):
         style : StyleCollection, optional
         parent : QObject, optional
         '''
-        # Note: PySide2 does not support a cooperative __init__, meaning we
-        # cannot use super().__init__ here.
-        # super().__init__(registry=registry, parent=parent)
-        QGraphicsScene.__init__(self, parent=parent)
-        _FlowSceneModel.__init__(self, registry=registry)
+        super().__init__(parent=parent)
+        self._registry = registry or self._registry
 
         if style is None:
             style = style_module.default_style
