@@ -7,7 +7,6 @@ import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import PortType
 
 
-
 class MyNodeData(nodeeditor.NodeData):
     data_type = nodeeditor.NodeDataType('MyNodeData', 'My Node Data')
 
