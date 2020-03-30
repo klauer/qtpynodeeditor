@@ -85,12 +85,6 @@ class Connection(QObject, Serializable, ConnectionBase):
             self._graphics_object._cleanup()
             self._graphics_object = None
 
-    def __del__(self):
-        try:
-            self._cleanup()
-        except Exception:
-            ...
-
     @property
     def style(self) -> StyleCollection:
         return self._style

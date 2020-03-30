@@ -427,12 +427,6 @@ class FlowScene(QGraphicsScene, _FlowSceneModel):
     def _cleanup(self):
         self.clear_scene()
 
-    def __del__(self):
-        try:
-            self._cleanup()
-        except Exception:
-            ...
-
     @property
     def allow_node_creation(self):
         return self._allow_node_creation
