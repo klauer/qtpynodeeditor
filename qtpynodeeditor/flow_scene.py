@@ -44,7 +44,6 @@ class FlowSceneModel:
 
     def __init__(self, registry=None, **kwargs):
         super().__init__(**kwargs)
-        print('model init called')
         self._connections = []
         self._nodes = {}
 
@@ -184,7 +183,6 @@ class FlowSceneModel:
         ----------
         conn : Connection
         """
-        print('setup conn signals', conn)
         conn.connection_made_incomplete.connect(
             self.connection_deleted.emit, Qt.UniqueConnection)
 

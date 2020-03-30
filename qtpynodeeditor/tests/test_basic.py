@@ -1,8 +1,11 @@
+import unittest.mock
+
 import pytest
 import qtpy.QtCore
 
 import qtpynodeeditor as nodeeditor
 from qtpynodeeditor import PortType
+
 
 
 class MyNodeData(nodeeditor.NodeData):
@@ -256,3 +259,36 @@ def test_smoke_repr(scene, view, model):
     conn = scene.create_connection(*ports)
     print()
     print('connection', conn)
+
+
+def test_smoke_scene_signal_connections(scene, view, model):
+    mock = unittest.mock.Mock()
+    scene.connection_created.connect(mock)
+
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    conn = scene.create_connection(node2[PortType.output][2],
+                                   node1[PortType.input][1])
+    assert mock.call_count == 1
+
+    mock = unittest.mock.Mock()
+    scene.connection_deleted.connect(mock)
+
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    scene.delete_connection(conn)
+    assert mock.call_count == 1
+
+
+def test_smoke_scene_signal_nodes(scene, view, model):
+    mock = unittest.mock.Mock()
+    scene.node_created.connect(mock)
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    assert mock.call_count == 2
+
+    mock = unittest.mock.Mock()
+    scene.node_deleted.connect(mock)
+    scene.remove_node(node1)
+    scene.remove_node(node2)
+    assert mock.call_count == 2
