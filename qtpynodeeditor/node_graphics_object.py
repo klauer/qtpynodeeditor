@@ -58,12 +58,6 @@ class NodeGraphicsObject(QGraphicsObject):
             self._scene.removeItem(self)
             self._scene = None
 
-    def __del__(self):
-        try:
-            self._cleanup()
-        except Exception:
-            ...
-
     def setPos(self, pos):
         super().setPos(pos)
         self.move_connections()

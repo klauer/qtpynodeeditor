@@ -43,12 +43,6 @@ class Node(QObject, Serializable, NodeBase):
             self._graphics_obj = None
             self._geometry = None
 
-    def __del__(self):
-        try:
-            self._cleanup()
-        except Exception:
-            ...
-
     def __getstate__(self) -> dict:
         """
         Save
