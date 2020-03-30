@@ -27,6 +27,9 @@ matrix:
   include:
     - python: 3.6
       env:
+        - CHECK_STYLE=1
+    - python: 3.6
+      env:
         - CONDA_UPLOAD=1
         - BUILD_DOCS=1
         - QT_API=pyqt5
@@ -41,6 +44,15 @@ matrix:
         - QT_API=PySide2
 
 install:
+  - |
+    if [[ "$CHECK_STYLE" == "1" ]]; then
+      echo "Checking style with flake8..."
+      pip install flake8
+      flake8 qtpynodeeditor
+      FLAKE8_EXIT=$?
+      echo "flake8 exited with code $FLAKE8_EXIT"
+      exit $FLAKE8_EXIT
+    fi
   # Install requirements
   - pip install -Ur requirements.txt
   # Install additional development requirements
@@ -50,15 +62,12 @@ install:
   # Install the specific binding we're testing against
   - pip install "${QT_API}"
 
-
 before_script:
   # Run the window manager
   - "herbstluftwm &"
   - sleep 1
 
-
 script:
-  - flake8 qtpynodeeditor
   - export PYTEST_QT_API="${QT_API}"
   - coverage run run_tests.py
   - set -e
