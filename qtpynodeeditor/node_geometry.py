@@ -491,7 +491,8 @@ class NodeGeometry:
         if not names:
             return 0
 
-        return max(self._font_metrics.width(name) for name in names)
+        return max(self._font_metrics.horizontalAdvance(name)
+                   for name in names)
 
     @property
     def size(self):
