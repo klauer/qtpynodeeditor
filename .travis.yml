@@ -53,6 +53,8 @@ install:
       echo "flake8 exited with code $FLAKE8_EXIT"
       exit $FLAKE8_EXIT
     fi
+  # Ensure pip is up-to-date
+  - pip install --upgrade pip
   # Install requirements
   - pip install -Ur requirements.txt
   # Install additional development requirements
