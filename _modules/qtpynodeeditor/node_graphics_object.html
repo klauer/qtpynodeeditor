@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -150,21 +150,21 @@
   <h1>Source code for qtpynodeeditor.node_graphics_object</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QPainter</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="k">import</span> <span class="p">(</span><span class="n">QGraphicsDropShadowEffect</span><span class="p">,</span> <span class="n">QGraphicsItem</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QSizeF</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QPainter</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QGraphicsDropShadowEffect</span><span class="p">,</span> <span class="n">QGraphicsItem</span><span class="p">,</span>
                             <span class="n">QGraphicsObject</span><span class="p">,</span> <span class="n">QGraphicsProxyWidget</span><span class="p">,</span>
                             <span class="n">QGraphicsSceneContextMenuEvent</span><span class="p">,</span>
                             <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span>
                             <span class="n">QSizePolicy</span><span class="p">,</span> <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">ConnectionPolicy</span>
-<span class="kn">from</span> <span class="nn">.node_connection_interaction</span> <span class="k">import</span> <span class="n">NodeConnectionInteraction</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ConnectionPolicy</span>
+<span class="kn">from</span> <span class="nn">.node_connection_interaction</span> <span class="kn">import</span> <span class="n">NodeConnectionInteraction</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">PortType</span>
 
 
 <div class="viewcode-block" id="NodeGraphicsObject"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject">[docs]</a><span class="k">class</span> <span class="nc">NodeGraphicsObject</span><span class="p">(</span><span class="n">QGraphicsObject</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="n">scene</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node</span> <span class="o">=</span> <span class="n">node</span>
@@ -207,12 +207,6 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="o">...</span>
 
 <div class="viewcode-block" id="NodeGraphicsObject.setPos"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGraphicsObject.setPos">[docs]</a>    <span class="k">def</span> <span class="nf">setPos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
@@ -272,7 +266,7 @@
 <span class="sd">        option : QStyleOptionGraphicsItem</span>
 <span class="sd">        widget : QWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.node_painter</span> <span class="k">import</span> <span class="n">NodePainter</span>
+        <span class="kn">from</span> <span class="nn">.node_painter</span> <span class="kn">import</span> <span class="n">NodePainter</span>
         <span class="c1"># TODO</span>
         <span class="n">painter</span><span class="o">.</span><span class="n">setClipRect</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">exposedRect</span><span class="p">)</span>
         <span class="n">NodePainter</span><span class="o">.</span><span class="n">paint</span><span class="p">(</span><span class="n">painter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="p">,</span>

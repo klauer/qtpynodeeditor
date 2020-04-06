@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -150,16 +150,16 @@
   <h1>Source code for qtpynodeeditor.node_painter</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">math</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QFontMetrics</span><span class="p">,</span> <span class="n">QLinearGradient</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPen</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="kn">import</span> <span class="n">QFontMetrics</span><span class="p">,</span> <span class="n">QLinearGradient</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPen</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="k">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
-<span class="kn">from</span> <span class="nn">.node_data</span> <span class="k">import</span> <span class="n">NodeDataModel</span>
-<span class="kn">from</span> <span class="nn">.node_geometry</span> <span class="k">import</span> <span class="n">NodeGeometry</span>
-<span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="k">import</span> <span class="n">NodeGraphicsObject</span>
-<span class="kn">from</span> <span class="nn">.node_state</span> <span class="k">import</span> <span class="n">NodeState</span>
-<span class="kn">from</span> <span class="nn">.style</span> <span class="k">import</span> <span class="n">ConnectionStyle</span><span class="p">,</span> <span class="n">NodeStyle</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
+<span class="kn">from</span> <span class="nn">.node_data</span> <span class="kn">import</span> <span class="n">NodeDataModel</span>
+<span class="kn">from</span> <span class="nn">.node_geometry</span> <span class="kn">import</span> <span class="n">NodeGeometry</span>
+<span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="kn">import</span> <span class="n">NodeGraphicsObject</span>
+<span class="kn">from</span> <span class="nn">.node_state</span> <span class="kn">import</span> <span class="n">NodeState</span>
+<span class="kn">from</span> <span class="nn">.style</span> <span class="kn">import</span> <span class="n">ConnectionStyle</span><span class="p">,</span> <span class="n">NodeStyle</span>
 
 
 <div class="viewcode-block" id="NodePainterDelegate"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainterDelegate">[docs]</a><span class="k">class</span> <span class="nc">NodePainterDelegate</span><span class="p">:</span>

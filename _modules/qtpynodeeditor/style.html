@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -152,7 +152,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="k">import</span> <span class="n">QColor</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="kn">import</span> <span class="n">QColor</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -213,7 +213,7 @@
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">json_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">json_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_style</span>
 
@@ -234,7 +234,7 @@
 
 
 <div class="viewcode-block" id="FlowViewStyle"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowViewStyle">[docs]</a><span class="k">class</span> <span class="nc">FlowViewStyle</span><span class="p">(</span><span class="n">Style</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">background_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fine_grid_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coarse_grid_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
@@ -272,7 +272,7 @@
 <span class="sd">    use_data_defined_colors : bool</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">construction_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">normal_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
@@ -331,7 +331,7 @@
 
 
 <div class="viewcode-block" id="NodeStyle"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeStyle">[docs]</a><span class="k">class</span> <span class="nc">NodeStyle</span><span class="p">(</span><span class="n">Style</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">normal_boundary_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selected_boundary_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gradient_colors</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">QColor</span><span class="p">()),</span> <span class="p">)</span>
@@ -392,7 +392,7 @@
 <div class="viewcode-block" id="StyleCollection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.StyleCollection">[docs]</a><span class="k">class</span> <span class="nc">StyleCollection</span><span class="p">:</span>
     <span class="s1">&#39;Container for all styles&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flow_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flow_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">NodeStyle</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>

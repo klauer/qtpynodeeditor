@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -150,20 +150,20 @@
   <h1>Source code for qtpynodeeditor.node_connection_interaction</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="k">import</span> <span class="n">QPointF</span>
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPointF</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">ConnectionPointFailure</span><span class="p">,</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ConnectionPointFailure</span><span class="p">,</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
                          <span class="n">ConnectionRequiresPortFailure</span><span class="p">,</span> <span class="n">ConnectionSelfFailure</span><span class="p">,</span>
                          <span class="n">NodeConnectionFailure</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.port</span> <span class="k">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
-<span class="kn">from</span> <span class="nn">.type_converter</span> <span class="k">import</span> <span class="n">DefaultTypeConverter</span>
+<span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
+<span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">DefaultTypeConverter</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="NodeConnectionInteraction"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction">[docs]</a><span class="k">class</span> <span class="nc">NodeConnectionInteraction</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="n">FlowSceneBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="n">FlowSceneBase</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        node_connection_interaction</span>
 
@@ -201,14 +201,14 @@
         <span class="c1"># 1) Connection requires a port</span>
         <span class="n">required_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_required_port</span>
         <span class="k">if</span> <span class="n">required_port</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConnectionRequiresPortFailure</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Connection requires a port&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConnectionRequiresPortFailure</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Connection requires a port&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">required_port</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Invalid port specified </span><span class="si">{required_port}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid port specified </span><span class="si">{</span><span class="n">required_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># 1.5) Forbid connecting the node to itself</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">opposite_port</span><span class="p">(</span><span class="n">required_port</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConnectionSelfFailure</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Cannot connect </span><span class="si">{node}</span><span class="s1"> to itself&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConnectionSelfFailure</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot connect </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1"> to itself&#39;</span><span class="p">)</span>
 
         <span class="c1"># 2) connection point is on top of the node port</span>
         <span class="n">connection_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_end_scene_position</span><span class="p">(</span><span class="n">required_port</span><span class="p">)</span>
@@ -216,12 +216,12 @@
                                                 <span class="n">connection_point</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConnectionPointFailure</span><span class="p">(</span>
-                <span class="n">f</span><span class="s1">&#39;Connection point </span><span class="si">{connection_point}</span><span class="s1"> is not on node </span><span class="si">{node}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">&#39;Connection point </span><span class="si">{</span><span class="n">connection_point</span><span class="si">}</span><span class="s1"> is not on node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># 3) Node port is vacant</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">port</span><span class="o">.</span><span class="n">can_connect</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">(</span>
-                <span class="n">f</span><span class="s1">&#39;Port </span><span class="si">{required_port}</span><span class="s1"> </span><span class="si">{port}</span><span class="s1"> cannot connect&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;Port </span><span class="si">{</span><span class="n">required_port</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1"> cannot connect&#39;</span>
             <span class="p">)</span>
 
         <span class="c1"># 4) Connection type equals node port type, or there is a registered</span>
