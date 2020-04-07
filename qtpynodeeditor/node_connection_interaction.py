@@ -3,7 +3,8 @@ import logging
 from qtpy.QtCore import QPointF
 
 from .base import ConnectionBase, FlowSceneBase, NodeBase
-from .exceptions import (ConnectionPointFailure, ConnectionPortNotEmptyFailure,
+from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
+                         ConnectionPortNotEmptyFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
                          NodeConnectionFailure)
 from .port import PortType, opposite_port
@@ -15,7 +16,8 @@ logger = logging.getLogger(__name__)
 class NodeConnectionInteraction:
     def __init__(self, node: NodeBase, connection: ConnectionBase, scene: FlowSceneBase):
         '''
-        node_connection_interaction
+        An interactive connection interaction to complete `connection` with the
+        given node
 
         Parameters
         ----------
@@ -27,13 +29,23 @@ class NodeConnectionInteraction:
         self._connection = connection
         self._scene = scene
 
+    @property
+    def creates_cycle(self):
+        """Would completing the connection introduce a cycle?"""
+        required_port = self.connection_required_port
+        return self.connection_node.has_connection_by_port_type(
+            self._node, required_port)
+
     def can_connect(self) -> bool:
         """
         Can connect when following conditions are met:
-            1) Connection 'requires' a port
-            2) Connection's vacant end is above the node port
+            1) Connection 'requires' a port - i.e., is missing either a start
+               node or an end node
+            2) Connection's vacant end is above the node port in the user
+               interface
             3) Node port is vacant
-            4) Connection type equals node port type, or there is a registered
+            4) Connection does not introduce a cycle in the graph
+            5) Connection type equals node port type, or there is a registered
                type conversion that can translate between the two
 
         Parameters
@@ -56,7 +68,7 @@ class NodeConnectionInteraction:
             raise ValueError(f'Invalid port specified {required_port}')
 
         # 1.5) Forbid connecting the node to itself
-        node = self._connection.get_node(opposite_port(required_port))
+        node = self.connection_node
         if node == self._node:
             raise ConnectionSelfFailure(f'Cannot connect {node} to itself')
 
@@ -74,7 +86,14 @@ class NodeConnectionInteraction:
                 f'Port {required_port} {port} cannot connect'
             )
 
-        # 4) Connection type equals node port type, or there is a registered
+        # 4) Cycle check
+        if self.creates_cycle:
+            raise ConnectionCycleFailure(
+                f'Connecting {self._node} and {node} would introduce a '
+                f'cycle in the graph'
+            )
+
+        # 5) Connection type equals node port type, or there is a registered
         #    type conversion that can translate between the two
         connection_data_type = self._connection.data_type(opposite_port(required_port))
 
@@ -170,13 +189,19 @@ class NodeConnectionInteraction:
     @property
     def connection_required_port(self) -> PortType:
         """
-        Connection required port
+        The required port type to complete the connection
 
         Returns
         -------
         value : PortType
         """
         return self._connection.required_port
+
+    @property
+    def connection_node(self):
+        """The node already specified for the connection"""
+        required_port = self.connection_required_port
+        return self._connection.get_node(opposite_port(required_port))
 
     def connection_end_scene_position(self, port_type: PortType) -> QPointF:
         """

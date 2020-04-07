@@ -1,3 +1,5 @@
+import collections
+import typing
 import uuid
 
 from qtpy.QtCore import QObject, QPointF, QSizeF
@@ -42,6 +44,78 @@ class Node(QObject, Serializable, NodeBase):
             return node.id == self.id and self.model is node.model
         except AttributeError:
             return False
+
+    def has_any_connection(self, node: 'Node') -> bool:
+        """
+        Is this node connected to `node` through any port?
+
+        Parameters
+        ----------
+        node : Node
+            The node to check connectivity
+
+        Returns
+        -------
+        connected : bool
+        """
+        return any(self.has_connection_by_port_type(node, port_type)
+                   for port_type in PortType)
+
+    def has_connection_by_port_type(self, target: 'Node',
+                                    port_type: PortType) -> bool:
+        """
+        Is this node connected to `target` through an input/output port?
+
+        Parameters
+        ----------
+        target : Node
+            The target node to check connectivity
+        port_type : PortType
+            The port type (``PortType.input``, ``PortType.output``) to check
+
+        Returns
+        -------
+        connected : bool
+        """
+        return any(
+            path[-1] == target
+            for path in self.walk_paths_by_port_type(port_type)
+        )
+
+    def walk_paths_by_port_type(
+            self, port_type: PortType) -> typing.Iterable['Node']:
+        """
+        Yields paths to connected nodes by port type
+
+        Yields
+        ------
+        node_path : tuple
+            The path to the node
+        """
+        seen = set([None])
+        pending = collections.deque([([], self)])
+
+        if port_type == PortType.output:
+            def get_connection_nodes(state):
+                for con in state.output_connections:
+                    yield con.input_node
+        elif port_type == PortType.input:
+            def get_connection_nodes(state):
+                for con in state.input_connections:
+                    yield con.output_node
+        else:
+            raise ValueError(f'Unexpected port_type {port_type}')
+
+        while pending:
+            node_path, node = pending.popleft()
+            seen.add(node)
+            if node is not self:
+                yield tuple(node_path) + (node, )
+
+            node_path = list(node_path) + [node]
+            for node in get_connection_nodes(node.state):
+                if node not in seen:
+                    pending.append((node_path, node))
 
     def __getitem__(self, key):
         return self._state[key]
