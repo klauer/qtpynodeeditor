@@ -34,6 +34,9 @@ class Node(QObject, Serializable, NodeBase):
         self._model.data_updated.connect(self._on_port_index_data_updated)
         self._model.embedded_widget_size_updated.connect(self.on_node_size_updated)
 
+    def __hash__(self):
+        return id(self._uid)
+
     def __eq__(self, node):
         try:
             return node.id == self.id and self.model is node.model
