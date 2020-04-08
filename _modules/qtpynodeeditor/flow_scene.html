@@ -155,6 +155,7 @@
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QPoint</span><span class="p">,</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">Signal</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="kn">import</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QGraphicsScene</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">style</span> <span class="k">as</span> <span class="n">style_module</span>
 <span class="kn">from</span> <span class="nn">.connection</span> <span class="kn">import</span> <span class="n">Connection</span>
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="kn">import</span> <span class="n">ConnectionGraphicsObject</span>
@@ -590,7 +591,8 @@
         <span class="k">return</span> <span class="n">locate_node_at</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowScene.create_connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowScene.create_connection">[docs]</a>    <span class="k">def</span> <span class="nf">create_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_a</span><span class="p">:</span> <span class="n">Port</span><span class="p">,</span> <span class="n">port_b</span><span class="p">:</span> <span class="n">Port</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                          <span class="n">converter</span><span class="p">:</span> <span class="n">TypeConverter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+                          <span class="n">converter</span><span class="p">:</span> <span class="n">TypeConverter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">check_cycles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a connection</span>
 
@@ -602,16 +604,36 @@
 <span class="sd">            The second port, opposite of the type of port_a</span>
 <span class="sd">        converter : TypeConverter, optional</span>
 <span class="sd">            The type converter to use for data propagation</span>
+<span class="sd">        check_cycles : bool, optional</span>
+<span class="sd">            Ensures that creating the connection would not introduce a cycle</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        value : Connection</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NodeConnectionFailure</span>
+<span class="sd">            If it is not possible to create the connection</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">port_a</span><span class="o">=</span><span class="n">port_a</span><span class="p">,</span> <span class="n">port_b</span><span class="o">=</span><span class="n">port_b</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">port_a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">port_a</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">port_b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">port_b</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">port_a</span> <span class="ow">and</span> <span class="n">port_b</span> <span class="ow">and</span> <span class="n">check_cycles</span><span class="p">:</span>
+            <span class="c1"># In the case of a fully-specified connection, ensure adding the</span>
+            <span class="c1"># connection would not create a cycle in the graph.  For</span>
+            <span class="c1"># partially-specified connections (i.e., one port only), the</span>
+            <span class="c1"># validation happens in the NodeConnectionInteraction</span>
+            <span class="n">node_a</span><span class="p">,</span> <span class="n">node_b</span> <span class="o">=</span> <span class="n">port_a</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="n">port_b</span><span class="o">.</span><span class="n">node</span>
+            <span class="k">if</span> <span class="n">node_a</span><span class="o">.</span><span class="n">has_connection_by_port_type</span><span class="p">(</span><span class="n">node_b</span><span class="p">,</span> <span class="n">port_b</span><span class="o">.</span><span class="n">port_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionCycleFailure</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Connecting </span><span class="si">{</span><span class="n">node_a</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">node_b</span><span class="si">}</span><span class="s1"> would introduce a &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;cycle in the graph&#39;</span>
+                <span class="p">)</span>
 
         <span class="n">cgo</span> <span class="o">=</span> <span class="n">ConnectionGraphicsObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">)</span>
         <span class="c1"># after self function connection points are set to node port</span>

@@ -512,9 +512,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">]</span><span class="o">.</span><span class="n">node</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">output_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
         <span class="s1">&#39;Output node&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">]</span><span class="o">.</span><span class="n">node</span>
+
+    <span class="c1"># For backward-compatibility:</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">output_node</span>
 
     <span class="k">def</span> <span class="nf">propagate_empty_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">propagate_data</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>

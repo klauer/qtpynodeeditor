@@ -153,7 +153,8 @@
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPointF</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ConnectionPointFailure</span><span class="p">,</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ConnectionCycleFailure</span><span class="p">,</span> <span class="n">ConnectionPointFailure</span><span class="p">,</span>
+                         <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
                          <span class="n">ConnectionRequiresPortFailure</span><span class="p">,</span> <span class="n">ConnectionSelfFailure</span><span class="p">,</span>
                          <span class="n">NodeConnectionFailure</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
@@ -165,7 +166,8 @@
 <div class="viewcode-block" id="NodeConnectionInteraction"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction">[docs]</a><span class="k">class</span> <span class="nc">NodeConnectionInteraction</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="n">FlowSceneBase</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        node_connection_interaction</span>
+<span class="sd">        An interactive connection interaction to complete `connection` with the</span>
+<span class="sd">        given node</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -177,13 +179,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="n">scene</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">creates_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Would completing the connection introduce a cycle?&quot;&quot;&quot;</span>
+        <span class="n">required_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_required_port</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_node</span><span class="o">.</span><span class="n">has_connection_by_port_type</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">required_port</span><span class="p">)</span>
+
 <div class="viewcode-block" id="NodeConnectionInteraction.can_connect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.can_connect">[docs]</a>    <span class="k">def</span> <span class="nf">can_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Can connect when following conditions are met:</span>
-<span class="sd">            1) Connection &#39;requires&#39; a port</span>
-<span class="sd">            2) Connection&#39;s vacant end is above the node port</span>
+<span class="sd">            1) Connection &#39;requires&#39; a port - i.e., is missing either a start</span>
+<span class="sd">               node or an end node</span>
+<span class="sd">            2) Connection&#39;s vacant end is above the node port in the user</span>
+<span class="sd">               interface</span>
 <span class="sd">            3) Node port is vacant</span>
-<span class="sd">            4) Connection type equals node port type, or there is a registered</span>
+<span class="sd">            4) Connection does not introduce a cycle in the graph</span>
+<span class="sd">            5) Connection type equals node port type, or there is a registered</span>
 <span class="sd">               type conversion that can translate between the two</span>
 
 <span class="sd">        Parameters</span>
@@ -206,7 +218,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid port specified </span><span class="si">{</span><span class="n">required_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># 1.5) Forbid connecting the node to itself</span>
-        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">opposite_port</span><span class="p">(</span><span class="n">required_port</span><span class="p">))</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_node</span>
         <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConnectionSelfFailure</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot connect </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1"> to itself&#39;</span><span class="p">)</span>
 
@@ -224,7 +236,14 @@
                 <span class="sa">f</span><span class="s1">&#39;Port </span><span class="si">{</span><span class="n">required_port</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1"> cannot connect&#39;</span>
             <span class="p">)</span>
 
-        <span class="c1"># 4) Connection type equals node port type, or there is a registered</span>
+        <span class="c1"># 4) Cycle check</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">creates_cycle</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConnectionCycleFailure</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Connecting </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1"> would introduce a &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;cycle in the graph&#39;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># 5) Connection type equals node port type, or there is a registered</span>
         <span class="c1">#    type conversion that can translate between the two</span>
         <span class="n">connection_data_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">data_type</span><span class="p">(</span><span class="n">opposite_port</span><span class="p">(</span><span class="n">required_port</span><span class="p">))</span>
 
@@ -320,13 +339,19 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">connection_required_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PortType</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Connection required port</span>
+<span class="sd">        The required port type to complete the connection</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        value : PortType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">required_port</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">connection_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The node already specified for the connection&quot;&quot;&quot;</span>
+        <span class="n">required_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_required_port</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">opposite_port</span><span class="p">(</span><span class="n">required_port</span><span class="p">))</span>
 
 <div class="viewcode-block" id="NodeConnectionInteraction.connection_end_scene_position"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.connection_end_scene_position">[docs]</a>    <span class="k">def</span> <span class="nf">connection_end_scene_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
