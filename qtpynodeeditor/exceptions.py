@@ -22,6 +22,11 @@ class ConnectionPortNotEmptyFailure(NodeConnectionFailure):
     ...
 
 
+class ConnectionCycleFailure(NodeConnectionFailure):
+    'Connection would introduce a cycle in the graph'
+    ...
+
+
 class PortsOfSameTypeError(NodeConnectionFailure):
     ...
 

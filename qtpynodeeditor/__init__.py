@@ -4,7 +4,8 @@ from .connection_graphics_object import ConnectionGraphicsObject
 from .connection_painter import ConnectionPainter
 from .data_model_registry import DataModelRegistry
 from .enums import ConnectionPolicy, NodeValidationState, PortType
-from .exceptions import (ConnectionPointFailure, ConnectionPortNotEmptyFailure,
+from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
+                         ConnectionPortNotEmptyFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
                          NodeConnectionFailure)
 from .flow_scene import FlowScene
@@ -22,6 +23,7 @@ from .style import (ConnectionStyle, FlowViewStyle, NodeStyle, Style,
 
 __all__ = [
     'Connection',
+    'ConnectionCycleFailure',
     'ConnectionGeometry',
     'ConnectionGraphicsObject',
     'ConnectionPainter',

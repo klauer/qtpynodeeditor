@@ -177,6 +177,31 @@ def test_smoke_node_size_updated(scene, view, model):
     view.update()
 
 
+def test_connection_cycles(scene, view, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    node3 = scene.create_node(model)
+    scene.create_connection(node1[PortType.output][0],
+                            node2[PortType.input][0])
+    scene.create_connection(node2[PortType.output][0],
+                            node3[PortType.input][0])
+
+    # node1 -> node2 -> node3
+
+    # Test with a fully-specified connection: try to connect node3->node1
+    with pytest.raises(nodeeditor.ConnectionCycleFailure):
+        scene.create_connection(node3[PortType.output][0],
+                                node1[PortType.input][0])
+
+    # Test with a half-specified connection: start with node3
+    conn = scene.create_connection(node3[PortType.output][0])
+    # and then pretend the user attempts to connect it to node1:
+    interaction = nodeeditor.NodeConnectionInteraction(
+        node=node1, connection=conn, scene=scene)
+
+    assert interaction.creates_cycle
+
+
 def test_smoke_connection_interaction(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)

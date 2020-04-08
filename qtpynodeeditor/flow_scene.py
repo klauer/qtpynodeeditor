@@ -5,6 +5,7 @@ import os
 from qtpy.QtCore import QDir, QPoint, QPointF, Qt, Signal
 from qtpy.QtWidgets import QFileDialog, QGraphicsScene
 
+from . import exceptions
 from . import style as style_module
 from .connection import Connection
 from .connection_graphics_object import ConnectionGraphicsObject
@@ -440,7 +441,8 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         return locate_node_at(point, self, transform)
 
     def create_connection(self, port_a: Port, port_b: Port = None, *,
-                          converter: TypeConverter = None) -> Connection:
+                          converter: TypeConverter = None,
+                          check_cycles=True) -> Connection:
         """
         Create a connection
 
@@ -452,16 +454,36 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
             The second port, opposite of the type of port_a
         converter : TypeConverter, optional
             The type converter to use for data propagation
+        check_cycles : bool, optional
+            Ensures that creating the connection would not introduce a cycle
 
         Returns
         -------
         value : Connection
+
+        Raises
+        ------
+        NodeConnectionFailure
+            If it is not possible to create the connection
         """
         connection = Connection(port_a=port_a, port_b=port_b, style=self._style)
         if port_a is not None:
             port_a.add_connection(connection)
+
         if port_b is not None:
             port_b.add_connection(connection)
+
+        if port_a and port_b and check_cycles:
+            # In the case of a fully-specified connection, ensure adding the
+            # connection would not create a cycle in the graph.  For
+            # partially-specified connections (i.e., one port only), the
+            # validation happens in the NodeConnectionInteraction
+            node_a, node_b = port_a.node, port_b.node
+            if node_a.has_connection_by_port_type(node_b, port_b.port_type):
+                raise exceptions.ConnectionCycleFailure(
+                    f'Connecting {node_a} and {node_b} would introduce a '
+                    f'cycle in the graph'
+                )
 
         cgo = ConnectionGraphicsObject(self, connection)
         # after self function connection points are set to node port

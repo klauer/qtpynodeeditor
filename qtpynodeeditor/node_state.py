@@ -49,12 +49,27 @@ class NodeState:
         yield from self[PortType.output].values()
 
     @property
+    def output_connections(self):
+        """All output connections"""
+        return [
+            connection
+            for idx, port in self._ports[PortType.output].items()
+            for connection in port.connections
+        ]
+
+    @property
+    def input_connections(self):
+        """All input connections"""
+        return [
+            connection
+            for idx, port in self._ports[PortType.input].items()
+            for connection in port.connections
+        ]
+
+    @property
     def all_connections(self):
-        return [connection
-                for port_type, ports in self._ports.items()
-                for idx, port in ports.items()
-                for connection in port.connections
-                ]
+        """All input and output connections"""
+        return self.input_connections + self.output_connections
 
     def connections(self, port_type: PortType, port_index: int) -> list:
         """
