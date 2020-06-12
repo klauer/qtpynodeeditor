@@ -403,7 +403,7 @@ def main(app):
                                 node_operation[PortType.input][0],
                                 )
 
-        scene.create_connection(node_a[PortType.output][0],
+        scene.create_connection(node_b[PortType.output][0],
                                 node_operation[PortType.input][1],
                                 )
 
