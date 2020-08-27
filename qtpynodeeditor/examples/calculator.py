@@ -44,6 +44,7 @@ class IntegerData(NodeData):
     def lock(self):
         return self._lock
 
+    @property
     def number(self) -> int:
         'The number data'
         return self._number
