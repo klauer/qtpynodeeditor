@@ -8,7 +8,6 @@ from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
                          ConnectionDataTypeFailure, NodeConnectionFailure)
 from .port import PortType, opposite_port
-from .type_converter import DefaultTypeConverter
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +100,7 @@ class NodeConnectionInteraction:
 
         candidate_node_data_type = port.data_type
         if connection_data_type.id == candidate_node_data_type.id:
-            return port, DefaultTypeConverter
+            return port, None
 
         registry = self._scene.registry
         if required_port == PortType.input:

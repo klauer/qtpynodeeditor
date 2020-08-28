@@ -15,7 +15,7 @@ from .node import Node
 from .node_data import NodeDataModel, NodeDataType
 from .node_graphics_object import NodeGraphicsObject
 from .port import Port, PortType
-from .type_converter import DefaultTypeConverter, TypeConverter
+from .type_converter import TypeConverter
 
 
 def locate_node_at(scene_point, scene, view_transform):
@@ -477,9 +477,8 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
                     # If not specified, try to get it from the registry
                     converter = self.registry.get_type_converter(out_port.data_type,
                                                                  in_port.data_type)
-                if (not converter or converter == DefaultTypeConverter
-                        or (converter.type_in != out_port.data_type
-                            or converter.type_out != in_port.data_type)):
+                if (not converter or (converter.type_in != out_port.data_type
+                                      or converter.type_out != in_port.data_type)):
                     raise ConnectionDataTypeFailure(
                         f'{in_port.data_type} and {out_port.data_type} are not compatible'
                     )
@@ -564,7 +563,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         def get_converter():
             converter = connection_json.get("converter", None)
             if converter is None:
-                return DefaultTypeConverter
+                return None
 
             in_type = NodeDataType(
                 id=converter["in"]["id"],
