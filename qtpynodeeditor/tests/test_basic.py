@@ -176,6 +176,18 @@ def test_clear_scene(scene, view, model):
     assert len(all_c2) == 0
 
 
+def test_get_and_set_state(scene, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
+    state = scene.__getstate__()
+    scene.__setstate__(state)
+
+    assert scene.__getstate__() == state
+
+
 def test_save_load(tmp_path, scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
