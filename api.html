@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="qtpynodeeditor" href="index.html" /> 
@@ -49,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> qtpynodeeditor
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> qtpynodeeditor
           
 
           
@@ -72,6 +73,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -137,6 +139,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -175,7 +178,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>API</li>
     
@@ -207,7 +210,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">FlowScene</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">registry</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_node_creation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">allow_node_deletion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.auto_arrange">
-<code class="sig-name descname">auto_arrange</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">layout</span><span class="o">=</span><span class="default_value">'bipartite'</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">700</span></em>, <em class="sig-param"><span class="n">align</span><span class="o">=</span><span class="default_value">'horizontal'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.auto_arrange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.auto_arrange" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">auto_arrange</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">layout</span><span class="o">=</span><span class="default_value">'bipartite'</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">700</span></em>, <em class="sig-param"><span class="n">align</span><span class="o">=</span><span class="default_value">'horizontal'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.auto_arrange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.auto_arrange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Automatically arrange nodes with networkx, if available</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -221,7 +224,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.create_connection">
-<code class="sig-name descname">create_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_a</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em>, <em class="sig-param"><span class="n">port_b</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">converter</span><span class="p">:</span> <span class="n">qtpynodeeditor.type_converter.TypeConverter</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">check_cycles</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_a</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em>, <em class="sig-param"><span class="n">port_b</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">converter</span><span class="p">:</span> <span class="n">qtpynodeeditor.type_converter.TypeConverter</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">check_cycles</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -245,6 +248,8 @@
 <dd class="field-odd"><dl class="simple">
 <dt>NodeConnectionFailure</dt><dd><p>If it is not possible to create the connection</p>
 </dd>
+<dt>ConnectionDataTypeFailure</dt><dd><p>If port data types are not compatible</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -252,7 +257,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.create_connection_by_index">
-<code class="sig-name descname">create_connection_by_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node_in</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em>, <em class="sig-param"><span class="n">port_index_in</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">node_out</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em>, <em class="sig-param"><span class="n">port_index_out</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">converter</span><span class="p">:</span> <span class="n">qtpynodeeditor.type_converter.TypeConverter</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection_by_index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_connection_by_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_in</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em>, <em class="sig-param"><span class="n">port_index_in</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">node_out</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em>, <em class="sig-param"><span class="n">port_index_out</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">converter</span><span class="p">:</span> <span class="n">qtpynodeeditor.type_converter.TypeConverter</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_connection_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_connection_by_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -274,7 +279,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.create_node">
-<code class="sig-name descname">create_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">data_model</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataModel</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_node" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_model</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataModel</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.create_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.create_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a node in the scene</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -292,7 +297,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.restore_connection">
-<code class="sig-name descname">restore_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection_json</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.restore_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.restore_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restore_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection_json</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.connection.Connection<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.restore_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.restore_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -310,7 +315,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.restore_node">
-<code class="sig-name descname">restore_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node_json</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.restore_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.restore_node" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restore_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_json</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.restore_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.restore_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore a node from a state dictinoary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -328,7 +333,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowScene.selected_nodes">
-<code class="sig-name descname">selected_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.selected_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.selected_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">selected_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/qtpynodeeditor/flow_scene.html#FlowScene.selected_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowScene.selected_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selected nodes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -355,7 +360,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">FlowView</code><span class="sig-paren">(</span><em class="sig-param">parent: QWidget = None) QGraphicsView(QGraphicsScene</em>, <em class="sig-param">parent: QWidget = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.FlowView.clear_selection_action">
-<code class="sig-name descname">clear_selection_action</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtWidgets.QAction<a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.clear_selection_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.clear_selection_action" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clear_selection_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; PyQt5.QtWidgets.QAction<a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.clear_selection_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.clear_selection_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear selection action</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -368,7 +373,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.contextMenuEvent">
-<code class="sig-name descname">contextMenuEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QContextMenuEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.contextMenuEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.contextMenuEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">contextMenuEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QContextMenuEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.contextMenuEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.contextMenuEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -380,7 +385,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.delete_selection_action">
-<code class="sig-name descname">delete_selection_action</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtWidgets.QAction<a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.delete_selection_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.delete_selection_action" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_selection_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; PyQt5.QtWidgets.QAction<a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.delete_selection_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.delete_selection_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete selection action</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -393,7 +398,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.drawBackground">
-<code class="sig-name descname">drawBackground</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">r</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QRectF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.drawBackground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.drawBackground" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">drawBackground</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">r</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QRectF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.drawBackground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.drawBackground" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -406,7 +411,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.generate_context_menu">
-<code class="sig-name descname">generate_context_menu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">pos</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPoint</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.generate_context_menu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.generate_context_menu" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_context_menu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pos</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPoint</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.generate_context_menu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.generate_context_menu" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a context menu for contextMenuEvent</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -420,7 +425,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.keyPressEvent">
-<code class="sig-name descname">keyPressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QKeyEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.keyPressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.keyPressEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">keyPressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QKeyEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.keyPressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.keyPressEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -432,7 +437,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.keyReleaseEvent">
-<code class="sig-name descname">keyReleaseEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QKeyEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.keyReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.keyReleaseEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">keyReleaseEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QKeyEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.keyReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.keyReleaseEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -444,7 +449,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.mouseMoveEvent">
-<code class="sig-name descname">mouseMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mouseMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -456,7 +461,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.mousePressEvent">
-<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.mousePressEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.mousePressEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -481,7 +486,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.setScene">
-<code class="sig-name descname">setScene</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">scene</span><span class="p">:</span> <span class="n">qtpynodeeditor.flow_scene.FlowScene</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.setScene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.setScene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setScene</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scene</span><span class="p">:</span> <span class="n">qtpynodeeditor.flow_scene.FlowScene</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.setScene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.setScene" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -493,7 +498,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.showEvent">
-<code class="sig-name descname">showEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QShowEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.showEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.showEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">showEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QShowEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.showEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.showEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -505,7 +510,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.FlowView.wheelEvent">
-<code class="sig-name descname">wheelEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QWheelEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.wheelEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.wheelEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">wheelEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QWheelEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/flow_view.html#FlowView.wheelEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowView.wheelEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -537,7 +542,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">Style</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#Style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Style" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.Style.load_from_json">
-<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#Style.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Style.load_from_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#Style.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Style.load_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load from json</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -574,7 +579,7 @@
 </dl>
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionStyle.get_normal_color">
-<code class="sig-name descname">get_normal_color</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">type_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtGui.QColor<a class="reference internal" href="_modules/qtpynodeeditor/style.html#ConnectionStyle.get_normal_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionStyle.get_normal_color" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_normal_color</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtGui.QColor<a class="reference internal" href="_modules/qtpynodeeditor/style.html#ConnectionStyle.get_normal_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionStyle.get_normal_color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normal color</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -592,7 +597,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionStyle.load_from_json">
-<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#ConnectionStyle.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionStyle.load_from_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#ConnectionStyle.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionStyle.load_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load from json</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -613,7 +618,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">FlowViewStyle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#FlowViewStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowViewStyle" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.FlowViewStyle.load_from_json">
-<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#FlowViewStyle.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowViewStyle.load_from_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#FlowViewStyle.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.FlowViewStyle.load_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load from json</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -634,7 +639,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">NodeStyle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#NodeStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeStyle" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.NodeStyle.load_from_json">
-<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#NodeStyle.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeStyle.load_from_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json_style</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/style.html#NodeStyle.load_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeStyle.load_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load from json</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -684,7 +689,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.has_any_connection">
-<code class="sig-name descname">has_any_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">‘Node’</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.has_any_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.has_any_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">has_any_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.has_any_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.has_any_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is this node connected to <cite>node</cite> through any port?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -703,7 +708,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.has_connection_by_port_type">
-<code class="sig-name descname">has_connection_by_port_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n">‘Node’</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.has_connection_by_port_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.has_connection_by_port_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">has_connection_by_port_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.has_connection_by_port_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.has_connection_by_port_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is this node connected to <cite>target</cite> through an input/output port?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -750,7 +755,7 @@
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.on_data_updated">
-<code class="sig-name descname">on_data_updated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.on_data_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.on_data_updated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_data_updated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.on_data_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.on_data_updated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetches data from model’s output port and propagates it along the
 connection</p>
 <dl class="field-list simple">
@@ -764,7 +769,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.on_node_size_updated">
-<code class="sig-name descname">on_node_size_updated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.on_node_size_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.on_node_size_updated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_node_size_updated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.on_node_size_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.on_node_size_updated" title="Permalink to this definition">¶</a></dt>
 <dd><p>update the graphic part if the size of the embeddedwidget changes</p>
 </dd></dl>
 
@@ -788,7 +793,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.propagate_data">
-<code class="sig-name descname">propagate_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node_data</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeData</span></em>, <em class="sig-param"><span class="n">input_port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.propagate_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagate_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_data</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeData</span></em>, <em class="sig-param"><span class="n">input_port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.propagate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Propagates incoming data to the underlying model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -802,7 +807,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.react_to_possible_connection">
-<code class="sig-name descname">react_to_possible_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">reacting_port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">reacting_data_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">scene_point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.react_to_possible_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.react_to_possible_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">react_to_possible_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reacting_port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">reacting_data_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">scene_point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.react_to_possible_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.react_to_possible_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>React to possible connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -854,7 +859,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Node.walk_paths_by_port_type">
-<code class="sig-name descname">walk_paths_by_port_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; Iterable[_ForwardRef(‘Node’)]<a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.walk_paths_by_port_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.walk_paths_by_port_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">walk_paths_by_port_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span>qtpynodeeditor.node.Node<span class="p">]</span><a class="reference internal" href="_modules/qtpynodeeditor/node.html#Node.walk_paths_by_port_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Node.walk_paths_by_port_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yields paths to connected nodes by port type</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields</dt>
@@ -878,7 +883,7 @@ connection</p>
 <p>The actual data is stored in subtypes</p>
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeData.same_type">
-<code class="sig-name descname">same_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeData.same_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeData.same_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">same_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeData.same_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeData.same_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is another NodeData instance of the same type?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -923,7 +928,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.embedded_widget">
-<code class="sig-name descname">embedded_widget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtWidgets.QWidget<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.embedded_widget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.embedded_widget" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">embedded_widget</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; PyQt5.QtWidgets.QWidget<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.embedded_widget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.embedded_widget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Embedded widget</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -936,7 +941,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.input_connection_created">
-<code class="sig-name descname">input_connection_created</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.input_connection_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.input_connection_created" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">input_connection_created</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.input_connection_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.input_connection_created" title="Permalink to this definition">¶</a></dt>
 <dd><p>Input connection created</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -949,7 +954,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.input_connection_deleted">
-<code class="sig-name descname">input_connection_deleted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.input_connection_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.input_connection_deleted" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">input_connection_deleted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.input_connection_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.input_connection_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Input connection deleted</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -975,7 +980,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.out_data">
-<code class="sig-name descname">out_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeData<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.out_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.out_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">out_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeData<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.out_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.out_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Out data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -993,7 +998,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.output_connection_created">
-<code class="sig-name descname">output_connection_created</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.output_connection_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.output_connection_created" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">output_connection_created</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.output_connection_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.output_connection_created" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output connection created</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1006,7 +1011,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.output_connection_deleted">
-<code class="sig-name descname">output_connection_deleted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.output_connection_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.output_connection_deleted" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">output_connection_deleted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.output_connection_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.output_connection_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output connection deleted</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1019,7 +1024,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.painter_delegate">
-<code class="sig-name descname">painter_delegate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.painter_delegate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.painter_delegate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">painter_delegate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.painter_delegate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.painter_delegate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Painter delegate</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1032,7 +1037,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.port_out_connection_policy">
-<code class="sig-name descname">port_out_connection_policy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.enums.ConnectionPolicy<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.port_out_connection_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.port_out_connection_policy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">port_out_connection_policy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.enums.ConnectionPolicy<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.port_out_connection_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.port_out_connection_policy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Port out connection policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1050,7 +1055,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.resizable">
-<code class="sig-name descname">resizable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.resizable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.resizable" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resizable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.resizable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.resizable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resizable</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1063,7 +1068,7 @@ connection</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.restore">
-<code class="sig-name descname">restore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">doc</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.restore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.restore" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">doc</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.restore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.restore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subclasses may implement this to load additional state from
 pickled or saved-to-JSON data.</p>
 <dl class="field-list simple">
@@ -1077,7 +1082,7 @@ pickled or saved-to-JSON data.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.save" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subclasses may implement this to save additional state for
 pickling/saving to JSON.</p>
 <dl class="field-list simple">
@@ -1091,7 +1096,7 @@ pickling/saving to JSON.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.set_in_data">
-<code class="sig-name descname">set_in_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node_data</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeData</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.set_in_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.set_in_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_in_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_data</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeData</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.set_in_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.set_in_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Triggers the algorithm; to be overridden by subclasses</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1111,7 +1116,7 @@ pickling/saving to JSON.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.validation_message">
-<code class="sig-name descname">validation_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.validation_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.validation_message" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validation_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.validation_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.validation_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validation message</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1124,7 +1129,7 @@ pickling/saving to JSON.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeDataModel.validation_state">
-<code class="sig-name descname">validation_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.enums.NodeValidationState<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.validation_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.validation_state" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validation_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.enums.NodeValidationState<a class="reference internal" href="_modules/qtpynodeeditor/node_data.html#NodeDataModel.validation_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeDataModel.validation_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validation state</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1151,7 +1156,7 @@ pickling/saving to JSON.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeState.connections">
-<code class="sig-name descname">connections</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.connections" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">connections</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.connections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connections</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1170,7 +1175,7 @@ pickling/saving to JSON.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeState.erase_connection">
-<code class="sig-name descname">erase_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.erase_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.erase_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">erase_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.erase_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.erase_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Erase connection</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1262,7 +1267,7 @@ pickling/saving to JSON.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeState.set_reaction">
-<code class="sig-name descname">set_reaction</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">reaction:qtpynodeeditor.enums.ReactToConnectionState</em>, <em class="sig-param">reacting_port_type:qtpynodeeditor.enums.PortType=&lt;PortType.none: 'none'&gt;</em>, <em class="sig-param">reacting_data_type:qtpynodeeditor.node_data.NodeDataType=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.set_reaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.set_reaction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_reaction</code><span class="sig-paren">(</span><em class="sig-param">reaction: qtpynodeeditor.enums.ReactToConnectionState</em>, <em class="sig-param">reacting_port_type: qtpynodeeditor.enums.PortType = &lt;PortType.none: 'none'&gt;</em>, <em class="sig-param">reacting_data_type: qtpynodeeditor.node_data.NodeDataType = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_state.html#NodeState.set_reaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeState.set_reaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set reaction</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1375,7 +1380,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGeometry.check_hit_scene_point">
-<code class="sig-name descname">check_hit_scene_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">scene_point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em>, <em class="sig-param"><span class="n">scene_transform</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QTransform</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.port.Port<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.check_hit_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.check_hit_scene_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_hit_scene_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">scene_point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em>, <em class="sig-param"><span class="n">scene_transform</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QTransform</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.port.Port<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.check_hit_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.check_hit_scene_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check hit scene point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1421,7 +1426,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGeometry.entry_bounding_rect">
-<code class="sig-name descname">entry_bounding_rect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">addon</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QRectF<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.entry_bounding_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.entry_bounding_rect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">entry_bounding_rect</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">addon</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QRectF<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.entry_bounding_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.entry_bounding_rect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry bounding rect</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1460,7 +1465,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGeometry.equivalent_widget_height">
-<code class="sig-name descname">equivalent_widget_height</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.equivalent_widget_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.equivalent_widget_height" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">equivalent_widget_height</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.equivalent_widget_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.equivalent_widget_height" title="Permalink to this definition">¶</a></dt>
 <dd><p>The maximum height a widget can be without causing the node to grow.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1525,7 +1530,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGeometry.port_scene_position">
-<code class="sig-name descname">port_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">t</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QTransform</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.port_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.port_scene_position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">port_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">t</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QTransform</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.port_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.port_scene_position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Port scene position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1545,7 +1550,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGeometry.port_width">
-<code class="sig-name descname">port_width</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.port_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.port_width" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">port_width</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.port_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.port_width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Port width</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1563,7 +1568,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGeometry.recalculate_size">
-<code class="sig-name descname">recalculate_size</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">font</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QFont</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.recalculate_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.recalculate_size" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">recalculate_size</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">font</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QFont</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_geometry.html#NodeGeometry.recalculate_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGeometry.recalculate_size" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>If font is unspecified,</dt><dd><p>Updates size unconditionally</p>
 </dd>
@@ -1678,7 +1683,7 @@ upper left corner.</p>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">NodeGraphicsObject</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="p">:</span> <span class="n">QGraphicsItem</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.boundingRect">
-<code class="sig-name descname">boundingRect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QRectF<a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.boundingRect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.boundingRect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">boundingRect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QRectF<a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.boundingRect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.boundingRect" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1690,7 +1695,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.contextMenuEvent">
-<code class="sig-name descname">contextMenuEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneContextMenuEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.contextMenuEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.contextMenuEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">contextMenuEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneContextMenuEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.contextMenuEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.contextMenuEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1702,7 +1707,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.hoverEnterEvent">
-<code class="sig-name descname">hoverEnterEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.hoverEnterEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.hoverEnterEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hoverEnterEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.hoverEnterEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.hoverEnterEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1714,7 +1719,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.hoverLeaveEvent">
-<code class="sig-name descname">hoverLeaveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.hoverLeaveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.hoverLeaveEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hoverLeaveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.hoverLeaveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.hoverLeaveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1726,7 +1731,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.hoverMoveEvent">
-<code class="sig-name descname">hoverMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.hoverMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.hoverMoveEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hoverMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.hoverMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.hoverMoveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1738,7 +1743,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.itemChange">
-<code class="sig-name descname">itemChange</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">change</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsItem.GraphicsItemChange</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.itemChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.itemChange" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">itemChange</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">change</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsItem.GraphicsItemChange</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.itemChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.itemChange" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1756,7 +1761,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.lock">
-<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">locked</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.lock" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locked</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.lock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lock</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1769,7 +1774,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.mouseDoubleClickEvent">
-<code class="sig-name descname">mouseDoubleClickEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mouseDoubleClickEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mouseDoubleClickEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mouseDoubleClickEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mouseDoubleClickEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mouseDoubleClickEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1781,7 +1786,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.mouseMoveEvent">
-<code class="sig-name descname">mouseMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mouseMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1793,7 +1798,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.mousePressEvent">
-<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mousePressEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mousePressEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1805,7 +1810,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.mouseReleaseEvent">
-<code class="sig-name descname">mouseReleaseEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mouseReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mouseReleaseEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mouseReleaseEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.mouseReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.mouseReleaseEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1817,7 +1822,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.move_connections">
-<code class="sig-name descname">move_connections</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.move_connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.move_connections" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">move_connections</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.move_connections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.move_connections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visits all attached connections and corrects their corresponding end points.</p>
 </dd></dl>
 
@@ -1836,7 +1841,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeGraphicsObject.paint">
-<code class="sig-name descname">paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">option</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QStyleOptionGraphicsItem</span></em>, <em class="sig-param"><span class="n">widget</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QWidget</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.paint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.paint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">option</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QStyleOptionGraphicsItem</span></em>, <em class="sig-param"><span class="n">widget</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QWidget</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_graphics_object.html#NodeGraphicsObject.paint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeGraphicsObject.paint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1864,7 +1869,7 @@ upper left corner.</p>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">DataModelRegistry</code><a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.categories">
-<code class="sig-name descname">categories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; set<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.categories" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; set<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.categories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Categories</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1877,7 +1882,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">model_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeDataModel<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeDataModel<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1895,7 +1900,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.get_type_converter">
-<code class="sig-name descname">get_type_converter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">d1</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">d2</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.type_converter.TypeConverter<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.get_type_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.get_type_converter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_type_converter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d1</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">d2</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.type_converter.TypeConverter<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.get_type_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.get_type_converter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get type converter</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1914,7 +1919,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.register_type_converter">
-<code class="sig-name descname">register_type_converter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">type_in</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">type_out</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">type_converter</span><span class="p">:</span> <span class="n">qtpynodeeditor.type_converter.TypeConverter</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.register_type_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.register_type_converter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">register_type_converter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type_in</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">type_out</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataType</span></em>, <em class="sig-param"><span class="n">type_converter</span><span class="p">:</span> <span class="n">qtpynodeeditor.type_converter.TypeConverter</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.register_type_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.register_type_converter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register type converter</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1928,7 +1933,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.registered_model_creators">
-<code class="sig-name descname">registered_model_creators</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.registered_model_creators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.registered_model_creators" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">registered_model_creators</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.registered_model_creators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.registered_model_creators" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registered model creators</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1941,7 +1946,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.registered_models_category_association">
-<code class="sig-name descname">registered_models_category_association</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.registered_models_category_association"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.registered_models_category_association" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">registered_models_category_association</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.registered_models_category_association"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.registered_models_category_association" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registered models category association</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1965,7 +1970,7 @@ upper left corner.</p>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">Connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="p">:</span> <span class="n">QObject</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.Connection.clear_node">
-<code class="sig-name descname">clear_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.clear_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.clear_node" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clear_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.clear_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.clear_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear node</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1978,7 +1983,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Connection.connect_to">
-<code class="sig-name descname">connect_to</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.connect_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.connect_to" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">connect_to</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">qtpynodeeditor.port.Port</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.connect_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.connect_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assigns a node to the required port.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1991,7 +1996,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Connection.data_type">
-<code class="sig-name descname">data_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeDataType<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.data_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.data_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">data_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeDataType<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.data_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.data_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data type</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2022,7 +2027,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Connection.get_node">
-<code class="sig-name descname">get_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.get_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.get_node" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node.Node<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.get_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.get_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get node</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2040,7 +2045,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Connection.get_port_index">
-<code class="sig-name descname">get_port_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.get_port_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.get_port_index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_port_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.get_port_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.get_port_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get port index</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2090,7 +2095,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Connection.interact_with_node">
-<code class="sig-name descname">interact_with_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.interact_with_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.interact_with_node" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">interact_with_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">qtpynodeeditor.node.Node</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.interact_with_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.interact_with_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interact with node</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2141,7 +2146,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Connection.propagate_data">
-<code class="sig-name descname">propagate_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">node_data</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeData</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.propagate_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">propagate_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_data</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeData</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection.html#Connection.propagate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Connection.propagate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Propagate the given data from the output port -&gt; input port.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2214,7 +2219,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGeometry.get_end_point">
-<code class="sig-name descname">get_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.get_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.get_end_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.get_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.get_end_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get end point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2245,7 +2250,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGeometry.line_width">
-<code class="sig-name descname">line_width</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.line_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.line_width" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">line_width</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.line_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.line_width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Line width</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -2258,7 +2263,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGeometry.move_end_point">
-<code class="sig-name descname">move_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">offset</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.move_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.move_end_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">move_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">offset</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.move_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.move_end_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move end point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2272,7 +2277,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGeometry.points_c1_c2">
-<code class="sig-name descname">points_c1_c2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.points_c1_c2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.points_c1_c2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">points_c1_c2</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.points_c1_c2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.points_c1_c2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connection points (c1, c2)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -2288,7 +2293,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGeometry.set_end_point">
-<code class="sig-name descname">set_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.set_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.set_end_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_end_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_geometry.html#ConnectionGeometry.set_end_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGeometry.set_end_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set end point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2336,7 +2341,7 @@ upper left corner.</p>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionGraphicsObject</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="p">:</span> <span class="n">QGraphicsItem</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.boundingRect">
-<code class="sig-name descname">boundingRect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QRectF<a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.boundingRect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.boundingRect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">boundingRect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QRectF<a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.boundingRect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.boundingRect" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2361,7 +2366,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.hoverEnterEvent">
-<code class="sig-name descname">hoverEnterEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.hoverEnterEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.hoverEnterEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hoverEnterEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.hoverEnterEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.hoverEnterEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2373,7 +2378,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.hoverLeaveEvent">
-<code class="sig-name descname">hoverLeaveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.hoverLeaveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.hoverLeaveEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hoverLeaveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneHoverEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.hoverLeaveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.hoverLeaveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2385,7 +2390,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.lock">
-<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">locked</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.lock" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locked</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.lock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lock</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2398,7 +2403,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.mouseMoveEvent">
-<code class="sig-name descname">mouseMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mouseMoveEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2410,7 +2415,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.mousePressEvent">
-<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.mousePressEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mousePressEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.mousePressEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2422,7 +2427,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.mouseReleaseEvent">
-<code class="sig-name descname">mouseReleaseEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.mouseReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.mouseReleaseEvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mouseReleaseEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QGraphicsSceneMouseEvent</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.mouseReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.mouseReleaseEvent" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -2434,13 +2439,13 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.move">
-<code class="sig-name descname">move</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.move" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">move</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.move" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the position of both ends</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.paint">
-<code class="sig-name descname">paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">option</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QStyleOptionGraphicsItem</span></em>, <em class="sig-param"><span class="n">widget</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QWidget</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.paint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.paint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">option</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QStyleOptionGraphicsItem</span></em>, <em class="sig-param"><span class="n">widget</span><span class="p">:</span> <span class="n">PyQt5.QtWidgets.QWidget</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.paint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.paint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2455,7 +2460,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.ConnectionGraphicsObject.shape">
-<code class="sig-name descname">shape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtGui.QPainterPath<a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.shape" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; PyQt5.QtGui.QPainterPath<a class="reference internal" href="_modules/qtpynodeeditor/connection_graphics_object.html#ConnectionGraphicsObject.shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionGraphicsObject.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -2479,7 +2484,7 @@ upper left corner.</p>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">Port</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="p">:</span> <span class="n">QObject</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.Port.add_connection">
-<code class="sig-name descname">add_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.add_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.add_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.add_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.add_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a Connection to the Port</p>
 </dd></dl>
 
@@ -2527,7 +2532,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Port.get_mapped_scene_position">
-<code class="sig-name descname">get_mapped_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.get_mapped_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.get_mapped_scene_position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_mapped_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.get_mapped_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.get_mapped_scene_position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node port scene position after a transform</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2552,7 +2557,7 @@ upper left corner.</p>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.Port.remove_connection">
-<code class="sig-name descname">remove_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.remove_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.remove_connection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">remove_connection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/port.html#Port.remove_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.Port.remove_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a Connection from the Port</p>
 </dd></dl>
 
@@ -2647,7 +2652,7 @@ upper left corner.</p>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">NodeConnectionInteraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.NodeBase</span></em>, <em class="sig-param"><span class="n">connection</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.ConnectionBase</span></em>, <em class="sig-param"><span class="n">scene</span><span class="p">:</span> <span class="n">qtpynodeeditor.base.FlowSceneBase</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.can_connect">
-<code class="sig-name descname">can_connect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.can_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.can_connect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">can_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.can_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.can_connect" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Can connect when following conditions are met:</dt><dd><ol class="arabic simple">
 <li><p>Connection ‘requires’ a port - i.e., is missing either a start
@@ -2671,6 +2676,8 @@ type conversion that can translate between the two</p></li>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><dl class="simple">
 <dt>NodeConnectionFailure</dt><dd></dd>
+<dt>ConnectionDataTypeFailure</dt><dd><p>If port data types are not compatible</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -2678,7 +2685,7 @@ type conversion that can translate between the two</p></li>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.connection_end_scene_position">
-<code class="sig-name descname">connection_end_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.connection_end_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.connection_end_scene_position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">connection_end_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.connection_end_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.connection_end_scene_position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connection end scene position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2721,7 +2728,7 @@ type conversion that can translate between the two</p></li>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.disconnect">
-<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_to_disconnect</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.disconnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">disconnect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_to_disconnect</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.disconnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><ol class="arabic simple">
 <li><p>Node and Connection should be already connected</p></li>
 <li><p>If so, clear Connection entry in the NodeState</p></li>
@@ -2744,7 +2751,7 @@ type conversion that can translate between the two</p></li>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty">
-<code class="sig-name descname">node_port_is_empty</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">node_port_is_empty</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_is_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node port is empty</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2763,7 +2770,7 @@ type conversion that can translate between the two</p></li>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.node_port_scene_position">
-<code class="sig-name descname">node_port_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_scene_position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">node_port_scene_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">port_index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; PyQt5.QtCore.QPointF<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_scene_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_scene_position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node port scene position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2782,7 +2789,7 @@ type conversion that can translate between the two</p></li>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point">
-<code class="sig-name descname">node_port_under_scene_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">scene_point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.base.NodeBase<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_under_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">node_port_under_scene_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port_type</span><span class="p">:</span> <span class="n">qtpynodeeditor.enums.PortType</span></em>, <em class="sig-param"><span class="n">scene_point</span><span class="p">:</span> <span class="n">PyQt5.QtCore.QPointF</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.base.NodeBase<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.node_port_under_scene_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Node port under scene point</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2801,7 +2808,7 @@ type conversion that can translate between the two</p></li>
 
 <dl class="py method">
 <dt id="qtpynodeeditor.NodeConnectionInteraction.try_connect">
-<code class="sig-name descname">try_connect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.try_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.try_connect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">try_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/qtpynodeeditor/node_connection_interaction.html#NodeConnectionInteraction.try_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionInteraction.try_connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Try to connect the nodes. Steps:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">)</span> <span class="n">Check</span> <span class="n">conditions</span> <span class="kn">from</span> <span class="s1">&#39;can_connect&#39;</span>
 <span class="mf">1.5</span><span class="p">)</span> <span class="n">If</span> <span class="n">the</span> <span class="n">connection</span> <span class="ow">is</span> <span class="n">possible</span> <span class="n">but</span> <span class="n">a</span> <span class="nb">type</span> <span class="n">conversion</span> <span class="ow">is</span> <span class="n">needed</span><span class="p">,</span> <span class="n">add</span>
@@ -2974,7 +2981,7 @@ type conversion that can translate between the two</p></li>
 <em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">NodePainterDelegate</code><a class="reference internal" href="_modules/qtpynodeeditor/node_painter.html#NodePainterDelegate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodePainterDelegate" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="qtpynodeeditor.NodePainterDelegate.paint">
-<code class="sig-name descname">paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">geom</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_geometry.NodeGeometry</span></em>, <em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataModel</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_painter.html#NodePainterDelegate.paint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodePainterDelegate.paint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">painter</span><span class="p">:</span> <span class="n">PyQt5.QtGui.QPainter</span></em>, <em class="sig-param"><span class="n">geom</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_geometry.NodeGeometry</span></em>, <em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n">qtpynodeeditor.node_data.NodeDataModel</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qtpynodeeditor/node_painter.html#NodePainterDelegate.paint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodePainterDelegate.paint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Paint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3020,11 +3027,19 @@ type conversion that can translate between the two</p></li>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2019, Ken Lauer
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -3035,7 +3050,6 @@ type conversion that can translate between the two</p></li>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

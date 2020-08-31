@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> qtpynodeeditor
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> qtpynodeeditor
           
 
           
@@ -71,6 +72,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -90,6 +92,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -128,7 +131,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -160,11 +163,12 @@
 <span class="kn">from</span> <span class="nn">.connection</span> <span class="kn">import</span> <span class="n">Connection</span>
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="kn">import</span> <span class="n">ConnectionGraphicsObject</span>
 <span class="kn">from</span> <span class="nn">.data_model_registry</span> <span class="kn">import</span> <span class="n">DataModelRegistry</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ConnectionDataTypeFailure</span>
 <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="kn">import</span> <span class="n">NodeDataModel</span><span class="p">,</span> <span class="n">NodeDataType</span>
 <span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="kn">import</span> <span class="n">NodeGraphicsObject</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">Port</span><span class="p">,</span> <span class="n">PortType</span>
-<span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">DefaultTypeConverter</span><span class="p">,</span> <span class="n">TypeConverter</span>
+<span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">TypeConverter</span>
 
 
 <span class="k">def</span> <span class="nf">locate_node_at</span><span class="p">(</span><span class="n">scene_point</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">view_transform</span><span class="p">):</span>
@@ -615,8 +619,23 @@
 <span class="sd">        ------</span>
 <span class="sd">        NodeConnectionFailure</span>
 <span class="sd">            If it is not possible to create the connection</span>
+<span class="sd">        ConnectionDataTypeFailure</span>
+<span class="sd">            If port data types are not compatible</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">port_a</span><span class="o">=</span><span class="n">port_a</span><span class="p">,</span> <span class="n">port_b</span><span class="o">=</span><span class="n">port_b</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">port_a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">port_b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">in_port</span> <span class="o">=</span> <span class="n">port_a</span> <span class="k">if</span> <span class="n">port_a</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span> <span class="k">else</span> <span class="n">port_b</span>
+            <span class="n">out_port</span> <span class="o">=</span> <span class="n">port_b</span> <span class="k">if</span> <span class="n">port_a</span><span class="o">.</span><span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">input</span> <span class="k">else</span> <span class="n">port_a</span>
+            <span class="k">if</span> <span class="n">in_port</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">out_port</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">converter</span><span class="p">:</span>
+                    <span class="c1"># If not specified, try to get it from the registry</span>
+                    <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">get_type_converter</span><span class="p">(</span><span class="n">out_port</span><span class="o">.</span><span class="n">data_type</span><span class="p">,</span>
+                                                                 <span class="n">in_port</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">converter</span> <span class="ow">or</span> <span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">type_in</span> <span class="o">!=</span> <span class="n">out_port</span><span class="o">.</span><span class="n">data_type</span>
+                                      <span class="ow">or</span> <span class="n">converter</span><span class="o">.</span><span class="n">type_out</span> <span class="o">!=</span> <span class="n">in_port</span><span class="o">.</span><span class="n">data_type</span><span class="p">)):</span>
+                    <span class="k">raise</span> <span class="n">ConnectionDataTypeFailure</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">in_port</span><span class="o">.</span><span class="n">data_type</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">out_port</span><span class="o">.</span><span class="n">data_type</span><span class="si">}</span><span class="s1"> are not compatible&#39;</span>
+                    <span class="p">)</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">port_a</span><span class="o">=</span><span class="n">port_a</span><span class="p">,</span> <span class="n">port_b</span><span class="o">=</span><span class="n">port_b</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="n">converter</span><span class="o">=</span><span class="n">converter</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">port_a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">port_a</span><span class="o">.</span><span class="n">add_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
 
@@ -697,7 +716,7 @@
         <span class="k">def</span> <span class="nf">get_converter</span><span class="p">():</span>
             <span class="n">converter</span> <span class="o">=</span> <span class="n">connection_json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;converter&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">DefaultTypeConverter</span>
+                <span class="k">return</span> <span class="kc">None</span>
 
             <span class="n">in_type</span> <span class="o">=</span> <span class="n">NodeDataType</span><span class="p">(</span>
                 <span class="nb">id</span><span class="o">=</span><span class="n">converter</span><span class="p">[</span><span class="s2">&quot;in&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
@@ -807,11 +826,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2019, Ken Lauer
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -822,7 +849,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
