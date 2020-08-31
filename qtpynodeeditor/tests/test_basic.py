@@ -11,6 +11,10 @@ class MyNodeData(nodeeditor.NodeData):
     data_type = nodeeditor.NodeDataType('MyNodeData', 'My Node Data')
 
 
+class MyOtherNodeData(nodeeditor.NodeData):
+    data_type = nodeeditor.NodeDataType('MyOtherNodeData', 'My Other Node Data')
+
+
 class BasicDataModel(nodeeditor.NodeDataModel):
     name = 'MyDataModel'
     caption = 'Caption'
@@ -33,6 +37,16 @@ class BasicDataModel(nodeeditor.NodeDataModel):
         return None
 
 
+class BasicOtherDataModel(nodeeditor.NodeDataModel):
+    name = 'MyOtherDataModel'
+    caption = 'Caption'
+    caption_visible = True
+    num_ports = {'input': 1,
+                 'output': 1
+                 }
+    data_type = MyOtherNodeData.data_type
+
+
 # @pytest.mark.parametrize("model_class", [...])
 @pytest.fixture(scope='function')
 def model():
@@ -40,9 +54,15 @@ def model():
 
 
 @pytest.fixture(scope='function')
-def registry(model):
+def other_model():
+    return BasicOtherDataModel
+
+
+@pytest.fixture(scope='function')
+def registry(model, other_model):
     registry = nodeeditor.DataModelRegistry()
     registry.register_model(model, category='My Category')
+    registry.register_model(other_model, category='My Category')
     return registry
 
 
@@ -115,6 +135,30 @@ def test_create_connection(scene, view, model):
     assert len(all_c2) == 0
 
 
+def test_create_connection_with_converter(scene, view, model, other_model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(other_model)
+
+    # Converter not registerd, must raise Exception
+    with pytest.raises(nodeeditor.ConnectionDataTypeFailure):
+        scene.create_connection(node1[PortType.output][0], node2[PortType.input][0])
+
+    # Wrong converter, must fail
+    converter = nodeeditor.type_converter.TypeConverter(MyOtherNodeData.data_type,
+                                                        MyNodeData.data_type,
+                                                        lambda x: None)
+    scene.registry.register_type_converter(MyNodeData.data_type, MyOtherNodeData.data_type, converter)
+    with pytest.raises(nodeeditor.ConnectionDataTypeFailure):
+        scene.create_connection(node1[PortType.output][0], node2[PortType.input][0])
+
+    # Correct converter registered, must pass
+    converter = nodeeditor.type_converter.TypeConverter(MyNodeData.data_type,
+                                                        MyOtherNodeData.data_type,
+                                                        lambda x: None)
+    scene.registry.register_type_converter(MyNodeData.data_type, MyOtherNodeData.data_type, converter)
+    scene.create_connection(node1[PortType.output][0], node2[PortType.input][0])
+
+
 def test_clear_scene(scene, view, model):
     node1 = scene.create_node(model)
     node2 = scene.create_node(model)
@@ -130,6 +174,18 @@ def test_clear_scene(scene, view, model):
     assert len(all_c1) == 0
     all_c2 = node1.state.all_connections
     assert len(all_c2) == 0
+
+
+def test_get_and_set_state(scene, model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(model)
+    scene.create_connection(node2[PortType.output][2],
+                            node1[PortType.input][1],
+                            )
+    state = scene.__getstate__()
+    scene.__setstate__(state)
+
+    assert scene.__getstate__() == state
 
 
 def test_save_load(tmp_path, scene, view, model):
@@ -234,6 +290,21 @@ def test_smoke_connection_interaction(scene, view, model):
     interaction.connection_end_scene_position(PortType.input)
     interaction.node_port_scene_position(PortType.input, 0)
     interaction.node_port_under_scene_point(PortType.input, qtpy.QtCore.QPointF(0, 0))
+
+
+def test_connection_interaction_wrong_data_type(scene, view, model, other_model):
+    node1 = scene.create_node(model)
+    node2 = scene.create_node(other_model)
+    conn = scene.create_connection(node1[PortType.output][0])
+    interaction = nodeeditor.NodeConnectionInteraction(
+        node=node2, connection=conn, scene=scene)
+
+    node_scene_transform = node2.graphics_object.sceneTransform()
+    pos = node2.geometry.port_scene_position(PortType.input, 0, node_scene_transform)
+
+    conn.geometry.set_end_point(PortType.input, conn.graphics_object.mapFromScene(pos))
+    with pytest.raises(nodeeditor.ConnectionDataTypeFailure):
+        interaction.can_connect()
 
 
 def test_locate_node(scene, view, model):

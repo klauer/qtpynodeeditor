@@ -27,6 +27,11 @@ class ConnectionCycleFailure(NodeConnectionFailure):
     ...
 
 
+class ConnectionDataTypeFailure(NodeConnectionFailure):
+    'Ports do not have compatible data types'
+    ...
+
+
 class PortsOfSameTypeError(NodeConnectionFailure):
     ...
 

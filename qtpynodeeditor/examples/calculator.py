@@ -6,6 +6,7 @@ from qtpy.QtGui import QDoubleValidator
 from qtpy.QtWidgets import QApplication, QLabel, QLineEdit, QWidget
 
 import qtpynodeeditor as nodeeditor
+from qtpynodeeditor.type_converter import TypeConverter
 from qtpynodeeditor import (NodeData, NodeDataModel, NodeDataType,
                             NodeValidationState, Port, PortType)
 
@@ -44,6 +45,7 @@ class IntegerData(NodeData):
     def lock(self):
         return self._lock
 
+    @property
     def number(self) -> int:
         'The number data'
         return self._number
@@ -371,10 +373,10 @@ def main(app):
         registry.register_model(model, category='Operations',
                                 style=None)
 
-    registry.register_type_converter(DecimalData, IntegerData,
-                                     decimal_to_integer_converter)
-    registry.register_type_converter(IntegerData, DecimalData,
-                                     decimal_to_integer_converter)
+    dec_converter = TypeConverter(DecimalData.data_type, IntegerData.data_type, decimal_to_integer_converter)
+    int_converter = TypeConverter(IntegerData.data_type, DecimalData.data_type, integer_to_decimal_converter)
+    registry.register_type_converter(DecimalData.data_type, IntegerData.data_type, dec_converter)
+    registry.register_type_converter(IntegerData.data_type, DecimalData.data_type, int_converter)
 
     scene = nodeeditor.FlowScene(registry=registry)
 

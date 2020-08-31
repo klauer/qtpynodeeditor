@@ -6,9 +6,8 @@ from .base import ConnectionBase, FlowSceneBase, NodeBase
 from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
                          ConnectionPortNotEmptyFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
-                         NodeConnectionFailure)
+                         ConnectionDataTypeFailure, NodeConnectionFailure)
 from .port import PortType, opposite_port
-from .type_converter import DefaultTypeConverter
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +58,8 @@ class NodeConnectionInteraction:
         Raises
         ------
         NodeConnectionFailure
+        ConnectionDataTypeFailure
+            If port data types are not compatible
         """
         # 1) Connection requires a port
         required_port = self.connection_required_port
@@ -99,7 +100,7 @@ class NodeConnectionInteraction:
 
         candidate_node_data_type = port.data_type
         if connection_data_type.id == candidate_node_data_type.id:
-            return port, DefaultTypeConverter
+            return port, None
 
         registry = self._scene.registry
         if required_port == PortType.input:
@@ -108,6 +109,11 @@ class NodeConnectionInteraction:
         else:
             converter = registry.get_type_converter(candidate_node_data_type,
                                                     connection_data_type)
+        if not converter:
+            raise ConnectionDataTypeFailure(
+                f'{connection_data_type} and {candidate_node_data_type} are not compatible'
+            )
+
         return port, converter
 
     def try_connect(self) -> bool:

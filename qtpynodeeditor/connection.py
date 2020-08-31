@@ -351,7 +351,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         if not in_port:
             return
 
-        if self._converter:
+        if node_data is not None and self._converter:
             node_data = self._converter(node_data)
 
         in_port.node.propagate_data(node_data, in_port)
