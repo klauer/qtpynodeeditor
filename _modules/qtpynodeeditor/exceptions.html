@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>qtpynodeeditor.enums &mdash; qtpynodeeditor  documentation</title>
+  <title>qtpynodeeditor.exceptions &mdash; qtpynodeeditor  documentation</title>
   
 
   
@@ -137,7 +137,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>qtpynodeeditor.enums</li>
+      <li>qtpynodeeditor.exceptions</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -152,30 +152,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for qtpynodeeditor.enums</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+  <h1>Source code for qtpynodeeditor.exceptions</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="NodeConnectionFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionFailure">[docs]</a><span></span><span class="k">class</span> <span class="nc">NodeConnectionFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="o">...</span></div>
 
 
-<div class="viewcode-block" id="NodeValidationState"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeValidationState">[docs]</a><span class="k">class</span> <span class="nc">NodeValidationState</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">valid</span> <span class="o">=</span> <span class="s1">&#39;valid&#39;</span>
-    <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;warning&#39;</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span></div>
+<div class="viewcode-block" id="ConnectionRequiresPortFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionRequiresPortFailure">[docs]</a><span class="k">class</span> <span class="nc">ConnectionRequiresPortFailure</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="s1">&#39;A port is required&#39;</span>
+    <span class="o">...</span></div>
 
 
-<div class="viewcode-block" id="PortType"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.PortType">[docs]</a><span class="k">class</span> <span class="nc">PortType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">none</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
-    <span class="nb">input</span> <span class="o">=</span> <span class="s1">&#39;input&#39;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span></div>
+<div class="viewcode-block" id="ConnectionSelfFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionSelfFailure">[docs]</a><span class="k">class</span> <span class="nc">ConnectionSelfFailure</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="s1">&#39;Cannot connect a node to itself&#39;</span>
+    <span class="o">...</span></div>
 
 
-<div class="viewcode-block" id="ConnectionPolicy"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionPolicy">[docs]</a><span class="k">class</span> <span class="nc">ConnectionPolicy</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">one</span> <span class="o">=</span> <span class="s1">&#39;one&#39;</span>
-    <span class="n">many</span> <span class="o">=</span> <span class="s1">&#39;many&#39;</span></div>
+<div class="viewcode-block" id="ConnectionPointFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionPointFailure">[docs]</a><span class="k">class</span> <span class="nc">ConnectionPointFailure</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="s1">&#39;Connection point is not on top of the node port&#39;</span>
+    <span class="o">...</span></div>
 
 
-<span class="k">class</span> <span class="nc">ReactToConnectionState</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">reacting</span> <span class="o">=</span> <span class="s1">&#39;reacting&#39;</span>
-    <span class="n">not_reacting</span> <span class="o">=</span> <span class="s1">&#39;not_reacting&#39;</span>
+<div class="viewcode-block" id="ConnectionPortNotEmptyFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionPortNotEmptyFailure">[docs]</a><span class="k">class</span> <span class="nc">ConnectionPortNotEmptyFailure</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="s1">&#39;Port should be empty&#39;</span>
+    <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="ConnectionCycleFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionCycleFailure">[docs]</a><span class="k">class</span> <span class="nc">ConnectionCycleFailure</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="s1">&#39;Connection would introduce a cycle in the graph&#39;</span>
+    <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="ConnectionDataTypeFailure"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.ConnectionDataTypeFailure">[docs]</a><span class="k">class</span> <span class="nc">ConnectionDataTypeFailure</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="s1">&#39;Ports do not have compatible data types&#39;</span>
+    <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="PortsOfSameTypeError"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.PortsOfSameTypeError">[docs]</a><span class="k">class</span> <span class="nc">PortsOfSameTypeError</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="PortsAlreadyConnectedError"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.PortsAlreadyConnectedError">[docs]</a><span class="k">class</span> <span class="nc">PortsAlreadyConnectedError</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="MultipleInputConnectionError"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.MultipleInputConnectionError">[docs]</a><span class="k">class</span> <span class="nc">MultipleInputConnectionError</span><span class="p">(</span><span class="n">NodeConnectionFailure</span><span class="p">):</span>
+    <span class="o">...</span></div>
 </pre></div>
 
            </div>

@@ -5,6 +5,7 @@
 ./_modules/qtpynodeeditor/connection_painter.html
 ./_modules/qtpynodeeditor/data_model_registry.html
 ./_modules/qtpynodeeditor/enums.html
+./_modules/qtpynodeeditor/exceptions.html
 ./_modules/qtpynodeeditor/flow_scene.html
 ./_modules/qtpynodeeditor/flow_view.html
 ./_modules/qtpynodeeditor/node.html
@@ -17,7 +18,9 @@
 ./_modules/qtpynodeeditor/port.html
 ./_modules/qtpynodeeditor/style.html
 ./_sources/api.rst.txt
+./_sources/getting_started.rst.txt
 ./_sources/index.rst.txt
+./_sources/release_notes.rst.txt
 ./_static/basic.css
 ./_static/css/badge_only.css
 ./_static/css/fonts/Roboto-Slab-Bold.woff
@@ -103,7 +106,9 @@
 ./_static/underscore.js
 ./api.html
 ./genindex.html
+./getting_started.html
 ./index.html
 ./objects.inv
+./release_notes.html
 ./search.html
 ./searchindex.js

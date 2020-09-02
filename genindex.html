@@ -82,7 +82,9 @@
             
               <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release History</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Links</span></p>
 <ul>
@@ -245,13 +247,17 @@
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeConnectionInteraction.connection_end_scene_position">connection_end_scene_position() (qtpynodeeditor.NodeConnectionInteraction method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#qtpynodeeditor.NodeConnectionInteraction.connection_node">connection_node() (qtpynodeeditor.NodeConnectionInteraction property)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.Port.connection_policy">connection_policy() (qtpynodeeditor.Port property)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeConnectionInteraction.connection_required_port">connection_required_port() (qtpynodeeditor.NodeConnectionInteraction property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#qtpynodeeditor.ConnectionCycleFailure">ConnectionCycleFailure (class in qtpynodeeditor)</a>
+</li>
+      <li><a href="api.html#qtpynodeeditor.ConnectionDataTypeFailure">ConnectionDataTypeFailure (class in qtpynodeeditor)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.ConnectionGeometry">ConnectionGeometry (class in qtpynodeeditor)</a>
 </li>
@@ -259,9 +265,17 @@
 </li>
       <li><a href="api.html#qtpynodeeditor.ConnectionPainter">ConnectionPainter (class in qtpynodeeditor)</a>
 </li>
+      <li><a href="api.html#qtpynodeeditor.ConnectionPointFailure">ConnectionPointFailure (class in qtpynodeeditor)</a>
+</li>
       <li><a href="api.html#qtpynodeeditor.ConnectionPolicy">ConnectionPolicy (class in qtpynodeeditor)</a>
 </li>
+      <li><a href="api.html#qtpynodeeditor.ConnectionPortNotEmptyFailure">ConnectionPortNotEmptyFailure (class in qtpynodeeditor)</a>
+</li>
+      <li><a href="api.html#qtpynodeeditor.ConnectionRequiresPortFailure">ConnectionRequiresPortFailure (class in qtpynodeeditor)</a>
+</li>
       <li><a href="api.html#qtpynodeeditor.NodeState.connections">connections() (qtpynodeeditor.NodeState method)</a>
+</li>
+      <li><a href="api.html#qtpynodeeditor.ConnectionSelfFailure">ConnectionSelfFailure (class in qtpynodeeditor)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.ConnectionStyle">ConnectionStyle (class in qtpynodeeditor)</a>
 </li>
@@ -549,6 +563,8 @@
 </li>
       <li><a href="api.html#qtpynodeeditor.ConnectionGeometry.move_end_point">move_end_point() (qtpynodeeditor.ConnectionGeometry method)</a>
 </li>
+      <li><a href="api.html#qtpynodeeditor.MultipleInputConnectionError">MultipleInputConnectionError (class in qtpynodeeditor)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -569,14 +585,16 @@
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeDataModel.node_style">node_style() (qtpynodeeditor.NodeDataModel property)</a>
 </li>
+      <li><a href="api.html#qtpynodeeditor.NodeConnectionFailure">NodeConnectionFailure (class in qtpynodeeditor)</a>
+</li>
       <li><a href="api.html#qtpynodeeditor.NodeConnectionInteraction">NodeConnectionInteraction (class in qtpynodeeditor)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeData">NodeData (class in qtpynodeeditor)</a>
 </li>
-      <li><a href="api.html#qtpynodeeditor.NodeDataModel">NodeDataModel (class in qtpynodeeditor)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#qtpynodeeditor.NodeDataModel">NodeDataModel (class in qtpynodeeditor)</a>
+</li>
       <li><a href="api.html#qtpynodeeditor.NodeDataType">NodeDataType (class in qtpynodeeditor)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeGeometry">NodeGeometry (class in qtpynodeeditor)</a>
@@ -643,15 +661,19 @@
 </li>
       <li><a href="api.html#qtpynodeeditor.ConnectionGeometry.points_c1_c2">points_c1_c2() (qtpynodeeditor.ConnectionGeometry method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#qtpynodeeditor.Port">Port (class in qtpynodeeditor)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#qtpynodeeditor.NodeDataModel.port_out_connection_policy">port_out_connection_policy() (qtpynodeeditor.NodeDataModel method)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeGeometry.port_scene_position">port_scene_position() (qtpynodeeditor.NodeGeometry method)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.NodeGeometry.port_width">port_width() (qtpynodeeditor.NodeGeometry method)</a>
+</li>
+      <li><a href="api.html#qtpynodeeditor.PortsAlreadyConnectedError">PortsAlreadyConnectedError (class in qtpynodeeditor)</a>
+</li>
+      <li><a href="api.html#qtpynodeeditor.PortsOfSameTypeError">PortsOfSameTypeError (class in qtpynodeeditor)</a>
 </li>
       <li><a href="api.html#qtpynodeeditor.PortType">PortType (class in qtpynodeeditor)</a>
 </li>

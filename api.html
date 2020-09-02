@@ -36,7 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="qtpynodeeditor" href="index.html" /> 
+    <link rel="next" title="Release History" href="release_notes.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,6 +84,7 @@
             
               <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#scene-and-view">Scene and View</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#flowscene">FlowScene</a></li>
@@ -112,6 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#connection">Connection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#connectiongeometry">ConnectionGeometry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#connectiongraphicsobject">ConnectionGraphicsObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exceptions">Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ports">Ports</a><ul>
@@ -130,6 +133,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release History</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Links</span></p>
 <ul>
@@ -2509,6 +2513,65 @@ node given its user-friendly name.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="exceptions">
+<h3>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt id="qtpynodeeditor.NodeConnectionFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">NodeConnectionFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#NodeConnectionFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.NodeConnectionFailure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.ConnectionCycleFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionCycleFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#ConnectionCycleFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionCycleFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connection would introduce a cycle in the graph</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.ConnectionDataTypeFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionDataTypeFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#ConnectionDataTypeFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionDataTypeFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ports do not have compatible data types</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.ConnectionPointFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionPointFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#ConnectionPointFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionPointFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connection point is not on top of the node port</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.ConnectionPortNotEmptyFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionPortNotEmptyFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#ConnectionPortNotEmptyFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionPortNotEmptyFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Port should be empty</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.ConnectionRequiresPortFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionRequiresPortFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#ConnectionRequiresPortFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionRequiresPortFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>A port is required</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.ConnectionSelfFailure">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">ConnectionSelfFailure</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#ConnectionSelfFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.ConnectionSelfFailure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cannot connect a node to itself</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.MultipleInputConnectionError">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">MultipleInputConnectionError</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#MultipleInputConnectionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.MultipleInputConnectionError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.PortsAlreadyConnectedError">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">PortsAlreadyConnectedError</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#PortsAlreadyConnectedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.PortsAlreadyConnectedError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="qtpynodeeditor.PortsOfSameTypeError">
+<em class="property">class </em><code class="sig-prename descclassname">qtpynodeeditor.</code><code class="sig-name descname">PortsOfSameTypeError</code><a class="reference internal" href="_modules/qtpynodeeditor/exceptions.html#PortsOfSameTypeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.PortsOfSameTypeError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 </div>
 <div class="section" id="ports">
 <h2>Ports<a class="headerlink" href="#ports" title="Permalink to this headline">¶</a></h2>
@@ -3052,8 +3115,10 @@ type conversion that can translate between the two</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="release_notes.html" class="btn btn-neutral float-right" title="Release History" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="index.html" class="btn btn-neutral float-left" title="qtpynodeeditor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
