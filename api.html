@@ -1883,7 +1883,7 @@ upper left corner.</p>
 <dl class="py method">
 <dt id="qtpynodeeditor.DataModelRegistry.create">
 <code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; qtpynodeeditor.node_data.NodeDataModel<a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create</p>
+<dd><p>Create a <a class="reference internal" href="#qtpynodeeditor.NodeDataModel" title="qtpynodeeditor.NodeDataModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDataModel</span></code></a> given its user-friendly name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -1892,7 +1892,42 @@ upper left corner.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>value</strong><span class="classifier">(NodeDataModel, init_kwargs)</span></dt><dd></dd>
+<dt><strong>data_model_instance</strong><span class="classifier">NodeDataModel</span></dt><dd><p>The instance of the given data model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If the model name is not registered.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="qtpynodeeditor.DataModelRegistry.get_model_by_name">
+<code class="sig-name descname">get_model_by_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Type<span class="p">[</span>qtpynodeeditor.node_data.NodeDataModel<span class="p">]</span><span class="p">, </span>dict<span class="p">]</span><a class="reference internal" href="_modules/qtpynodeeditor/data_model_registry.html#DataModelRegistry.get_model_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtpynodeeditor.DataModelRegistry.get_model_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get information on how to create a specific <a class="reference internal" href="#qtpynodeeditor.NodeDataModel" title="qtpynodeeditor.NodeDataModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDataModel</span></code></a>
+node given its user-friendly name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model_name</strong><span class="classifier">str</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>data_model</strong><span class="classifier">NodeDataModel</span></dt><dd><p>The data model class.</p>
+</dd>
+<dt><strong>init_kwargs</strong><span class="classifier">dict</span></dt><dd><p>Default init keyword arguments.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If the model name is not registered.</p>
+</dd>
 </dl>
 </dd>
 </dl>

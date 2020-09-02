@@ -152,6 +152,7 @@
             
   <h1>Source code for qtpynodeeditor.data_model_registry</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="kn">import</span> <span class="n">NodeDataModel</span><span class="p">,</span> <span class="n">NodeDataType</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">TypeConverter</span>
@@ -192,7 +193,7 @@
 
 <div class="viewcode-block" id="DataModelRegistry.create"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.DataModelRegistry.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeDataModel</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create</span>
+<span class="sd">        Create a :class:`NodeDataModel` given its user-friendly name.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -200,10 +201,44 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : (NodeDataModel, init_kwargs)</span>
+<span class="sd">        data_model_instance : NodeDataModel</span>
+<span class="sd">            The instance of the given data model.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the model name is not registered.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_creators</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_by_name</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataModelRegistry.get_model_by_name"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.DataModelRegistry.get_model_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+                          <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">NodeDataModel</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information on how to create a specific :class:`NodeDataModel`</span>
+<span class="sd">        node given its user-friendly name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model_name : str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_model : NodeDataModel</span>
+<span class="sd">            The data model class.</span>
+
+<span class="sd">        init_kwargs : dict</span>
+<span class="sd">            Default init keyword arguments.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the model name is not registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item_creators</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown model: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span></div>
 
 <div class="viewcode-block" id="DataModelRegistry.registered_model_creators"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.DataModelRegistry.registered_model_creators">[docs]</a>    <span class="k">def</span> <span class="nf">registered_model_creators</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

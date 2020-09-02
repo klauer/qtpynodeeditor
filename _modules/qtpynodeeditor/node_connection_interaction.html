@@ -217,7 +217,7 @@
         <span class="c1"># 1) Connection requires a port</span>
         <span class="n">required_port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_required_port</span>
         <span class="k">if</span> <span class="n">required_port</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConnectionRequiresPortFailure</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Connection requires a port&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConnectionRequiresPortFailure</span><span class="p">(</span><span class="s1">&#39;Connection requires a port&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">required_port</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid port specified </span><span class="si">{</span><span class="n">required_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 

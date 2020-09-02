@@ -318,14 +318,15 @@
             <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="n">skip_text</span><span class="p">:</span>
                 <span class="k">return</span>
 
-            <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">type_</span><span class="p">:</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">get_model_by_name</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Model not found: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
                 <span class="n">pos_view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="n">pos_view</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span><span class="o">.</span><span class="n">node_placed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Model not found&quot;</span><span class="p">)</span>
 
             <span class="n">model_menu</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 

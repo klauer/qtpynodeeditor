@@ -483,10 +483,6 @@
     <span class="k">def</span> <span class="nf">_new_node_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_model_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">emit_placed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="s1">&#39;Context manager: creates Node/yields it, handling necessary Signals&#39;</span>
         <span class="n">data_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">data_model_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">data_model</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No registered model with name </span><span class="si">{}</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_model_name</span><span class="p">))</span>
-
         <span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">data_model</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nodes</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
