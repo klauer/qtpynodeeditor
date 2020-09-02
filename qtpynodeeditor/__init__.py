@@ -4,10 +4,11 @@ from .connection_graphics_object import ConnectionGraphicsObject
 from .connection_painter import ConnectionPainter
 from .data_model_registry import DataModelRegistry
 from .enums import ConnectionPolicy, NodeValidationState, PortType
-from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
-                         ConnectionPortNotEmptyFailure,
+from .exceptions import (ConnectionCycleFailure, ConnectionDataTypeFailure,
+                         ConnectionPointFailure, ConnectionPortNotEmptyFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
-                         ConnectionDataTypeFailure, NodeConnectionFailure)
+                         MultipleInputConnectionError, NodeConnectionFailure,
+                         PortsAlreadyConnectedError, PortsOfSameTypeError)
 from .flow_scene import FlowScene
 from .flow_view import FlowView
 from .node import Node, NodeDataType
@@ -24,23 +25,24 @@ from .style import (ConnectionStyle, FlowViewStyle, NodeStyle, Style,
 __all__ = [
     'Connection',
     'ConnectionCycleFailure',
+    'ConnectionDataTypeFailure',
     'ConnectionGeometry',
     'ConnectionGraphicsObject',
     'ConnectionPainter',
+    'ConnectionPointFailure',
     'ConnectionPolicy',
-    'ConnectionStyle',
+    'ConnectionPortNotEmptyFailure',
     'ConnectionRequiresPortFailure',
     'ConnectionSelfFailure',
-    'ConnectionPointFailure',
-    'ConnectionPortNotEmptyFailure',
-    'ConnectionDataTypeFailure',
+    'ConnectionStyle',
     'DataModelRegistry',
     'FlowScene',
     'FlowView',
     'FlowViewStyle',
+    'MultipleInputConnectionError',
     'Node',
-    'NodeConnectionInteraction',
     'NodeConnectionFailure',
+    'NodeConnectionInteraction',
     'NodeData',
     'NodeDataModel',
     'NodeDataType',
@@ -53,6 +55,8 @@ __all__ = [
     'NodeValidationState',
     'Port',
     'PortType',
+    'PortsAlreadyConnectedError',
+    'PortsOfSameTypeError',
     'Style',
     'StyleCollection',
     'opposite_port',

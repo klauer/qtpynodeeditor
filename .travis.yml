@@ -11,7 +11,7 @@ addons:
         - herbstluftwm
         - libxkbcommon-x11-0
 
-env: 
+env:
    global:
       - OFFICIAL_REPO="klauer/qtpynodeeditor"
       # Doctr deploy key for klauer/qtpynodeeditor
@@ -71,19 +71,19 @@ before_script:
 
 script:
   - export PYTEST_QT_API="${QT_API}"
-  - coverage run run_tests.py
+  - coverage run -m pytest -vv qtpynodeeditor/tests
   - set -e
-  
+
   - |
     if [[ "$BUILD_DOCS" == "1" ]]; then
-      # Create HTML documentation  
+      # Create HTML documentation
       pushd docs
       make html
       popd
       #Publish docs.
       doctr deploy . --built-docs docs/build/html --deploy-branch-name gh-pages --command "touch .nojekyll; git add .nojekyll"
     fi
-   
+
 
 after_success:
   - coverage report -m

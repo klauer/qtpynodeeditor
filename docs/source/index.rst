@@ -13,7 +13,9 @@ Contents
    :caption: API Documentation
    :hidden:
 
+   getting_started.rst
    api.rst
+   release_notes.rst
 
 .. toctree::
    :maxdepth: 1

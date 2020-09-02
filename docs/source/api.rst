@@ -132,6 +132,20 @@ ConnectionGraphicsObject
 .. autoclass:: ConnectionGraphicsObject
    :members:
 
+Exceptions
+==========
+
+.. autoclass:: NodeConnectionFailure
+.. autoclass:: ConnectionCycleFailure
+.. autoclass:: ConnectionDataTypeFailure
+.. autoclass:: ConnectionPointFailure
+.. autoclass:: ConnectionPortNotEmptyFailure
+.. autoclass:: ConnectionRequiresPortFailure
+.. autoclass:: ConnectionSelfFailure
+.. autoclass:: MultipleInputConnectionError
+.. autoclass:: PortsAlreadyConnectedError
+.. autoclass:: PortsOfSameTypeError
+
 
 -----
 Ports
