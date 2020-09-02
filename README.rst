@@ -41,16 +41,27 @@ Screenshots
 
 Installation
 ------------
+
+We recommend using conda to install qtpynodeeditor.
+
 ::
 
-   $ conda create -n node -c conda-forge python=3.6 pyqt5 qt qtpy
-   $ conda activate node
-   $ git clone https://github.com/klauer/qtpynodeeditor
-   $ cd qtpynodeeditor
-   $ pip install .
+   $ conda create -n my_new_environment -c conda-forge python=3.7 qtpynodeeditor
+   $ conda activate my_new_environment
+
+qtpynodeeditor may also be installed using pip from PyPI.
+
+::
+
+    $ python -m pip install qtpynodeeditor pyqt5
+
 
 Running the Tests
 -----------------
+
+Tests must be run with pytest and pytest-qt.
+
 ::
 
-   $ python run_tests.py
+   $ pip install -r dev-requirements.txt
+   $ pytest -v qtpynodeeditor/tests
