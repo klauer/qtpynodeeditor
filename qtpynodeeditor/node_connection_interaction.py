@@ -64,7 +64,7 @@ class NodeConnectionInteraction:
         # 1) Connection requires a port
         required_port = self.connection_required_port
         if required_port == PortType.none:
-            raise ConnectionRequiresPortFailure(f'Connection requires a port')
+            raise ConnectionRequiresPortFailure('Connection requires a port')
         elif required_port not in (PortType.input, PortType.output):
             raise ValueError(f'Invalid port specified {required_port}')
 

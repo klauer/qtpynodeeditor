@@ -165,14 +165,15 @@ class FlowView(QGraphicsView):
             if model_name == skip_text:
                 return
 
-            type_ = self._scene.registry.create(model_name)
-            if type_:
-                node = self._scene.create_node(type_)
+            try:
+                model, _ = self._scene.registry.get_model_by_name(model_name)
+            except ValueError:
+                logger.error("Model not found: %s", model_name)
+            else:
+                node = self._scene.create_node(model)
                 pos_view = self.mapToScene(pos)
                 node.graphics_object.setPos(pos_view)
                 self._scene.node_placed.emit(node)
-            else:
-                logger.debug("Model not found")
 
             model_menu.close()
 
