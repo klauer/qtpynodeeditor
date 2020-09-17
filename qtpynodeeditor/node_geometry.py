@@ -58,13 +58,6 @@ class NodeGeometry:
 
     @width.setter
     def width(self, width: int):
-        """
-        Set width
-
-        Parameters
-        ----------
-        width : int
-        """
         self._width = int(width)
 
     @property
@@ -80,13 +73,6 @@ class NodeGeometry:
 
     @entry_height.setter
     def entry_height(self, h: int):
-        """
-        Set entry height
-
-        Parameters
-        ----------
-        h : int
-        """
         self._entry_height = int(h)
 
     @property
@@ -102,13 +88,6 @@ class NodeGeometry:
 
     @entry_width.setter
     def entry_width(self, width: int):
-        """
-        Set entry width
-
-        Parameters
-        ----------
-        width : int
-        """
         self._entry_width = int(width)
 
     @property
@@ -124,13 +103,6 @@ class NodeGeometry:
 
     @spacing.setter
     def spacing(self, s: int):
-        """
-        Set spacing
-
-        Parameters
-        ----------
-        s : int
-        """
         self._spacing = int(s)
 
     @property
@@ -146,19 +118,12 @@ class NodeGeometry:
 
     @hovered.setter
     def hovered(self, h: int):
-        """
-        Set hovered
-
-        Parameters
-        ----------
-        h : int
-        """
         self._hovered = bool(h)
 
     @property
     def num_sources(self) -> int:
         """
-        N sources
+        Number of sources.
 
         Returns
         -------
@@ -169,7 +134,7 @@ class NodeGeometry:
     @property
     def num_sinks(self) -> int:
         """
-        N sinks
+        Number of sinks.
 
         Returns
         -------
@@ -408,9 +373,13 @@ class NodeGeometry:
 
     @staticmethod
     def calculate_node_position_between_node_ports(
-            target_port_index: int, target_port: PortType, target_node:
-            NodeBase, source_port_index: int, source_port: PortType,
-            source_node: NodeBase, new_node: NodeBase) -> QPointF:
+            target_port_index: int,
+            target_port: PortType,
+            target_node: NodeBase,
+            source_port_index: int,
+            source_port: PortType,
+            source_node: NodeBase,
+            new_node: NodeBase) -> QPointF:
         """
         calculate node position between node ports
 
