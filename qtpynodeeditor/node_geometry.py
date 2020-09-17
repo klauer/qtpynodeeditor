@@ -353,7 +353,7 @@ class NodeGeometry:
             # If the widget wants to use as much vertical space as possible,
             # place it immediately after the caption.
             return QPointF(self._spacing + self.port_width(PortType.input),
-                           self.caption_height())
+                           self.caption_height)
 
         if self._model.validation_state() != NodeValidationState.valid:
             return QPointF(
@@ -375,10 +375,10 @@ class NodeGeometry:
         -------
         value : int
         '''
-        base_height = self.height() - self.caption_height()
+        base_height = self.height() - self.caption_height
 
         if self._model.validation_state() != NodeValidationState.valid:
-            return (base_height + self.validation_height())
+            return base_height + self.validation_height
 
         return base_height
 
