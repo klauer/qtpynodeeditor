@@ -153,12 +153,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for qtpynodeeditor.connection</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">uuid</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">Signal</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">exceptions</span>
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">Serializable</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">Serializable</span>
 <span class="kn">from</span> <span class="nn">.connection_geometry</span> <span class="kn">import</span> <span class="n">ConnectionGeometry</span>
 <span class="kn">from</span> <span class="nn">.connection_graphics_object</span> <span class="kn">import</span> <span class="n">ConnectionGraphicsObject</span>
 <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">NodeDataType</span>
@@ -168,7 +169,7 @@
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">TypeConverter</span>
 
 
-<div class="viewcode-block" id="Connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection">[docs]</a><span class="k">class</span> <span class="nc">Connection</span><span class="p">(</span><span class="n">QObject</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">,</span> <span class="n">ConnectionBase</span><span class="p">):</span>
+<div class="viewcode-block" id="Connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection">[docs]</a><span class="k">class</span> <span class="nc">Connection</span><span class="p">(</span><span class="n">QObject</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">):</span>
     <span class="n">connection_completed</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
     <span class="n">connection_made_incomplete</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
     <span class="n">updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">QObject</span><span class="p">)</span>
@@ -384,7 +385,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_geometry</span>
 
-<div class="viewcode-block" id="Connection.get_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Node</span><span class="p">:</span>
+<div class="viewcode-block" id="Connection.get_node"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.Connection.get_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Node</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get node</span>
 
@@ -397,8 +398,7 @@
 <span class="sd">        value : Node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ports</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="n">node</span></div>
+        <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="n">node</span> <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -469,13 +469,13 @@
             <span class="k">return</span> <span class="n">ports</span><span class="p">[</span><span class="n">valid_type</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">type_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeConverter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">type_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">TypeConverter</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set type converter</span>
+<span class="sd">        The type converter used for the connection.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        converter : TypeConverter</span>
+<span class="sd">        converter : TypeConverter or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span>
 

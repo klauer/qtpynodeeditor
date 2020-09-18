@@ -154,17 +154,22 @@
             
   <h1>Source code for qtpynodeeditor.node_painter</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">Qt</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="kn">import</span> <span class="n">QFontMetrics</span><span class="p">,</span> <span class="n">QLinearGradient</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPen</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
 <span class="kn">from</span> <span class="nn">.node_data</span> <span class="kn">import</span> <span class="n">NodeDataModel</span>
 <span class="kn">from</span> <span class="nn">.node_geometry</span> <span class="kn">import</span> <span class="n">NodeGeometry</span>
 <span class="kn">from</span> <span class="nn">.node_graphics_object</span> <span class="kn">import</span> <span class="n">NodeGraphicsObject</span>
 <span class="kn">from</span> <span class="nn">.node_state</span> <span class="kn">import</span> <span class="n">NodeState</span>
 <span class="kn">from</span> <span class="nn">.style</span> <span class="kn">import</span> <span class="n">ConnectionStyle</span><span class="p">,</span> <span class="n">NodeStyle</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.connection</span> <span class="kn">import</span> <span class="n">Connection</span>  <span class="c1"># noqa</span>
+    <span class="kn">from</span> <span class="nn">.flow_scene</span> <span class="kn">import</span> <span class="n">FlowScene</span>  <span class="c1"># noqa</span>
+    <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span>  <span class="c1"># noqa</span>
 
 
 <div class="viewcode-block" id="NodePainterDelegate"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainterDelegate">[docs]</a><span class="k">class</span> <span class="nc">NodePainterDelegate</span><span class="p">:</span>
@@ -183,7 +188,7 @@
 
 <div class="viewcode-block" id="NodePainter"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainter">[docs]</a><span class="k">class</span> <span class="nc">NodePainter</span><span class="p">:</span>
 <div class="viewcode-block" id="NodePainter.paint"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainter.paint">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">paint</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="n">FlowSceneBase</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">paint</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="s1">&#39;FlowScene&#39;</span><span class="p">,</span>
               <span class="n">node_style</span><span class="p">:</span> <span class="n">NodeStyle</span><span class="p">,</span> <span class="n">connection_style</span><span class="p">:</span> <span class="n">ConnectionStyle</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Paint</span>
@@ -326,7 +331,7 @@
 <div class="viewcode-block" id="NodePainter.draw_connection_points"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodePainter.draw_connection_points">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">draw_connection_points</span><span class="p">(</span><span class="n">painter</span><span class="p">:</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="n">NodeGeometry</span><span class="p">,</span>
                                <span class="n">state</span><span class="p">:</span> <span class="n">NodeState</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">NodeDataModel</span><span class="p">,</span>
-                               <span class="n">scene</span><span class="p">:</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">node_style</span><span class="p">:</span> <span class="n">NodeStyle</span><span class="p">,</span>
+                               <span class="n">scene</span><span class="p">:</span> <span class="s1">&#39;FlowScene&#39;</span><span class="p">,</span> <span class="n">node_style</span><span class="p">:</span> <span class="n">NodeStyle</span><span class="p">,</span>
                                <span class="n">connection_style</span><span class="p">:</span> <span class="n">ConnectionStyle</span>
                                <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

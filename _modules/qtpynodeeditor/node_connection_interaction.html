@@ -154,21 +154,32 @@
             
   <h1>Source code for qtpynodeeditor.node_connection_interaction</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPointF</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">FlowSceneBase</span><span class="p">,</span> <span class="n">NodeBase</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ConnectionCycleFailure</span><span class="p">,</span> <span class="n">ConnectionPointFailure</span><span class="p">,</span>
-                         <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ConnectionCycleFailure</span><span class="p">,</span> <span class="n">ConnectionDataTypeFailure</span><span class="p">,</span>
+                         <span class="n">ConnectionPointFailure</span><span class="p">,</span> <span class="n">ConnectionPortNotEmptyFailure</span><span class="p">,</span>
                          <span class="n">ConnectionRequiresPortFailure</span><span class="p">,</span> <span class="n">ConnectionSelfFailure</span><span class="p">,</span>
-                         <span class="n">ConnectionDataTypeFailure</span><span class="p">,</span> <span class="n">NodeConnectionFailure</span><span class="p">)</span>
+                         <span class="n">NodeConnectionFailure</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
+<span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">TypeConverter</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.connection</span> <span class="kn">import</span> <span class="n">Connection</span>  <span class="c1"># noqa</span>
+    <span class="kn">from</span> <span class="nn">.flow_scene</span> <span class="kn">import</span> <span class="n">FlowScene</span>  <span class="c1"># noqa</span>
+    <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span>  <span class="c1"># noqa</span>
+    <span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">Port</span>  <span class="c1"># noqa</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="NodeConnectionInteraction"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction">[docs]</a><span class="k">class</span> <span class="nc">NodeConnectionInteraction</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ConnectionBase</span><span class="p">,</span> <span class="n">scene</span><span class="p">:</span> <span class="n">FlowSceneBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span>
+                 <span class="n">connection</span><span class="p">:</span> <span class="s1">&#39;Connection&#39;</span><span class="p">,</span>
+                 <span class="n">scene</span><span class="p">:</span> <span class="s1">&#39;FlowScene&#39;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        An interactive connection interaction to complete `connection` with the</span>
 <span class="sd">        given node</span>
@@ -190,7 +201,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_node</span><span class="o">.</span><span class="n">has_connection_by_port_type</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">required_port</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NodeConnectionInteraction.can_connect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.can_connect">[docs]</a>    <span class="k">def</span> <span class="nf">can_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeConnectionInteraction.can_connect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.can_connect">[docs]</a>    <span class="k">def</span> <span class="nf">can_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="s1">&#39;Port&#39;</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TypeConverter</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Can connect when following conditions are met:</span>
 <span class="sd">            1) Connection &#39;requires&#39; a port - i.e., is missing either a start</span>
@@ -207,8 +218,11 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        (port_index, converter) : (int, TypeConverter)</span>
-<span class="sd">            where port_index is the index of the port to be connected</span>
+<span class="sd">        port : Port</span>
+<span class="sd">            The port to be connected.</span>
+
+<span class="sd">        converter : TypeConverter</span>
+<span class="sd">            The data type converter to use.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -317,7 +331,7 @@
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="NodeConnectionInteraction.disconnect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_to_disconnect</span><span class="p">:</span> <span class="n">PortType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeConnectionInteraction.disconnect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_to_disconnect</span><span class="p">:</span> <span class="n">PortType</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        1) Node and Connection should be already connected</span>
 <span class="sd">        2) If so, clear Connection entry in the NodeState</span>
@@ -327,10 +341,6 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        port_to_disconnect : PortType</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        value : bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">get_port_index</span><span class="p">(</span><span class="n">port_to_disconnect</span><span class="p">)</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span>
@@ -398,7 +408,9 @@
         <span class="k">return</span> <span class="n">port</span><span class="o">.</span><span class="n">get_mapped_scene_position</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="NodeConnectionInteraction.node_port_under_scene_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_under_scene_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeBase</span><span class="p">:</span>
+<div class="viewcode-block" id="NodeConnectionInteraction.node_port_under_scene_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeConnectionInteraction.node_port_under_scene_point">[docs]</a>    <span class="k">def</span> <span class="nf">node_port_under_scene_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                    <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span>
+                                    <span class="n">scene_point</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;Port&#39;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Node port under scene point</span>
 
@@ -409,7 +421,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : int</span>
+<span class="sd">        port : Port</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node_geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">geometry</span>
         <span class="n">scene_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">sceneTransform</span><span class="p">()</span>

@@ -314,6 +314,19 @@
         <span class="n">scene_json</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">connection_json_array</span>
         <span class="k">return</span> <span class="n">scene_json</span>
 
+    <span class="k">def</span> <span class="nf">restore_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection_json</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Restore a connection.  To be overridden in a subclass.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        connection_json : dict</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : Connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load scene state from a dictionary</span>
@@ -693,7 +706,7 @@
 
 <div class="viewcode-block" id="FlowScene.restore_connection"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.FlowScene.restore_connection">[docs]</a>    <span class="k">def</span> <span class="nf">restore_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection_json</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Connection</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Restore connection</span>
+<span class="sd">        Restore a connection.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

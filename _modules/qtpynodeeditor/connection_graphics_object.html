@@ -153,17 +153,22 @@
            <div itemprop="articleBody">
             
   <h1>Source code for qtpynodeeditor.connection_graphics_object</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QRectF</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QRectF</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="kn">import</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPainterPath</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QGraphicsBlurEffect</span><span class="p">,</span> <span class="n">QGraphicsItem</span><span class="p">,</span>
                             <span class="n">QGraphicsObject</span><span class="p">,</span> <span class="n">QGraphicsSceneHoverEvent</span><span class="p">,</span>
                             <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span> <span class="n">QStyleOptionGraphicsItem</span><span class="p">,</span>
                             <span class="n">QWidget</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">ConnectionBase</span>
 <span class="kn">from</span> <span class="nn">.connection_painter</span> <span class="kn">import</span> <span class="n">ConnectionPainter</span>
 <span class="kn">from</span> <span class="nn">.node_connection_interaction</span> <span class="kn">import</span> <span class="n">NodeConnectionInteraction</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">opposite_port</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.connection</span> <span class="kn">import</span> <span class="n">Connection</span>  <span class="c1"># noqa</span>
+
 
 <span class="n">debug_drawing</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -199,7 +204,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_scene</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Connection&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connection</span>
 

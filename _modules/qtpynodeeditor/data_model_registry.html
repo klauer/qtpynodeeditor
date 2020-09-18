@@ -156,7 +156,7 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">.node_data</span> <span class="kn">import</span> <span class="n">NodeDataModel</span><span class="p">,</span> <span class="n">NodeDataType</span>
+<span class="kn">from</span> <span class="nn">.node_data</span> <span class="kn">import</span> <span class="n">NodeData</span><span class="p">,</span> <span class="n">NodeDataModel</span><span class="p">,</span> <span class="n">NodeDataType</span>
 <span class="kn">from</span> <span class="nn">.type_converter</span> <span class="kn">import</span> <span class="n">TypeConverter</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -175,21 +175,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_categories</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_models_category</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">category</span>
 
-<div class="viewcode-block" id="DataModelRegistry.register_type_converter"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.DataModelRegistry.register_type_converter">[docs]</a>    <span class="k">def</span> <span class="nf">register_type_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_in</span><span class="p">:</span> <span class="n">NodeDataType</span><span class="p">,</span> <span class="n">type_out</span><span class="p">:</span>
-                                <span class="n">NodeDataType</span><span class="p">,</span> <span class="n">type_converter</span><span class="p">:</span> <span class="n">TypeConverter</span><span class="p">):</span>
+<div class="viewcode-block" id="DataModelRegistry.register_type_converter"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.DataModelRegistry.register_type_converter">[docs]</a>    <span class="k">def</span> <span class="nf">register_type_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                <span class="n">type_in</span><span class="p">:</span> <span class="n">NodeDataType</span><span class="p">,</span>
+                                <span class="n">type_out</span><span class="p">:</span> <span class="n">NodeDataType</span><span class="p">,</span>
+                                <span class="n">type_converter</span><span class="p">:</span> <span class="n">TypeConverter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Register type converter</span>
+<span class="sd">        Register a type converter for a given data type.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        id_ : NodeData subclass or TypeConverterId</span>
+<span class="sd">        type_in : NodeDataType or NodeData subclass</span>
+<span class="sd">            The input type.</span>
+
+<span class="sd">        type_out : NodeDataType or NodeData subclass</span>
+<span class="sd">            The output type.</span>
+
 <span class="sd">        type_converter : TypeConverter</span>
+<span class="sd">            The type converter to use for the conversion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO typing annotation</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_in</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">):</span>
-            <span class="n">type_in</span> <span class="o">=</span> <span class="n">type_in</span><span class="o">.</span><span class="n">type</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_out</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">):</span>
-            <span class="n">type_out</span> <span class="o">=</span> <span class="n">type_out</span><span class="o">.</span><span class="n">type</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_in</span><span class="p">,</span> <span class="s1">&#39;data_type&#39;</span><span class="p">):</span>
+            <span class="n">type_in</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">NodeData</span><span class="p">,</span> <span class="n">type_in</span><span class="p">)</span><span class="o">.</span><span class="n">data_type</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_out</span><span class="p">,</span> <span class="s1">&#39;data_type&#39;</span><span class="p">):</span>
+            <span class="n">type_out</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">NodeData</span><span class="p">,</span> <span class="n">type_out</span><span class="p">)</span><span class="o">.</span><span class="n">data_type</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">type_converters</span><span class="p">[(</span><span class="n">type_in</span><span class="p">,</span> <span class="n">type_out</span><span class="p">)]</span> <span class="o">=</span> <span class="n">type_converter</span></div>
 

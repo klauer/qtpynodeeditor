@@ -154,18 +154,21 @@
             
   <h1>Source code for qtpynodeeditor.node_geometry</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QRect</span><span class="p">,</span> <span class="n">QRectF</span><span class="p">,</span> <span class="n">QSizeF</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtGui</span> <span class="kn">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QFontMetrics</span><span class="p">,</span> <span class="n">QTransform</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="kn">import</span> <span class="n">QSizePolicy</span>
 
-<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">NodeBase</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">NodeValidationState</span><span class="p">,</span> <span class="n">PortType</span>
 <span class="kn">from</span> <span class="nn">.port</span> <span class="kn">import</span> <span class="n">Port</span>
 
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span>  <span class="c1"># noqa</span>
+
 
 <div class="viewcode-block" id="NodeGeometry"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGeometry">[docs]</a><span class="k">class</span> <span class="nc">NodeGeometry</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node</span> <span class="o">=</span> <span class="n">node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">model</span>
@@ -188,7 +191,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Height</span>
+<span class="sd">        Node height.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -203,7 +206,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Width</span>
+<span class="sd">        Node width.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -213,13 +216,6 @@
 
     <span class="nd">@width</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set width</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        width : int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -235,13 +231,6 @@
 
     <span class="nd">@entry_height</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">entry_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set entry height</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        h : int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_entry_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -257,13 +246,6 @@
 
     <span class="nd">@entry_width</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">entry_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set entry width</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        width : int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_entry_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -279,13 +261,6 @@
 
     <span class="nd">@spacing</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set spacing</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        s : int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -301,19 +276,12 @@
 
     <span class="nd">@hovered</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">hovered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set hovered</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        h : int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hovered</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        N sources</span>
+<span class="sd">        Number of sources.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -324,7 +292,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_sinks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        N sinks</span>
+<span class="sd">        Number of sinks.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -333,7 +301,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">num_ports</span><span class="p">[</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">dragging_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">dragging_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Dragging pos</span>
 
@@ -343,9 +311,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dragging_pos</span>
 
-    <span class="nd">@dragging_pos</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@dragging_position</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">dragging_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dragging_pos</span> <span class="o">=</span> <span class="n">QPointF</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+
+    <span class="c1"># Back-compatibility</span>
+    <span class="n">dragging_pos</span> <span class="o">=</span> <span class="n">dragging_position</span>
 
 <div class="viewcode-block" id="NodeGeometry.entry_bounding_rect"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGeometry.entry_bounding_rect">[docs]</a>    <span class="k">def</span> <span class="nf">entry_bounding_rect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">addon</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QRectF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -452,29 +423,40 @@
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NodeGeometry.check_hit_scene_point"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGeometry.check_hit_scene_point">[docs]</a>    <span class="k">def</span> <span class="nf">check_hit_scene_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port_type</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">scene_point</span><span class="p">:</span> <span class="n">QPointF</span><span class="p">,</span>
-                              <span class="n">scene_transform</span><span class="p">:</span> <span class="n">QTransform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Port</span><span class="p">:</span>
+                              <span class="n">scene_transform</span><span class="p">:</span> <span class="n">QTransform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Port</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check hit scene point</span>
+<span class="sd">        Check a scene point for a specific port type.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        port_type : PortType</span>
+<span class="sd">            The port type to check for.</span>
+
 <span class="sd">        scene_point : QPointF</span>
+<span class="sd">            The point in the scene.</span>
+
 <span class="sd">        scene_transform : QTransform</span>
+<span class="sd">            The scene transform.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        value : Port</span>
+<span class="sd">        port : Port or None</span>
+<span class="sd">            The nearby port, if found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">port_type</span> <span class="o">==</span> <span class="n">PortType</span><span class="o">.</span><span class="n">none</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">nearby_port</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="o">.</span><span class="n">connection_point_diameter</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">port_type</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">get_mapped_scene_position</span><span class="p">(</span><span class="n">scene_transform</span><span class="p">)</span> <span class="o">-</span> <span class="n">scene_point</span>
             <span class="n">distance</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">QPointF</span><span class="o">.</span><span class="n">dotProduct</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">pos</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">port</span></div>
+                <span class="n">nearby_port</span> <span class="o">=</span> <span class="n">port</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">nearby_port</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">resize_rect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QRect</span><span class="p">:</span>
@@ -508,7 +490,7 @@
             <span class="c1"># If the widget wants to use as much vertical space as possible,</span>
             <span class="c1"># place it immediately after the caption.</span>
             <span class="k">return</span> <span class="n">QPointF</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spacing</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_width</span><span class="p">(</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">),</span>
-                           <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span><span class="p">())</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">validation_state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">NodeValidationState</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">QPointF</span><span class="p">(</span>
@@ -530,10 +512,10 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : int</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">base_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span><span class="p">()</span>
+        <span class="n">base_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_height</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">validation_state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">NodeValidationState</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">base_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_height</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">base_height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_height</span>
 
         <span class="k">return</span> <span class="n">base_height</span></div>
 
@@ -563,9 +545,13 @@
 
 <div class="viewcode-block" id="NodeGeometry.calculate_node_position_between_node_ports"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeGeometry.calculate_node_position_between_node_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">calculate_node_position_between_node_ports</span><span class="p">(</span>
-            <span class="n">target_port_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">target_port</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span> <span class="n">target_node</span><span class="p">:</span>
-            <span class="n">NodeBase</span><span class="p">,</span> <span class="n">source_port_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">source_port</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span>
-            <span class="n">source_node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">,</span> <span class="n">new_node</span><span class="p">:</span> <span class="n">NodeBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
+            <span class="n">target_port_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">target_port</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span>
+            <span class="n">target_node</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span>
+            <span class="n">source_port_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">source_port</span><span class="p">:</span> <span class="n">PortType</span><span class="p">,</span>
+            <span class="n">source_node</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span>
+            <span class="n">new_node</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPointF</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculate node position between node ports</span>
 
@@ -591,6 +577,9 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : QPointF</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">source_node</span><span class="o">.</span><span class="n">graphics_object</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">target_node</span><span class="o">.</span><span class="n">graphics_object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Uninitialized node&#39;</span><span class="p">)</span>
         <span class="n">converter_node_pos</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">source_node</span><span class="o">.</span><span class="n">graphics_object</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
             <span class="o">+</span> <span class="n">source_node</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">port_scene_position</span><span class="p">(</span><span class="n">source_port</span><span class="p">,</span> <span class="n">source_port_index</span><span class="p">)</span>

@@ -155,6 +155,7 @@
   <h1>Source code for qtpynodeeditor.node_data</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">qtpy.QtCore</span> <span class="kn">import</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">Signal</span>
 <span class="kn">from</span> <span class="nn">qtpy.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span>
@@ -197,8 +198,8 @@
 
 
 <div class="viewcode-block" id="NodeDataModel"><a class="viewcode-back" href="../../api.html#qtpynodeeditor.NodeDataModel">[docs]</a><span class="k">class</span> <span class="nc">NodeDataModel</span><span class="p">(</span><span class="n">QObject</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">caption</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">caption</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">caption_visible</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">num_ports</span> <span class="o">=</span> <span class="p">{</span><span class="n">PortType</span><span class="o">.</span><span class="n">input</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">PortType</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
