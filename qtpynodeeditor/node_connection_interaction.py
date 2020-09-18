@@ -1,5 +1,6 @@
 import logging
 import typing
+from typing import Optional, Tuple
 
 from qtpy.QtCore import QPointF
 
@@ -8,11 +9,13 @@ from .exceptions import (ConnectionCycleFailure, ConnectionDataTypeFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
                          NodeConnectionFailure)
 from .port import PortType, opposite_port
+from .type_converter import TypeConverter
 
 if typing.TYPE_CHECKING:
     from .connection import Connection  # noqa
     from .flow_scene import FlowScene  # noqa
     from .node import Node  # noqa
+    from .port import Port  # noqa
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +46,7 @@ class NodeConnectionInteraction:
         return self.connection_node.has_connection_by_port_type(
             self._node, required_port)
 
-    def can_connect(self) -> bool:
+    def can_connect(self) -> Tuple['Port', Optional[TypeConverter]]:
         """
         Can connect when following conditions are met:
             1) Connection 'requires' a port - i.e., is missing either a start
@@ -60,8 +63,11 @@ class NodeConnectionInteraction:
 
         Returns
         -------
-        (port_index, converter) : (int, TypeConverter)
-            where port_index is the index of the port to be connected
+        port : Port
+            The port to be connected.
+
+        converter : TypeConverter
+            The data type converter to use.
 
         Raises
         ------
@@ -170,7 +176,7 @@ class NodeConnectionInteraction:
 
         return True
 
-    def disconnect(self, port_to_disconnect: PortType) -> bool:
+    def disconnect(self, port_to_disconnect: PortType):
         """
         1) Node and Connection should be already connected
         2) If so, clear Connection entry in the NodeState
@@ -180,10 +186,6 @@ class NodeConnectionInteraction:
         Parameters
         ----------
         port_to_disconnect : PortType
-
-        Returns
-        -------
-        value : bool
         """
         port_index = self._connection.get_port_index(port_to_disconnect)
         state = self._node.state
@@ -253,7 +255,7 @@ class NodeConnectionInteraction:
 
     def node_port_under_scene_point(self,
                                     port_type: PortType,
-                                    scene_point: QPointF) -> 'Node':
+                                    scene_point: QPointF) -> Optional['Port']:
         """
         Node port under scene point
 
@@ -264,7 +266,7 @@ class NodeConnectionInteraction:
 
         Returns
         -------
-        value : int
+        port : Port
         """
         node_geom = self._node.geometry
         scene_transform = self._node.graphics_object.sceneTransform()

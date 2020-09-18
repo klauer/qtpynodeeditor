@@ -36,7 +36,7 @@ class NodeGeometry:
     @property
     def height(self) -> int:
         """
-        Height
+        Node height.
 
         Returns
         -------
@@ -51,7 +51,7 @@ class NodeGeometry:
     @property
     def width(self) -> int:
         """
-        Width
+        Node width.
 
         Returns
         -------
@@ -146,7 +146,7 @@ class NodeGeometry:
         return self._model.num_ports[PortType.input]
 
     @property
-    def dragging_pos(self) -> QPointF:
+    def dragging_position(self) -> QPointF:
         """
         Dragging pos
 
@@ -156,9 +156,12 @@ class NodeGeometry:
         """
         return self._dragging_pos
 
-    @dragging_pos.setter
+    @dragging_position.setter
     def dragging_position(self, pos: QPointF):
         self._dragging_pos = QPointF(pos)
+
+    # Back-compatibility
+    dragging_pos = dragging_position
 
     def entry_bounding_rect(self, *, addon=0.0) -> QRectF:
         """
@@ -265,29 +268,40 @@ class NodeGeometry:
         return t.map(result)
 
     def check_hit_scene_point(self, port_type: PortType, scene_point: QPointF,
-                              scene_transform: QTransform) -> Port:
+                              scene_transform: QTransform) -> typing.Optional[Port]:
         """
-        Check hit scene point
+        Check a scene point for a specific port type.
 
         Parameters
         ----------
         port_type : PortType
+            The port type to check for.
+
         scene_point : QPointF
+            The point in the scene.
+
         scene_transform : QTransform
+            The scene transform.
 
         Returns
         -------
-        value : Port
+        port : Port or None
+            The nearby port, if found.
         """
         if port_type == PortType.none:
             return None
+
+        nearby_port = None
 
         tolerance = 2.0 * self._style.connection_point_diameter
         for idx, port in self._node.state[port_type].items():
             pos = port.get_mapped_scene_position(scene_transform) - scene_point
             distance = math.sqrt(QPointF.dotProduct(pos, pos))
             if distance < tolerance:
-                return port
+                nearby_port = port
+                break
+
+        return nearby_port
 
     @property
     def resize_rect(self) -> QRect:
@@ -343,7 +357,7 @@ class NodeGeometry:
         -------
         value : int
         '''
-        base_height = self.height() - self.caption_height
+        base_height = self.height - self.caption_height
 
         if self._model.validation_state() != NodeValidationState.valid:
             return base_height + self.validation_height
@@ -408,6 +422,9 @@ class NodeGeometry:
         -------
         value : QPointF
         """
+        if (source_node.graphics_object is None
+                or target_node.graphics_object is None):
+            raise ValueError('Uninitialized node')
         converter_node_pos = (
             source_node.graphics_object.pos()
             + source_node.geometry.port_scene_position(source_port, source_port_index)

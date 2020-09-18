@@ -1,3 +1,4 @@
+import typing
 import uuid
 
 from qtpy.QtCore import QObject, Signal
@@ -229,7 +230,7 @@ class Connection(QObject, Serializable):
         """
         return self._connection_geometry
 
-    def get_node(self, port_type: PortType) -> Node:
+    def get_node(self, port_type: PortType) -> typing.Optional[Node]:
         """
         Get node
 
@@ -242,8 +243,7 @@ class Connection(QObject, Serializable):
         value : Node
         """
         port = self._ports[port_type]
-        if port is not None:
-            return port.node
+        return port.node if port is not None else None
 
     @property
     def nodes(self):
@@ -314,13 +314,13 @@ class Connection(QObject, Serializable):
             return ports[valid_type].data_type
 
     @property
-    def type_converter(self) -> TypeConverter:
+    def type_converter(self) -> typing.Optional[TypeConverter]:
         """
-        Set type converter
+        The type converter used for the connection.
 
         Returns
         -------
-        converter : TypeConverter
+        converter : TypeConverter or None
         """
         return self._converter
 
