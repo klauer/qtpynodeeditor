@@ -1,10 +1,11 @@
 import collections
 import typing
 import uuid
+from typing import Optional
 
 from qtpy.QtCore import QObject, QPointF, QSizeF
 
-from .base import NodeBase, Serializable
+from .base import Serializable
 from .enums import ReactToConnectionState
 from .node_data import NodeData, NodeDataModel, NodeDataType
 from .node_geometry import NodeGeometry
@@ -14,7 +15,14 @@ from .port import Port, PortType
 from .style import NodeStyle
 
 
-class Node(QObject, Serializable, NodeBase):
+class Node(QObject, Serializable):
+    _model: NodeDataModel
+    _uid: str
+    _style: NodeStyle
+    _state: NodeState
+    _geometry: NodeGeometry
+    _graphics_obj: Optional[NodeGraphicsObject]
+
     def __init__(self, data_model: NodeDataModel):
         '''
         A single Node in the scene
@@ -83,7 +91,8 @@ class Node(QObject, Serializable, NodeBase):
         )
 
     def walk_paths_by_port_type(
-            self, port_type: PortType) -> typing.Iterable['Node']:
+                self, port_type: PortType
+            ) -> typing.Generator[typing.Tuple['Node', ...], None, None]:
         """
         Yields paths to connected nodes by port type
 
@@ -92,6 +101,11 @@ class Node(QObject, Serializable, NodeBase):
         node_path : tuple
             The path to the node
         """
+        seen: typing.Set[typing.Union[Node, None]]
+        pending: typing.Deque[
+            typing.Tuple[typing.List[Node], Node]
+        ]
+
         seen = set([None])
         pending = collections.deque([([], self)])
 
@@ -134,6 +148,7 @@ class Node(QObject, Serializable, NodeBase):
         -------
         value : dict
         """
+        assert self._graphics_obj is not None
         return {
             "id": self._uid,
             "model": self._model.__getstate__(),
@@ -179,6 +194,9 @@ class Node(QObject, Serializable, NodeBase):
         node_data_type : NodeDataType
         scene_point : QPointF
         """
+        if self._graphics_obj is None:
+            return
+
         transform = self._graphics_obj.sceneTransform()
         inverted, invertible = transform.inverted()
         if invertible:
@@ -193,9 +211,9 @@ class Node(QObject, Serializable, NodeBase):
         self._graphics_obj.update()
 
     @property
-    def graphics_object(self) -> NodeGraphicsObject:
+    def graphics_object(self) -> Optional[NodeGraphicsObject]:
         """
-        Node graphics object
+        Get/set the associated node graphics object.
 
         Returns
         -------
@@ -205,20 +223,13 @@ class Node(QObject, Serializable, NodeBase):
 
     @graphics_object.setter
     def graphics_object(self, graphics: NodeGraphicsObject):
-        """
-        Set graphics object
-
-        Parameters
-        ----------
-        graphics : NodeGraphicsObject
-        """
         self._graphics_obj = graphics
         self._geometry.recalculate_size()
 
     @property
     def geometry(self) -> NodeGeometry:
         """
-        Node geometry
+        Get the node geometry.
 
         Returns
         -------
@@ -229,7 +240,7 @@ class Node(QObject, Serializable, NodeBase):
     @property
     def model(self) -> NodeDataModel:
         """
-        Node data model
+        Get the node data model.
 
         Returns
         -------
@@ -253,13 +264,14 @@ class Node(QObject, Serializable, NodeBase):
 
         self._model.set_in_data(node_data, input_port)
 
-        # Recalculate the nodes visuals. A data change can result in the node
-        # taking more space than before, so self forces a recalculate+repaint
-        # on the affected node
-        self._graphics_obj.set_geometry_changed()
-        self._geometry.recalculate_size()
-        self._graphics_obj.update()
-        self._graphics_obj.move_connections()
+        if self._graphics_obj is not None:
+            # Recalculate the nodes visuals. A data change can result in the
+            # node taking more space than before, so self forces a
+            # recalculate+repaint on the affected node
+            self._graphics_obj.set_geometry_changed()
+            self._geometry.recalculate_size()
+            self._graphics_obj.update()
+            self._graphics_obj.move_connections()
 
     def _on_port_index_data_updated(self, port_index: int):
         """
@@ -326,7 +338,8 @@ class Node(QObject, Serializable, NodeBase):
         -------
         value : QPointF
         """
-        return self._graphics_obj.pos()
+        if self._graphics_obj is not None:
+            return self._graphics_obj.pos()
 
     @position.setter
     def position(self, pos):

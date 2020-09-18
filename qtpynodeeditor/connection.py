@@ -1,9 +1,10 @@
+import typing
 import uuid
 
 from qtpy.QtCore import QObject, Signal
 
 from . import exceptions
-from .base import ConnectionBase, Serializable
+from .base import Serializable
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
 from .node import Node, NodeDataType
@@ -13,7 +14,7 @@ from .style import StyleCollection
 from .type_converter import TypeConverter
 
 
-class Connection(QObject, Serializable, ConnectionBase):
+class Connection(QObject, Serializable):
     connection_completed = Signal(QObject)
     connection_made_incomplete = Signal(QObject)
     updated = Signal(QObject)
@@ -229,7 +230,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         """
         return self._connection_geometry
 
-    def get_node(self, port_type: PortType) -> Node:
+    def get_node(self, port_type: PortType) -> typing.Optional[Node]:
         """
         Get node
 
@@ -242,8 +243,7 @@ class Connection(QObject, Serializable, ConnectionBase):
         value : Node
         """
         port = self._ports[port_type]
-        if port is not None:
-            return port.node
+        return port.node if port is not None else None
 
     @property
     def nodes(self):
@@ -314,13 +314,13 @@ class Connection(QObject, Serializable, ConnectionBase):
             return ports[valid_type].data_type
 
     @property
-    def type_converter(self) -> TypeConverter:
+    def type_converter(self) -> typing.Optional[TypeConverter]:
         """
-        Set type converter
+        The type converter used for the connection.
 
         Returns
         -------
-        converter : TypeConverter
+        converter : TypeConverter or None
         """
         return self._converter
 

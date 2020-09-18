@@ -159,6 +159,19 @@ class FlowSceneModel:
         scene_json["connections"] = connection_json_array
         return scene_json
 
+    def restore_connection(self, connection_json: dict) -> Connection:
+        """
+        Restore a connection.  To be overridden in a subclass.
+
+        Parameters
+        ----------
+        connection_json : dict
+
+        Returns
+        -------
+        value : Connection
+        """
+
     def __setstate__(self, doc: dict):
         """
         Load scene state from a dictionary
@@ -538,7 +551,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
 
     def restore_connection(self, connection_json: dict) -> Connection:
         """
-        Restore connection
+        Restore a connection.
 
         Parameters
         ----------

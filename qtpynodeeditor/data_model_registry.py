@@ -1,7 +1,7 @@
 import logging
 import typing
 
-from .node_data import NodeDataModel, NodeDataType
+from .node_data import NodeData, NodeDataModel, NodeDataType
 from .type_converter import TypeConverter
 
 logger = logging.getLogger(__name__)
@@ -20,21 +20,29 @@ class DataModelRegistry:
         self._categories.add(category)
         self._models_category[name] = category
 
-    def register_type_converter(self, type_in: NodeDataType, type_out:
-                                NodeDataType, type_converter: TypeConverter):
+    def register_type_converter(self,
+                                type_in: NodeDataType,
+                                type_out: NodeDataType,
+                                type_converter: TypeConverter):
         """
-        Register type converter
+        Register a type converter for a given data type.
 
         Parameters
         ----------
-        id_ : NodeData subclass or TypeConverterId
+        type_in : NodeDataType or NodeData subclass
+            The input type.
+
+        type_out : NodeDataType or NodeData subclass
+            The output type.
+
         type_converter : TypeConverter
+            The type converter to use for the conversion.
         """
         # TODO typing annotation
-        if hasattr(type_in, 'type'):
-            type_in = type_in.type
-        if hasattr(type_out, 'type'):
-            type_out = type_out.type
+        if hasattr(type_in, 'data_type'):
+            type_in = typing.cast(NodeData, type_in).data_type
+        if hasattr(type_out, 'data_type'):
+            type_out = typing.cast(NodeData, type_out).data_type
 
         self.type_converters[(type_in, type_out)] = type_converter
 

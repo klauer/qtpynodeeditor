@@ -1,5 +1,6 @@
 import inspect
 from collections import namedtuple
+from typing import Optional
 
 from qtpy.QtCore import QObject, Signal
 from qtpy.QtWidgets import QWidget
@@ -42,8 +43,8 @@ class NodeData:
 
 
 class NodeDataModel(QObject, Serializable):
-    name = None
-    caption = None
+    name: Optional[str] = None
+    caption: Optional[str] = None
     caption_visible = True
     num_ports = {PortType.input: 1,
                  PortType.output: 1,

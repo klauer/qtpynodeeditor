@@ -1,16 +1,19 @@
 import math
+import typing
 
 from qtpy.QtCore import QPointF, QRect, QRectF, QSizeF
 from qtpy.QtGui import QFont, QFontMetrics, QTransform
 from qtpy.QtWidgets import QSizePolicy
 
-from .base import NodeBase
 from .enums import NodeValidationState, PortType
 from .port import Port
 
+if typing.TYPE_CHECKING:
+    from .node import Node  # noqa
+
 
 class NodeGeometry:
-    def __init__(self, node: NodeBase):
+    def __init__(self, node: 'Node'):
         super().__init__()
         self._node = node
         self._model = node.model
@@ -33,7 +36,7 @@ class NodeGeometry:
     @property
     def height(self) -> int:
         """
-        Height
+        Node height.
 
         Returns
         -------
@@ -48,7 +51,7 @@ class NodeGeometry:
     @property
     def width(self) -> int:
         """
-        Width
+        Node width.
 
         Returns
         -------
@@ -58,13 +61,6 @@ class NodeGeometry:
 
     @width.setter
     def width(self, width: int):
-        """
-        Set width
-
-        Parameters
-        ----------
-        width : int
-        """
         self._width = int(width)
 
     @property
@@ -80,13 +76,6 @@ class NodeGeometry:
 
     @entry_height.setter
     def entry_height(self, h: int):
-        """
-        Set entry height
-
-        Parameters
-        ----------
-        h : int
-        """
         self._entry_height = int(h)
 
     @property
@@ -102,13 +91,6 @@ class NodeGeometry:
 
     @entry_width.setter
     def entry_width(self, width: int):
-        """
-        Set entry width
-
-        Parameters
-        ----------
-        width : int
-        """
         self._entry_width = int(width)
 
     @property
@@ -124,13 +106,6 @@ class NodeGeometry:
 
     @spacing.setter
     def spacing(self, s: int):
-        """
-        Set spacing
-
-        Parameters
-        ----------
-        s : int
-        """
         self._spacing = int(s)
 
     @property
@@ -146,19 +121,12 @@ class NodeGeometry:
 
     @hovered.setter
     def hovered(self, h: int):
-        """
-        Set hovered
-
-        Parameters
-        ----------
-        h : int
-        """
         self._hovered = bool(h)
 
     @property
     def num_sources(self) -> int:
         """
-        N sources
+        Number of sources.
 
         Returns
         -------
@@ -169,7 +137,7 @@ class NodeGeometry:
     @property
     def num_sinks(self) -> int:
         """
-        N sinks
+        Number of sinks.
 
         Returns
         -------
@@ -178,7 +146,7 @@ class NodeGeometry:
         return self._model.num_ports[PortType.input]
 
     @property
-    def dragging_pos(self) -> QPointF:
+    def dragging_position(self) -> QPointF:
         """
         Dragging pos
 
@@ -188,9 +156,12 @@ class NodeGeometry:
         """
         return self._dragging_pos
 
-    @dragging_pos.setter
+    @dragging_position.setter
     def dragging_position(self, pos: QPointF):
         self._dragging_pos = QPointF(pos)
+
+    # Back-compatibility
+    dragging_pos = dragging_position
 
     def entry_bounding_rect(self, *, addon=0.0) -> QRectF:
         """
@@ -297,29 +268,40 @@ class NodeGeometry:
         return t.map(result)
 
     def check_hit_scene_point(self, port_type: PortType, scene_point: QPointF,
-                              scene_transform: QTransform) -> Port:
+                              scene_transform: QTransform) -> typing.Optional[Port]:
         """
-        Check hit scene point
+        Check a scene point for a specific port type.
 
         Parameters
         ----------
         port_type : PortType
+            The port type to check for.
+
         scene_point : QPointF
+            The point in the scene.
+
         scene_transform : QTransform
+            The scene transform.
 
         Returns
         -------
-        value : Port
+        port : Port or None
+            The nearby port, if found.
         """
         if port_type == PortType.none:
             return None
+
+        nearby_port = None
 
         tolerance = 2.0 * self._style.connection_point_diameter
         for idx, port in self._node.state[port_type].items():
             pos = port.get_mapped_scene_position(scene_transform) - scene_point
             distance = math.sqrt(QPointF.dotProduct(pos, pos))
             if distance < tolerance:
-                return port
+                nearby_port = port
+                break
+
+        return nearby_port
 
     @property
     def resize_rect(self) -> QRect:
@@ -353,7 +335,7 @@ class NodeGeometry:
             # If the widget wants to use as much vertical space as possible,
             # place it immediately after the caption.
             return QPointF(self._spacing + self.port_width(PortType.input),
-                           self.caption_height())
+                           self.caption_height)
 
         if self._model.validation_state() != NodeValidationState.valid:
             return QPointF(
@@ -375,10 +357,10 @@ class NodeGeometry:
         -------
         value : int
         '''
-        base_height = self.height() - self.caption_height()
+        base_height = self.height - self.caption_height
 
         if self._model.validation_state() != NodeValidationState.valid:
-            return (base_height + self.validation_height())
+            return base_height + self.validation_height
 
         return base_height
 
@@ -408,9 +390,13 @@ class NodeGeometry:
 
     @staticmethod
     def calculate_node_position_between_node_ports(
-            target_port_index: int, target_port: PortType, target_node:
-            NodeBase, source_port_index: int, source_port: PortType,
-            source_node: NodeBase, new_node: NodeBase) -> QPointF:
+            target_port_index: int,
+            target_port: PortType,
+            target_node: 'Node',
+            source_port_index: int,
+            source_port: PortType,
+            source_node: 'Node',
+            new_node: 'Node') -> QPointF:
         """
         calculate node position between node ports
 
@@ -436,6 +422,9 @@ class NodeGeometry:
         -------
         value : QPointF
         """
+        if (source_node.graphics_object is None
+                or target_node.graphics_object is None):
+            raise ValueError('Uninitialized node')
         converter_node_pos = (
             source_node.graphics_object.pos()
             + source_node.geometry.port_scene_position(source_port, source_port_index)
