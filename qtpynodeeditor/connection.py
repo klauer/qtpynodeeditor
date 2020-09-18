@@ -3,7 +3,7 @@ import uuid
 from qtpy.QtCore import QObject, Signal
 
 from . import exceptions
-from .base import ConnectionBase, Serializable
+from .base import Serializable
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
 from .node import Node, NodeDataType
@@ -13,7 +13,7 @@ from .style import StyleCollection
 from .type_converter import TypeConverter
 
 
-class Connection(QObject, Serializable, ConnectionBase):
+class Connection(QObject, Serializable):
     connection_completed = Signal(QObject)
     connection_made_incomplete = Signal(QObject)
     updated = Signal(QObject)

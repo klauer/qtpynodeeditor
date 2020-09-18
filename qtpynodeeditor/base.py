@@ -1,15 +1,3 @@
-class NodeBase:
-    ...
-
-
-class ConnectionBase:
-    ...
-
-
-class FlowSceneBase:
-    ...
-
-
 class Serializable:
     'Interface for a serializable class'
 

@@ -1,16 +1,19 @@
 import math
+import typing
 
 from qtpy.QtCore import QPointF, QRect, QRectF, QSizeF
 from qtpy.QtGui import QFont, QFontMetrics, QTransform
 from qtpy.QtWidgets import QSizePolicy
 
-from .base import NodeBase
 from .enums import NodeValidationState, PortType
 from .port import Port
 
+if typing.TYPE_CHECKING:
+    from .node import Node  # noqa
+
 
 class NodeGeometry:
-    def __init__(self, node: NodeBase):
+    def __init__(self, node: 'Node'):
         super().__init__()
         self._node = node
         self._model = node.model
@@ -375,11 +378,11 @@ class NodeGeometry:
     def calculate_node_position_between_node_ports(
             target_port_index: int,
             target_port: PortType,
-            target_node: NodeBase,
+            target_node: 'Node',
             source_port_index: int,
             source_port: PortType,
-            source_node: NodeBase,
-            new_node: NodeBase) -> QPointF:
+            source_node: 'Node',
+            new_node: 'Node') -> QPointF:
         """
         calculate node position between node ports
 

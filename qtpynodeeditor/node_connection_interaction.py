@@ -1,19 +1,27 @@
 import logging
+import typing
 
 from qtpy.QtCore import QPointF
 
-from .base import ConnectionBase, FlowSceneBase, NodeBase
-from .exceptions import (ConnectionCycleFailure, ConnectionPointFailure,
-                         ConnectionPortNotEmptyFailure,
+from .exceptions import (ConnectionCycleFailure, ConnectionDataTypeFailure,
+                         ConnectionPointFailure, ConnectionPortNotEmptyFailure,
                          ConnectionRequiresPortFailure, ConnectionSelfFailure,
-                         ConnectionDataTypeFailure, NodeConnectionFailure)
+                         NodeConnectionFailure)
 from .port import PortType, opposite_port
+
+if typing.TYPE_CHECKING:
+    from .connection import Connection  # noqa
+    from .flow_scene import FlowScene  # noqa
+    from .node import Node  # noqa
+
 
 logger = logging.getLogger(__name__)
 
 
 class NodeConnectionInteraction:
-    def __init__(self, node: NodeBase, connection: ConnectionBase, scene: FlowSceneBase):
+    def __init__(self, node: 'Node',
+                 connection: 'Connection',
+                 scene: 'FlowScene'):
         '''
         An interactive connection interaction to complete `connection` with the
         given node
@@ -243,7 +251,9 @@ class NodeConnectionInteraction:
         return port.get_mapped_scene_position(
             self._node.graphics_object.sceneTransform())
 
-    def node_port_under_scene_point(self, port_type: PortType, scene_point: QPointF) -> NodeBase:
+    def node_port_under_scene_point(self,
+                                    port_type: PortType,
+                                    scene_point: QPointF) -> 'Node':
         """
         Node port under scene point
 

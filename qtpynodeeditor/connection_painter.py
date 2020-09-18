@@ -1,10 +1,15 @@
+import typing
+
 from qtpy.QtCore import QLineF, QPoint, QSize, Qt
 from qtpy.QtGui import QIcon, QPainter, QPainterPath, QPainterPathStroker, QPen
 
-from .base import ConnectionBase
 from .connection_geometry import ConnectionGeometry
 from .enums import PortType
 from .style import ConnectionStyle
+
+if typing.TYPE_CHECKING:
+    from .connection import Connection  # noqa
+
 
 use_debug_drawing = False
 
@@ -164,7 +169,7 @@ def draw_normal_line(painter, connection, style):
 
 class ConnectionPainter:
     @staticmethod
-    def paint(painter: QPainter, connection: ConnectionBase,
+    def paint(painter: QPainter, connection: 'Connection',
               style: ConnectionStyle):
         """
         Paint

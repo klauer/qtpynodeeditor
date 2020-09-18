@@ -1,15 +1,20 @@
 import math
+import typing
 
 from qtpy.QtCore import QPointF, QRectF, Qt
 from qtpy.QtGui import QFontMetrics, QLinearGradient, QPainter, QPen
 
-from .base import FlowSceneBase, NodeBase
 from .enums import NodeValidationState, PortType
 from .node_data import NodeDataModel
 from .node_geometry import NodeGeometry
 from .node_graphics_object import NodeGraphicsObject
 from .node_state import NodeState
 from .style import ConnectionStyle, NodeStyle
+
+if typing.TYPE_CHECKING:
+    from .connection import Connection  # noqa
+    from .flow_scene import FlowScene  # noqa
+    from .node import Node  # noqa
 
 
 class NodePainterDelegate:
@@ -28,7 +33,7 @@ class NodePainterDelegate:
 
 class NodePainter:
     @staticmethod
-    def paint(painter: QPainter, node: NodeBase, scene: FlowSceneBase,
+    def paint(painter: QPainter, node: 'Node', scene: 'FlowScene',
               node_style: NodeStyle, connection_style: ConnectionStyle):
         """
         Paint
@@ -171,7 +176,7 @@ class NodePainter:
     @staticmethod
     def draw_connection_points(painter: QPainter, geom: NodeGeometry,
                                state: NodeState, model: NodeDataModel,
-                               scene: FlowSceneBase, node_style: NodeStyle,
+                               scene: 'FlowScene', node_style: NodeStyle,
                                connection_style: ConnectionStyle
                                ):
         """

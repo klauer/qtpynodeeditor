@@ -4,7 +4,7 @@ import uuid
 
 from qtpy.QtCore import QObject, QPointF, QSizeF
 
-from .base import NodeBase, Serializable
+from .base import Serializable
 from .enums import ReactToConnectionState
 from .node_data import NodeData, NodeDataModel, NodeDataType
 from .node_geometry import NodeGeometry
@@ -14,7 +14,7 @@ from .port import Port, PortType
 from .style import NodeStyle
 
 
-class Node(QObject, Serializable, NodeBase):
+class Node(QObject, Serializable):
     def __init__(self, data_model: NodeDataModel):
         '''
         A single Node in the scene

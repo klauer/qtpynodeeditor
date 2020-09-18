@@ -1,3 +1,5 @@
+import typing
+
 from qtpy.QtCore import QRectF
 from qtpy.QtGui import QPainter, QPainterPath
 from qtpy.QtWidgets import (QGraphicsBlurEffect, QGraphicsItem,
@@ -5,10 +7,13 @@ from qtpy.QtWidgets import (QGraphicsBlurEffect, QGraphicsItem,
                             QGraphicsSceneMouseEvent, QStyleOptionGraphicsItem,
                             QWidget)
 
-from .base import ConnectionBase
 from .connection_painter import ConnectionPainter
 from .node_connection_interaction import NodeConnectionInteraction
 from .port import PortType, opposite_port
+
+if typing.TYPE_CHECKING:
+    from .connection import Connection  # noqa
+
 
 debug_drawing = False
 
@@ -44,7 +49,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
             self._scene = None
 
     @property
-    def connection(self) -> ConnectionBase:
+    def connection(self) -> 'Connection':
         """
         Connection
 

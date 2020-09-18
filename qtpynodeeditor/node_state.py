@@ -1,9 +1,12 @@
+import typing
 from collections import OrderedDict
 
-from .base import ConnectionBase
 from .enums import ReactToConnectionState
 from .node_data import NodeDataType
 from .port import Port, PortType
+
+if typing.TYPE_CHECKING:
+    from .connection import Connection  # noqa
 
 
 class NodeState:
@@ -86,7 +89,7 @@ class NodeState:
         """
         return list(self._ports[port_type][port_index].connections)
 
-    def erase_connection(self, port_type: PortType, port_index: int, connection: ConnectionBase):
+    def erase_connection(self, port_type: PortType, port_index: int, connection: 'Connection'):
         """
         Erase connection
 

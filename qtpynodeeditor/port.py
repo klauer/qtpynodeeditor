@@ -1,17 +1,38 @@
+import typing
+
 from qtpy.QtCore import QObject, Signal
 
-from .base import ConnectionBase
 from .enums import ConnectionPolicy, PortType
 
+if typing.TYPE_CHECKING:
+    from .connection import Connection  # noqa
 
-def opposite_port(port: PortType):
+
+def opposite_port(port: PortType) -> PortType:
+    """
+    Get the opposite port of `port`.
+
+    Parameters
+    ----------
+    port : PortType
+    """
     return {PortType.input: PortType.output,
             PortType.output: PortType.input}.get(port, PortType.none)
 
 
 class Port(QObject):
-    connection_created = Signal(ConnectionBase)
-    connection_deleted = Signal(ConnectionBase)
+    """
+
+    Signals
+    -------
+    connection_created : Signal(Connection)
+    connection_deleted : Signal(Connection)
+    data_updated : Signal(QObject)
+    data_invalidated : Signal(QObject)
+    """
+
+    connection_created = Signal(object)
+    connection_deleted = Signal(object)
     data_updated = Signal(QObject)
     data_invalidated = Signal(QObject)
 
@@ -79,7 +100,7 @@ class Port(QObject):
         else:
             return self.model.port_out_connection_policy(self.index)
 
-    def add_connection(self, connection: ConnectionBase):
+    def add_connection(self, connection: 'Connection'):
         'Add a Connection to the Port'
         if connection in self._connections:
             raise ValueError('Connection already in list')
@@ -87,7 +108,7 @@ class Port(QObject):
         self._connections.append(connection)
         self.connection_created.emit(connection)
 
-    def remove_connection(self, connection: ConnectionBase):
+    def remove_connection(self, connection: 'Connection'):
         'Remove a Connection from the Port'
         try:
             self._connections.remove(connection)
