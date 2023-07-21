@@ -117,6 +117,7 @@ class NodeGraphicsObject(QGraphicsObject):
         widget : QWidget
         """
         from .node_painter import NodePainter
+
         # TODO
         painter.setClipRect(option.exposedRect)
         NodePainter.paint(painter, self._node, self._scene,
@@ -206,7 +207,7 @@ class NodeGraphicsObject(QGraphicsObject):
             w = self._node.model.embedded_widget()
             if w:
                 self.prepareGeometryChange()
-                old_size = w.size() + QSize(diff.x(), diff.y())
+                old_size = w.size() + QSize(int(diff.x()), int(diff.y()))
                 w.setFixedSize(old_size)
 
                 old_size_f = QSizeF(old_size)

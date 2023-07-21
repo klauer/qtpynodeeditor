@@ -1,6 +1,6 @@
 import typing
 
-from qtpy.QtCore import QLineF, QPoint, QSize, Qt
+from qtpy.QtCore import QLineF, QPointF, QSize, Qt
 from qtpy.QtGui import QIcon, QPainter, QPainterPath, QPainterPathStroker, QPen
 
 from .connection_geometry import ConnectionGeometry
@@ -52,7 +52,7 @@ def draw_sketch_line(painter, connection, style):
         return
 
     p = QPen()
-    p.setWidth(style.construction_line_width)
+    p.setWidthF(style.construction_line_width)
     p.setColor(style.construction_color)
     p.setStyle(Qt.DashLine)
 
@@ -79,7 +79,7 @@ def draw_hovered_or_selected(painter, connection, style):
 
         line_width = style.line_width
 
-        p.setWidth(2 * line_width)
+        p.setWidthF(2.0 * line_width)
         p.setColor((style.selected_halo_color
                     if selected
                     else style.hovered_color))
@@ -119,7 +119,7 @@ def draw_normal_line(painter, connection, style):
 
     # draw normal line
     p = QPen()
-    p.setWidth(line_width)
+    p.setWidthF(line_width)
 
     graphics_object = connection.graphics_object
     selected = graphics_object.isSelected()
@@ -154,7 +154,7 @@ def draw_normal_line(painter, connection, style):
         icon = QIcon(":convert.png")
 
         pixmap = icon.pixmap(QSize(22, 22))
-        painter.drawPixmap(cubic.pointAtPercent(0.50) - QPoint(pixmap.width() / 2, pixmap.height() / 2), pixmap)
+        painter.drawPixmap(cubic.pointAtPercent(0.50) - QPointF(pixmap.width() / 2, pixmap.height() / 2), pixmap)
     else:
         p.setColor(normal_color_out)
 

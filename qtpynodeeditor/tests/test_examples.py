@@ -85,8 +85,8 @@ def test_smoke_mouse(qtbot, nodes):
         else:
             pos = node.geometry.port_scene_position('output', 0)
 
-        ev.scene_pos = QtCore.QPoint(pos.x(), pos.y())
-        ev.last_pos = QtCore.QPoint(pos.x(), pos.y())
+        ev.scene_pos = QtCore.QPoint(int(pos.x()), int(pos.y()))
+        ev.last_pos = QtCore.QPoint(int(pos.x()), int(pos.y()))
 
         if node.model.resizable():
             # Other case will try to propagate to mouseMoveEvent
