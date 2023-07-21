@@ -1,0 +1,25 @@
+name: PCDS Standard Testing
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
+
+jobs:
+  standard:
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-standard.yml@master
+    secrets: inherit
+    with:
+      # The workflow needs to know the package name.  This can be determined
+      # automatically if the repository name is the same as the import name.
+      package-name: "pcdsdevices"
+      # Extras that will be installed for both conda/pip:
+      testing-extras: ""
+      # Extras to be installed only for conda-based testing:
+      conda-testing-extras: ""
+      # Extras to be installed only for pip-based testing:
+      pip-testing-extras: ""
+      # Set if using setuptools-scm for the conda-build workflow
+      use-setuptools-scm: false

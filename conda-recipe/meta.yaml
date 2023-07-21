@@ -24,9 +24,10 @@ requirements:
 test:
     imports:
       - qtpynodeeditor
-
     requires:
       - pytest
+      - pytest-qt
+      - pytest-cov
 
 
 about:
