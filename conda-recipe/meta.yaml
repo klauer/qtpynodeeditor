@@ -14,8 +14,6 @@ build:
   noarch: python
   script: {{ PYTHON }} -m pip install . -vv
 
-
-
 requirements:
   build:
   - python >=3.6
@@ -26,8 +24,6 @@ requirements:
   - pyqt >=5
   - qtpy
 
-
-
 test:
   imports:
   - qtpynodeeditor
@@ -35,8 +31,6 @@ test:
   - pytest
   - pytest-qt
   - pytest-cov
-
-
 
 about:
   home: https://github.com/klauer/qtpynodeeditor
