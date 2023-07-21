@@ -10,7 +10,7 @@ on:
 jobs:
   pre-commit:
     name: "pre-commit checks"
-    uses: pcdshub/pcds-ci-helpers/.github/workflows/pre-commit.yml
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/pre-commit.yml@master
     with:
       args: "--all-files"
 
@@ -26,7 +26,7 @@ jobs:
           experimental: true
 
     name: "Conda"
-    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-conda-test.yml
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-conda-test.yml@master
     secrets: inherit
     with:
       package-name: "qtpynodeeditor"
@@ -49,7 +49,7 @@ jobs:
           experimental: true
 
     name: "Pip"
-    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-pip-test.yml
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-pip-test.yml@master
     secrets: inherit
     with:
       package-name: "qtpynodeeditor"
@@ -61,7 +61,7 @@ jobs:
 
     # pip-docs:
     #   name: "Documentation"
-    #   uses: pcdshub/pcds-ci-helpers/.github/workflows/python-docs.yml
+    #   uses: pcdshub/pcds-ci-helpers/.github/workflows/python-docs.yml@master
     #   with:
     #     package-name: "qtpynodeeditor"
     #     python-version: "3.9"
