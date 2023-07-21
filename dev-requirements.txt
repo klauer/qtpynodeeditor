@@ -3,3 +3,4 @@
 pytest
 pytest-qt
 pytest-cov
+sphinxcontrib-jquery
