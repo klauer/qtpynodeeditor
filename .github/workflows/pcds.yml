@@ -1,4 +1,4 @@
-name: PCDS Standard Testing
+name: Testing
 
 on:
   push:
@@ -8,18 +8,62 @@ on:
       - created
 
 jobs:
-  standard:
-    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-standard.yml@master
+  pre-commit:
+    name: "pre-commit checks"
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/pre-commit.yml
+    with:
+      args: "--all-files"
+
+  conda-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - python-version: "3.9"
+          deploy-on-success: true
+        - python-version: "3.10"
+        - python-version: "3.11"
+          experimental: true
+
+    name: "Conda"
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-conda-test.yml
     secrets: inherit
     with:
-      # The workflow needs to know the package name.  This can be determined
-      # automatically if the repository name is the same as the import name.
-      package-name: "pcdsdevices"
-      # Extras that will be installed for both conda/pip:
+      package-name: "qtpynodeeditor"
+      python-version: ${{ matrix.python-version }}
+      experimental: ${{ matrix.experimental || false }}
+      deploy-on-success: ${{ matrix.deploy-on-success || false }}
       testing-extras: ""
-      # Extras to be installed only for conda-based testing:
-      conda-testing-extras: ""
-      # Extras to be installed only for pip-based testing:
-      pip-testing-extras: ""
-      # Set if using setuptools-scm for the conda-build workflow
+      system-packages: ""
       use-setuptools-scm: false
+
+  pip-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - python-version: "3.9"
+          deploy-on-success: true
+        - python-version: "3.10"
+        - python-version: "3.11"
+          experimental: true
+
+    name: "Pip"
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-pip-test.yml
+    secrets: inherit
+    with:
+      package-name: "qtpynodeeditor"
+      python-version: ${{ matrix.python-version }}
+      experimental: ${{ matrix.experimental || false }}
+      deploy-on-success: ${{ matrix.deploy-on-success || false }}
+      system-packages: ""
+      testing-extras: ""
+
+    # pip-docs:
+    #   name: "Documentation"
+    #   uses: pcdshub/pcds-ci-helpers/.github/workflows/python-docs.yml
+    #   with:
+    #     package-name: "qtpynodeeditor"
+    #     python-version: "3.9"
+    #     deploy: ${{ github.repository_owner == "klauer" && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags')) }}
+    #     system-packages: ""
