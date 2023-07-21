@@ -1,4 +1,4 @@
-from ._version import get_versions
+from .version import __version__  # noqa: F401
 from .connection import Connection
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
@@ -62,6 +62,3 @@ __all__ = [
     'StyleCollection',
     'opposite_port',
 ]
-
-__version__ = get_versions()['version']
-del get_versions
