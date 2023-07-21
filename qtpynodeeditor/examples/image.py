@@ -36,12 +36,14 @@ class ImageLoaderModel(NodeDataModel):
         self._label.installEventFilter(self)
 
     def eventFilter(self, obj, event):
-        def set_pixmap():
-            w, h = self._label.width(), self._label.height()
-            self._label.setPixmap(self._pixmap.scaled(w, h, Qt.KeepAspectRatio))
+        label = getattr(self, "_label", None)
 
-        if obj is not self._label:
+        if label is None or obj is not label:
             return False
+
+        def set_pixmap():
+            w, h = label.width(), label.height()
+            label.setPixmap(self._pixmap.scaled(w, h, Qt.KeepAspectRatio))
 
         if event.type() == QtCore.QEvent.MouseButtonPress:
             file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
