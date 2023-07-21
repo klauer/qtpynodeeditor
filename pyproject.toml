@@ -10,7 +10,7 @@ keywords = []
 name = "qtpynodeeditor"
 requires-python = ">=3.9"
 [[project.authors]]
-name = "SLAC National Accelerator Laboratory"
+name = "Ken Lauer"
 
 [options]
 zip_safe = false

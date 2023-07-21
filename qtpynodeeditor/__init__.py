@@ -1,4 +1,3 @@
-from .version import __version__  # noqa: F401
 from .connection import Connection
 from .connection_geometry import ConnectionGeometry
 from .connection_graphics_object import ConnectionGraphicsObject
@@ -22,6 +21,7 @@ from .node_state import NodeState
 from .port import Port, opposite_port
 from .style import (ConnectionStyle, FlowViewStyle, NodeStyle, Style,
                     StyleCollection)
+from .version import __version__  # noqa: F401
 
 __all__ = [
     'Connection',

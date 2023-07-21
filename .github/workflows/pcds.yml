@@ -35,7 +35,7 @@ jobs:
       deploy-on-success: ${{ matrix.deploy-on-success || false }}
       testing-extras: ""
       system-packages: ""
-      use-setuptools-scm: false
+      use-setuptools-scm: true
 
   pip-test:
     strategy:
