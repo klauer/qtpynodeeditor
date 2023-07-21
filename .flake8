@@ -1,12 +1,23 @@
 [flake8]
-ignore = W503,W504
-exclude =
-    .git
-    __pycache__
-    qtpynodeeditor/_version.py
-    build
-    dist
-    versioneer.py
-    qtpynodeeditor/_version.py
-    docs/source/conf.py
-max-line-length = 115
+exclude = .git,__pycache__,build,dist,qtpynodeeditor/_version.py
+max-line-length = 88
+select = C,E,F,W,B,B950
+extend-ignore = E203, E501, E226, W503, W504
+
+# Explanation section:
+# B950
+#   This takes into account max-line-length but only triggers when the value
+#   has been exceeded by more than 10% (96 characters).
+# E203: Whitespace before ':'
+#   This is recommended by black in relation to slice formatting.
+# E501: Line too long (82 > 79 characters)
+#   Our line length limit is 88 (above 79 defined in E501).  Ignore it.
+# E226: Missing whitespace around arithmetic operator
+#   This is a stylistic choice which you'll find everywhere in pcdsdevices, for
+#   example.  Formulas can be easier to read when operators and operands
+#   have no whitespace between them.
+#
+# W503: Line break occurred before a binary operator
+# W504: Line break occurred after a binary operator
+#   flake8 wants us to choose one of the above two.  Our choice
+#   is to make no decision.
