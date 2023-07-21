@@ -1,6 +1,6 @@
 [flake8]
 ignore = W503,W504
-exclude = 
+exclude =
     .git
     __pycache__
     qtpynodeeditor/_version.py

@@ -25,7 +25,7 @@ test:
     imports:
       - qtpynodeeditor
 
-    requires: 
+    requires:
       - pytest
 
 

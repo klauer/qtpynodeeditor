@@ -101,4 +101,3 @@ Before you submit a pull request, check that it meets these guidelines:
 3. The pull request should work for Python 3.6 and up. Check
    https://travis-ci.org/klauer/qtpynodeeditor/pull_requests
    and make sure that the tests pass for all supported Python versions.
-
