@@ -1,6 +1,6 @@
 import logging
 import typing
-from typing import Optional, Tuple
+from typing import Optional
 
 from qtpy.QtCore import QPointF
 
