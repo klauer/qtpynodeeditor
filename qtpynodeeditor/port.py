@@ -35,7 +35,7 @@ class Port(QObject):
     connection_deleted = Signal(object)
     data_updated = Signal(QObject)
     data_invalidated = Signal(QObject)
-    _connections: typing.List['Connection']
+    _connections: list['Connection']
 
     def __init__(self, node, *, port_type: PortType, index: int):
         super().__init__(parent=node)

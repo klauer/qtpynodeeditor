@@ -80,9 +80,9 @@ def draw_hovered_or_selected(painter, connection, style):
         line_width = style.line_width
 
         p.setWidthF(2.0 * line_width)
-        p.setColor((style.selected_halo_color
+        p.setColor(style.selected_halo_color
                     if selected
-                    else style.hovered_color))
+                    else style.hovered_color)
 
         painter.setPen(p)
         painter.setBrush(Qt.NoBrush)
