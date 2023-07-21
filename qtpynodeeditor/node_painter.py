@@ -49,6 +49,11 @@ class NodePainter:
         geom = node.geometry
         state = node.state
         graphics_object = node.graphics_object
+
+        if graphics_object is None:
+            # On CI, we might not have a graphics object
+            return
+
         geom.recalculate_size(painter.font())
 
         model = node.model

@@ -145,7 +145,7 @@ class NodeDataModel(QObject, Serializable):
 
             default = get_default(attr, default, valid_type)
             if default is None:
-                raise ValueError('Cannot leave {} unspecified'.format(attr))
+                raise ValueError(f'Cannot leave {attr} unspecified')
 
             setattr(cls, attr, new_dict(default))
 
@@ -180,7 +180,7 @@ class NodeDataModel(QObject, Serializable):
                                        ''.format(attr, port_type, i))
 
         if reasons:
-            reason_text = '\n'.join('* {}'.format(reason)
+            reason_text = '\n'.join(f'* {reason}'
                                     for reason in reasons)
             raise ValueError(
                 'Verification of NodeDataModel class failed:\n{}'

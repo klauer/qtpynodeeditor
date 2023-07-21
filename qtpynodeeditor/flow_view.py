@@ -2,8 +2,8 @@ import logging
 import math
 
 from qtpy.QtCore import QLineF, QPoint, QRectF, Qt
-from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QMouseEvent, QPainter,
-                        QPen, QShowEvent, QWheelEvent, QKeySequence)
+from qtpy.QtGui import (QContextMenuEvent, QKeyEvent, QKeySequence,
+                        QMouseEvent, QPainter, QPen, QShowEvent, QWheelEvent)
 from qtpy.QtWidgets import (QAction, QGraphicsView, QLineEdit, QMenu,
                             QTreeWidget, QTreeWidgetItem, QWidgetAction)
 

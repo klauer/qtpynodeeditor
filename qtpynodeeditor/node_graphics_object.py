@@ -117,6 +117,7 @@ class NodeGraphicsObject(QGraphicsObject):
         widget : QWidget
         """
         from .node_painter import NodePainter
+
         # TODO
         painter.setClipRect(option.exposedRect)
         NodePainter.paint(painter, self._node, self._scene,
@@ -185,7 +186,7 @@ class NodeGraphicsObject(QGraphicsObject):
                 connection = self._scene.create_connection(port)
                 connection.graphics_object.grabMouse()
 
-        pos = QPoint(event.pos().x(), event.pos().y())
+        pos = QPoint(int(event.pos().x()), int(event.pos().y()))
         geom = self._node.geometry
         state = self._node.state
         if self._node.model.resizable() and geom.resize_rect.contains(pos):
@@ -206,7 +207,7 @@ class NodeGraphicsObject(QGraphicsObject):
             w = self._node.model.embedded_widget()
             if w:
                 self.prepareGeometryChange()
-                old_size = w.size() + QSize(diff.x(), diff.y())
+                old_size = w.size() + QSize(int(diff.x()), int(diff.y()))
                 w.setFixedSize(old_size)
 
                 old_size_f = QSizeF(old_size)
@@ -287,8 +288,9 @@ class NodeGraphicsObject(QGraphicsObject):
         """
         pos = event.pos()
         geom = self._node.geometry
-        if (self._node.model.resizable() and
-                geom.resize_rect.contains(QPoint(pos.x(), pos.y()))):
+        if self._node.model.resizable() and geom.resize_rect.contains(
+            QPoint(int(pos.x()), int(pos.y()))
+        ):
             self.setCursor(QCursor(Qt.SizeFDiagCursor))
         else:
             self.setCursor(QCursor())

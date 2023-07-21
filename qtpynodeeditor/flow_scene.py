@@ -119,7 +119,7 @@ class FlowSceneModel:
             if not file_name.endswith(".flow"):
                 file_name += ".flow"
 
-            with open(file_name, 'wt') as f:
+            with open(file_name, 'w') as f:
                 json.dump(self.__getstate__(), f)
 
     def load(self, file_name=None):
@@ -131,7 +131,7 @@ class FlowSceneModel:
         if not os.path.exists(file_name):
             return
 
-        with open(file_name, 'rt') as f:
+        with open(file_name) as f:
             doc = json.load(f)
 
         self.__setstate__(doc)
@@ -232,8 +232,7 @@ class FlowSceneModel:
         """
         Generator: Iterate over nodes
         """
-        for node in self._nodes.values():
-            yield node
+        yield from self._nodes.values()
 
     def iterate_over_node_data(self):
         """
@@ -645,7 +644,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         dig = self.to_digraph()
 
         layouts = {
-            name: getattr(networkx.layout, '{}_layout'.format(name))
+            name: getattr(networkx.layout, f'{name}_layout')
             for name in ('bipartite', 'circular', 'kamada_kawai', 'random',
                          'shell', 'spring', 'spectral')
         }
@@ -653,7 +652,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         try:
             layout_func = layouts[layout]
         except KeyError:
-            raise ValueError('Unknown layout type {}'.format(layout)) from None
+            raise ValueError(f'Unknown layout type {layout}') from None
 
         layout = layout_func(dig, **kwargs)
         for node, pos in layout.items():

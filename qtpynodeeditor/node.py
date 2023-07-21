@@ -91,8 +91,8 @@ class Node(QObject, Serializable):
         )
 
     def walk_paths_by_port_type(
-                self, port_type: PortType
-            ) -> typing.Generator[typing.Tuple['Node', ...], None, None]:
+        self, port_type: PortType
+    ) -> typing.Generator[tuple["Node", ...], None, None]:
         """
         Yields paths to connected nodes by port type
 
@@ -101,12 +101,12 @@ class Node(QObject, Serializable):
         node_path : tuple
             The path to the node
         """
-        seen: typing.Set[typing.Union[Node, None]]
+        seen: set[typing.Union[Node, None]]
         pending: typing.Deque[
-            typing.Tuple[typing.List[Node], Node]
+            tuple[list[Node], Node]
         ]
 
-        seen = set([None])
+        seen = {None}
         pending = collections.deque([([], self)])
 
         if port_type == PortType.output:

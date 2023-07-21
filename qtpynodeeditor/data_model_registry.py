@@ -68,7 +68,7 @@ class DataModelRegistry:
         return cls(**kwargs)
 
     def get_model_by_name(self, model_name: str
-                          ) -> typing.Tuple[typing.Type[NodeDataModel], dict]:
+                          ) -> tuple[type[NodeDataModel], dict]:
         """
         Get information on how to create a specific :class:`NodeDataModel`
         node given its user-friendly name.
