@@ -5,8 +5,8 @@ coverage
 flake8
 pytest
 pytest-qt
+pytest-cov
 sphinx
-doctr
 # These are dependencies of various sphinx extensions for documentation.
 ipython
 matplotlib
