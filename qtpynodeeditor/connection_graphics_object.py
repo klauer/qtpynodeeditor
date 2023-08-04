@@ -199,6 +199,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
         interaction = NodeConnectionInteraction(node, self._connection, self._scene)
         if node and interaction.try_connect():
             node.reset_reaction_to_connection()
+            self._scene.connection_created.emit(self._connection)
 
         if self._connection.requires_port:
             self._scene.delete_connection(self._connection)

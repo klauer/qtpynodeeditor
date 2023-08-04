@@ -514,11 +514,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         connection.graphics_object = cgo
         self._connections.append(connection)
 
-        if not port_a or not port_b:
-            # This connection isn't truly created yet. It's only partially
-            # created.  Thus, don't send the connection_created(...) signal.
-            connection.connection_completed.connect(self.connection_created.emit)
-        else:
+        if port_a and port_b:
             in_port, out_port = connection.ports
             out_port.node.on_data_updated(out_port)
             self.connection_created.emit(connection)
