@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import contextlib
 import json
 import os
@@ -398,6 +400,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
     node_hover_left = Signal(Node)
     node_hovered = Signal(Node, QPoint)
     node_moved = Signal(Node, QPointF)
+    node_dragging = Signal(bool)
 
     def __init__(self, registry=None, style=None, parent=None,
                  allow_node_creation=True, allow_node_deletion=True):
@@ -419,8 +422,24 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
         self._style = style
         self.allow_node_deletion = allow_node_creation
         self.allow_node_creation = allow_node_deletion
+        self.node_dragging.connect(self._redraw_post_drag)
 
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
+
+    def _redraw_post_drag(self, dragging: bool) -> None:
+        """
+        Redraw connections for all selected nodes after dragging is done.
+
+        Parameters
+        ----------
+        dragging : bool
+            Whether dragging has started (``True``) or finished.
+        """
+        if dragging:
+            return
+
+        for node in self.selected_nodes():
+            node.graphics_object.move_connections()
 
     def _cleanup(self):
         self.clear_scene()
@@ -655,7 +674,7 @@ class FlowScene(FlowSceneModel, QGraphicsScene):
             pos_x, pos_y = pos
             node.position = (pos_x * scale, pos_y * scale)
 
-    def selected_nodes(self) -> list:
+    def selected_nodes(self) -> list[NodeGraphicsObject]:
         """
         Selected nodes
 
