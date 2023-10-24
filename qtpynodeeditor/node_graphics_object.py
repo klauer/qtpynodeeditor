@@ -191,6 +191,7 @@ class NodeGraphicsObject(QGraphicsObject):
         state = self._node.state
         if self._node.model.resizable() and geom.resize_rect.contains(pos):
             state.resizing = True
+        self._scene.node_dragging.emit(True)
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent):
         """
@@ -236,8 +237,8 @@ class NodeGraphicsObject(QGraphicsObject):
         ----------
         event : QGraphicsSceneMouseEvent
         """
-        state = self._node.state
-        state.resizing = False
+        self._scene.node_dragging.emit(False)
+        self._node.state.resizing = False
         super().mouseReleaseEvent(event)
 
         # position connections precisely after fast node move
