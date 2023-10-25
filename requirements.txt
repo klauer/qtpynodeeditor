@@ -1,3 +1,4 @@
 versioneer
 qtpy
 PyQt5
+networkx
