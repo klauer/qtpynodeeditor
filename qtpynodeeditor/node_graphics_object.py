@@ -334,7 +334,7 @@ class NodeGraphicsObject(QGraphicsObject):
         # If the widget wants to use as much vertical space as possible, set it
         # to have the geomtry's equivalent_widget_height.
         if (widget.sizePolicy().verticalPolicy() == QSizePolicy.MinimumExpanding or
-            widget.sizePolicy().verticalPolicy() == QSizePolicy.MinimumExpanding):
+            widget.sizePolicy().verticalPolicy() == QSizePolicy.Expanding):
             self._proxy_widget.setMinimumHeight(geom.equivalent_widget_height())
 
         self._proxy_widget.setPos(geom.widget_position)
