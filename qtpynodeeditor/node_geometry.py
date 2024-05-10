@@ -331,7 +331,8 @@ class NodeGeometry:
         if not widget:
             return QPointF()
 
-        if widget.sizePolicy().verticalPolicy() & QSizePolicy.ExpandFlag:
+        if (widget.sizePolicy().verticalPolicy() == QSizePolicy.MinimumExpanding or
+                widget.sizePolicy().verticalPolicy() == QSizePolicy.MinimumExpanding):
             # If the widget wants to use as much vertical space as possible,
             # place it immediately after the caption.
             return QPointF(self._spacing + self.port_width(PortType.input),
