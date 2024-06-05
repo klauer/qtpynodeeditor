@@ -320,6 +320,21 @@ class NodeGraphicsObject(QGraphicsObject):
         self._scene.node_context_menu.emit(
             self._node, event.scenePos(), event.screenPos())
 
+    def moveWidget(self):
+        geom = self._node.geometry
+        w = self._node.model.embedded_widget()
+        if w:
+            self.prepareGeometryChange()
+            old_size = w.size()
+            w.setFixedSize(old_size)
+
+            old_size_f = QSizeF(old_size)
+            self._proxy_widget.setMinimumSize(old_size_f)
+            self._proxy_widget.setMaximumSize(old_size_f)
+            self._proxy_widget.setPos(geom.widget_position)
+            geom.recalculate_size()
+
+
     def embed_q_widget(self):
         geom = self._node.geometry
         widget = self._node.model.embedded_widget()

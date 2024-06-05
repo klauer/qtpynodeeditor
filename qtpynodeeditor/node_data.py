@@ -54,6 +54,8 @@ class NodeDataModel(QObject, Serializable):
     # changed:
     data_updated = Signal(int)
     data_invalidated = Signal(int)
+    port_added = Signal()
+    port_removed = Signal()
 
     computing_started = Signal()
     computing_finished = Signal()

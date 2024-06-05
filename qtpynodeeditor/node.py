@@ -42,6 +42,8 @@ class Node(QObject, Serializable):
 
         # propagate data: model => node
         self._model.data_updated.connect(self._on_port_index_data_updated)
+        self._model.port_added.connect(self._on_port_added)
+        self._model.port_removed.connect(self._on_port_removed)
         self._model.embedded_widget_size_updated.connect(self.on_node_size_updated)
 
     def __hash__(self):
@@ -268,10 +270,13 @@ class Node(QObject, Serializable):
             # Recalculate the nodes visuals. A data change can result in the
             # node taking more space than before, so self forces a
             # recalculate+repaint on the affected node
-            self._graphics_obj.set_geometry_changed()
-            self._geometry.recalculate_size()
-            self._graphics_obj.update()
-            self._graphics_obj.move_connections()
+            self.recalculate_visuals()
+
+    def recalculate_visuals(self):
+        self._graphics_obj.set_geometry_changed()
+        self._geometry.recalculate_size()
+        self._graphics_obj.update()
+        self._graphics_obj.move_connections()
 
     def _on_port_index_data_updated(self, port_index: int):
         """
@@ -284,6 +289,19 @@ class Node(QObject, Serializable):
         """
         port = self[PortType.output][port_index]
         self.on_data_updated(port)
+
+    def _on_port_added(self):
+        self._state.update_ports(self)
+        self.on_node_size_updated()
+        self.recalculate_visuals()
+        self._graphics_obj.moveWidget()
+
+    def _on_port_removed(self):
+        self._state.update_ports(self)
+        self.on_node_size_updated()
+        self.recalculate_visuals()
+        self._graphics_obj.moveWidget()
+
 
     def on_data_updated(self, port: Port):
         """

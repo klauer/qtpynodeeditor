@@ -175,3 +175,12 @@ class NodeState:
     @resizing.setter
     def resizing(self, resizing: bool):
         self._resizing = resizing
+
+    def update_ports(self, node):
+        model = node.model
+        for port_type in self._ports:
+            num_ports = model.num_ports[port_type]
+            self._ports[port_type] = OrderedDict(
+                (i, Port(node, port_type=port_type, index=i))
+                for i in range(num_ports)
+            )
