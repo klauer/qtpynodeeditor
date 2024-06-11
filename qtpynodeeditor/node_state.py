@@ -4,6 +4,7 @@ from collections import OrderedDict
 from .enums import ReactToConnectionState
 from .node_data import NodeDataType
 from .port import Port, PortType
+from .spacer import Spacer
 
 if typing.TYPE_CHECKING:
     from .connection import Connection  # noqa
@@ -21,13 +22,28 @@ class NodeState:
         self._ports = {PortType.input: OrderedDict(),
                        PortType.output: OrderedDict()
                        }
+        self._spacers = {
+            PortType.input: OrderedDict(),
+            PortType.output: OrderedDict(),
+        }
 
         model = node.model
+        spacers = model.spacers
         for port_type in self._ports:
             num_ports = model.num_ports[port_type]
+            spacers_by_side = spacers[port_type]
+            spacer_offsets = []
+            for i in range(num_ports):
+                spacer_offsets.append(len(list(filter(lambda x: x <= i, spacers_by_side.keys()))))
             self._ports[port_type] = OrderedDict(
-                (i, Port(node, port_type=port_type, index=i))
+                (i, Port(node, port_type=port_type, index=i, spacer_offset=spacer_offsets[i]))
                 for i in range(num_ports)
+            )
+        for spacer_type in spacers:
+            spacers_by_type = model.spacers[spacer_type]
+            self._spacers[spacer_type] = OrderedDict(
+                (i, Spacer(node, spacer_type=spacer_type, index=i))
+                for i in spacers_by_type.keys()
             )
 
         self._reaction = ReactToConnectionState.not_reacting
@@ -37,6 +53,11 @@ class NodeState:
 
     def __getitem__(self, key):
         return self._ports[key]
+
+    @property
+    def spacers(self):
+        yield from self._spacers[PortType.input].values()
+        yield from self._spacers[PortType.output].values()
 
     @property
     def ports(self):
@@ -178,9 +199,18 @@ class NodeState:
 
     def update_ports(self, node):
         model = node.model
+        spacers = model.spacers
         for port_type in self._ports:
             num_ports = model.num_ports[port_type]
+            spacers_by_side = spacers[port_type]
+            spacer_offsets = []
+            for i in range(num_ports):
+                spacer_offsets.append(len(list(filter(lambda x: x <= i, spacers_by_side.keys()))))
             self._ports[port_type] = OrderedDict(
-                (i, Port(node, port_type=port_type, index=i))
+                (i, Port(node, port_type=port_type, index=i, spacer_offset=spacer_offsets[i]))
                 for i in range(num_ports)
+            )
+            self._spacers[port_type] = OrderedDict(
+                (i, Spacer(node, spacer_type=port_type, index=i))
+                for i in spacers_by_side.keys()
             )

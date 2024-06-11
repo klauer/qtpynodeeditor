@@ -104,7 +104,7 @@ class ConnectionGraphicsObject(QGraphicsObject):
             node_geom = node.geometry
             scene_pos = node_geom.port_scene_position(
                 port_type, self._connection.get_port_index(port_type),
-                node_graphics.sceneTransform()
+                self._connection.get_port_spacer_offset(port_type), node_graphics.sceneTransform()
             )
 
             inverted, invertible = self.sceneTransform().inverted()

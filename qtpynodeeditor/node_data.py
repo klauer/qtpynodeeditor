@@ -83,6 +83,13 @@ class NodeDataModel(QObject, Serializable):
         if verify:
             cls._verify()
 
+    @property
+    def spacers(self):
+        return {
+            PortType.input: {},
+            PortType.output: {},
+        }
+
     @classmethod
     def _verify(cls):
         '''

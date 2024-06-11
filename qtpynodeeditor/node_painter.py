@@ -66,6 +66,7 @@ class NodePainter:
                                                   )
         NodePainter.draw_model_name(painter, geom, state, model, node_style)
         NodePainter.draw_entry_labels(painter, geom, state, model, node_style)
+        NodePainter.draw_spacer_labels(painter, geom, state, model, node_style)
         NodePainter.draw_resize_rect(painter, geom, model)
         NodePainter.draw_validation_rect(painter, geom, model, graphics_object,
                                          node_style)
@@ -176,6 +177,40 @@ class NodePainter:
             elif port.port_type == PortType.output:
                 scene_pos.setX(geom.width - 5.0 - rect.width())
 
+            painter.drawText(scene_pos, display_text)
+
+    @staticmethod
+    def draw_spacer_labels(painter: QPainter, geom: NodeGeometry,
+                          state: NodeState, model: NodeDataModel,
+                          node_style: NodeStyle):
+        """
+        Draw spacer labels
+
+        Parameters
+        ----------
+        painter : QPainter
+        geom : NodeGeometry
+        state : NodeState
+        model : NodeDataModel
+        node_style : NodeStyle
+        """
+        metrics = painter.fontMetrics()
+        painter.setPen(node_style.font_color)
+
+        font = painter.font()
+        font.setUnderline(True)
+        painter.setFont(font)
+
+        for spacer in state.spacers:
+            side = spacer.spacer_type
+            scene_pos = spacer.scene_position
+            display_text = spacer.text
+            rect = metrics.boundingRect(display_text)
+            scene_pos.setY(scene_pos.y() + rect.height() / 4.0)
+            if side == PortType.input:
+                scene_pos.setX(5.0)
+            elif side == PortType.output:
+                scene_pos.setX(geom.width - 5.0 - rect.width())
             painter.drawText(scene_pos, display_text)
 
     @staticmethod

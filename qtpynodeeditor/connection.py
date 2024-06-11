@@ -269,6 +269,20 @@ class Connection(QObject, Serializable):
         """
         return self._ports[port_type].index
 
+    def get_port_spacer_offset(self, port_type: PortType) -> int:
+        """
+        Get port spacer offset
+
+        Parameters
+        ----------
+        port_type : PortType
+
+        Returns
+        -------
+        index : int
+        """
+        return self._ports[port_type].spacer_offset
+
     def clear_node(self, port_type: PortType):
         """
         Clear node
