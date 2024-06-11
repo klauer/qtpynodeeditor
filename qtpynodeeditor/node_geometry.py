@@ -32,6 +32,10 @@ class NodeGeometry:
         f = QFont()
         f.setBold(True)
         self._bold_font_metrics = QFontMetrics(f)
+        f = QFont()
+        f.setPointSizeF(f.pointSizeF() * 0.8)
+        f.setItalic(True)
+        self._spacer_font_metrics = QFontMetrics(f)
 
     @property
     def height(self) -> int:
@@ -209,8 +213,11 @@ class NodeGeometry:
         self._entry_height = self._font_metrics.height()
 
         max_num_of_entries = max((self.num_sinks, self.num_sources))
+
+        spacers = self._node.model.spacers
+        max_num_of_separators = max(len(spacers[PortType.input].values()), len(spacers[PortType.output].values()))
         step = self._entry_height + self._spacing
-        height = step * max_num_of_entries
+        height = step * (max_num_of_entries + max_num_of_separators)
 
         widget = self._model.embedded_widget()
         if widget:
@@ -234,7 +241,7 @@ class NodeGeometry:
         self._height = height
 
     def port_scene_position(self, port_type: PortType, index: int,
-                            t: QTransform = None) -> QPointF:
+                            spacer_offset: int, t: QTransform = None) -> QPointF:
         """
         Port scene position
 
@@ -252,7 +259,7 @@ class NodeGeometry:
             t = QTransform()
 
         step = self._entry_height + self._spacing
-        total_height = float(self.caption_height) + step * index
+        total_height = float(self.caption_height) + step * (index + spacer_offset)
         # TODO_UPSTREAM: why?
         total_height += step / 2.0
 
@@ -264,6 +271,45 @@ class NodeGeometry:
             result = QPointF(x, total_height)
         else:
             raise ValueError(port_type)
+
+        return t.map(result)
+
+    def spacer_scene_position(self, spacer_type: PortType, index: int,
+                              spacers, t: QTransform = None) -> QPointF:
+        """
+        Spacer scene position
+
+        Parameters
+        ----------
+        port_type : PortType
+        index : int
+        t : QTransform
+
+        Returns
+        -------
+        value : QPointF
+        """
+        if t is None:
+            t = QTransform()
+
+        #spacer_visual_index = len(filter(lambda spacer_idx: spacer_idx < index, spacers[port_type].keys())) + index
+
+        step = self._entry_height + self._spacing
+        total_height = float(self.caption_height) + step * index
+        # TODO_UPSTREAM: why?
+        total_height += step / 2.0
+        for spacer_idx, spacer_val in spacers[spacer_type].items():
+            if spacer_idx < index:
+                total_height += step
+
+        if spacer_type == PortType.output:
+            x = self._width + self._style.connection_point_diameter
+            result = QPointF(x, total_height)
+        elif spacer_type == PortType.input:
+            x = -float(self._style.connection_point_diameter)
+            result = QPointF(x, total_height)
+        else:
+            raise ValueError(spacer_type)
 
         return t.map(result)
 

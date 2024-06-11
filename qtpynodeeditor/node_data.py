@@ -54,6 +54,8 @@ class NodeDataModel(QObject, Serializable):
     # changed:
     data_updated = Signal(int)
     data_invalidated = Signal(int)
+    port_added = Signal()
+    port_removed = Signal()
 
     computing_started = Signal()
     computing_finished = Signal()
@@ -80,6 +82,13 @@ class NodeDataModel(QObject, Serializable):
 
         if verify:
             cls._verify()
+
+    @property
+    def spacers(self):
+        return {
+            PortType.input: {},
+            PortType.output: {},
+        }
 
     @classmethod
     def _verify(cls):

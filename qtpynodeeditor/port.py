@@ -37,11 +37,12 @@ class Port(QObject):
     data_invalidated = Signal(QObject)
     _connections: list['Connection']
 
-    def __init__(self, node, *, port_type: PortType, index: int):
+    def __init__(self, node, *, port_type: PortType, index: int, spacer_offset: int):
         super().__init__(parent=node)
         self.node = node
         self.port_type = port_type
         self.index = index
+        self.spacer_offset = spacer_offset
         self._connections = []
         self.opposite_port = {PortType.input: PortType.output,
                               PortType.output: PortType.input}[self.port_type]
@@ -133,7 +134,8 @@ class Port(QObject):
         get_mapped_scene_position
         '''
         return self.node.geometry.port_scene_position(self.port_type,
-                                                      self.index)
+                                                      self.index,
+                                                      self.spacer_offset)
 
     def get_mapped_scene_position(self, transform):
         """
