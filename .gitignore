@@ -77,3 +77,6 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# versioneer
+qtpynodeeditor/_version.py

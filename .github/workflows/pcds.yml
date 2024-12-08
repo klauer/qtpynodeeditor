@@ -19,11 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - python-version: "3.9"
-          deploy-on-success: true
-        - python-version: "3.10"
-        - python-version: "3.11"
-          experimental: true
+          - python-version: "3.9"
+            deploy-on-success: true
+          - python-version: "3.10"
+          - python-version: "3.11"
+          - python-version: "3.12"
 
     name: "Conda"
     uses: pcdshub/pcds-ci-helpers/.github/workflows/python-conda-test.yml@master
@@ -42,11 +42,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - python-version: "3.9"
-          deploy-on-success: true
-        - python-version: "3.10"
-        - python-version: "3.11"
-          experimental: true
+          - python-version: "3.9"
+            deploy-on-success: true
+          - python-version: "3.10"
+          - python-version: "3.11"
+          - python-version: "3.12"
+          - python-version: "3.13"
 
     name: "Pip"
     uses: pcdshub/pcds-ci-helpers/.github/workflows/python-pip-test.yml@master
