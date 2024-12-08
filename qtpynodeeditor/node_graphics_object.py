@@ -138,7 +138,7 @@ class NodeGraphicsObject(QGraphicsObject):
         -------
         value : any
         """
-        if change == self.ItemPositionChange and self.scene():
+        if change == QGraphicsItem.ItemPositionChange and self.scene():
             self.move_connections()
 
         return super().itemChange(change, value)
@@ -333,7 +333,8 @@ class NodeGraphicsObject(QGraphicsObject):
 
         # If the widget wants to use as much vertical space as possible, set it
         # to have the geomtry's equivalent_widget_height.
-        if widget.sizePolicy().verticalPolicy() & QSizePolicy.ExpandFlag:
+        if (widget.sizePolicy().verticalPolicy() == QSizePolicy.MinimumExpanding or
+            widget.sizePolicy().verticalPolicy() == QSizePolicy.Expanding):
             self._proxy_widget.setMinimumHeight(geom.equivalent_widget_height())
 
         self._proxy_widget.setPos(geom.widget_position)
