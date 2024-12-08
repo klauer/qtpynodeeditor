@@ -191,6 +191,9 @@ class FlowSceneModel:
         for connection in doc["connections"]:
             self.restore_connection(connection)
 
+    def _connection_made_incomplete(self, conn: Connection):
+        self.connection_deleted.emit(conn)
+
     def _setup_connection_signals(self, conn: Connection):
         """
         Setup connection signals
@@ -200,7 +203,7 @@ class FlowSceneModel:
         conn : Connection
         """
         conn.connection_made_incomplete.connect(
-            self.connection_deleted.emit, Qt.UniqueConnection)
+            self._connection_made_incomplete, Qt.UniqueConnection)
 
     def _send_connection_created_to_nodes(self, conn: Connection):
         """
