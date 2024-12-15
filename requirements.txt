@@ -1,3 +1,0 @@
-versioneer
-qtpy
-PyQt5
