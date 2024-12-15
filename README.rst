@@ -53,7 +53,9 @@ qtpynodeeditor may also be installed using pip from PyPI.
 
 ::
 
-    $ python -m pip install qtpynodeeditor pyqt5
+    $ python -m pip install qtpynodeeditor[pyqt5]
+    $ python -m pip install qtpynodeeditor[pyqt6]
+    $ python -m pip install qtpynodeeditor[pyside]
 
 
 Running the Tests
@@ -63,5 +65,5 @@ Tests must be run with pytest and pytest-qt.
 
 ::
 
-   $ pip install -r dev-requirements.txt
+   $ pip install .[pyqt5,test]
    $ pytest -v qtpynodeeditor/tests
